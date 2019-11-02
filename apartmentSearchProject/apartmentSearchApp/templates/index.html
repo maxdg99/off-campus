@@ -1,7 +1,31 @@
-{% if listings %}
-    <ul>
-    {% for listing in listings %}
-        <li>Id: {{ listing.id }}, Line 1: {{ listing.address }}</a></li>
-    {% endfor %}
-    </ul>
-{% endif %}
+<!-- Materialize -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+
+    {% if listings %}
+    <tbody>
+        {% for listing in listings %}
+        <tr>
+            <td>{{ listing.id }}</td>
+            <td>{{ listing.address }}</td>
+            <td>{{ listing.price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% else %}
+    <tbody>
+        <tr>
+            <td>No listings</td>
+        </tr>
+    </tbody>
+    {% endif %}
+</table>
