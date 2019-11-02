@@ -23,7 +23,7 @@
         #no-price-switch{
             font-size: 13px;
         }
-        
+
         .map {
             height: 150px;
             width: 300px;
@@ -44,47 +44,47 @@
                 <form action="#" id="filter">
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="bedrooms">
-                            <label># Bedrooms</label>
+                            <input id="bedrooms" type="text">
+                            <label for="password"># Bedrooms</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="bathrooms">
-                            <label># Bathrooms</label>
+                            <input id="bathrooms" type="text">
+                            <label for="password"># Bathrooms</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input id="min-price">
-                            <label>Min Price</label>
+                            <input id="min-price" type="text">
+                            <label for="password">Min Price</label>
                         </div>
                         <div class="input-field col s6">
-                            <input id="max-price">
-                            <label>Max Price</label>
+                            <input id="max-price" type="text">
+                            <label for="password">Max Price</label>
                         </div>
                     </div>
                     <p id="no-price-switch">Show properties without a price</p>
                     <div class="switch">
                         <label>
                             No
-                            <input type="checkbox">
+                            <input id = "show-no-price" type="checkbox">
                             <span class="lever"></span>
                             Yes
                         </label>
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input id="min-distance">
-                            <label>Min Distance</label>
+                            <input id="min-distance" type="text">
+                            <label for="password">Min Distance</label>
                         </div>
                         <div class="input-field col s6">
-                            <input id="max-distacne">
-                            <label>Max Distance</label>
+                            <input id="max-distacne" type="text">
+                            <label for="password">Max Distance</label>
                         </div>
                     </div>
                     <div class="row">
-                        <button class="btn waves-effect waves-light col s12" id = "submit" type="submit" name="action">
+                        <button onclick="reloadWithParams()" class="btn waves-effect waves-light col s12" id = "submit" type="submit" name="action">
                             Let's Find an Apartment!
                         </button>
                     </div>
@@ -132,6 +132,26 @@
 </body>
 
 <script>
+    function reloadWithParams()
+    {
+        var beds = $("#bedrooms").val();
+        var bath = $("#bathrooms").val();
+        var minPrice = $("#min-price").val();
+        var maxPrice = $("#max-price").val();
+        var showNoPrice = $("#show-no-price").val();
+        var minDistance = $("#min-distance").val();
+        var maxDistance = $("#min-distance").val();
+        var params = $.param({'beds':beds, 'bath':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance});
+        console.log(params);
+        if(!isNaN(beds) && !isNaN(bath) && !isNaN(minPrice) && !isNaN(maxPrice) && !isNaN(minDistance) && !isNaN(maxDistance) &&
+            beds > 0 && bath > 0 && minPrice > 0 && minPrice < maxPrice && minDistance > 0 && minDistance < maxDistance){
+                window.location.href = window.location.pathname+"?"+$.param({'foo':'bar','base':'ball'})
+        }
+        else{
+            alert("Hmm, your filters don't seem right.  Can you double check?")
+        }
+    }
+
     function renderMap(mapElement, latitude, longitude) {
         var map = new ol.Map({
             target: mapElement,
