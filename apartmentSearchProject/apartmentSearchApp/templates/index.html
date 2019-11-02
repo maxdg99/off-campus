@@ -2,30 +2,75 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Address</th>
-            <th>Price</th>
-        </tr>
-    </thead>
+<div class = "row">
+    <div class = "col s2">
+        <form action="#" id = "filter">
+            <p>
+            <label>
+                <input type="checkbox" />
+                <span>Red</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="checkbox" checked="checked" />
+                <span>Yellow</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="checkbox" class="filled-in" checked="checked" />
+                <span>Filled in</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input id="indeterminate-checkbox" type="checkbox" />
+                <span>Indeterminate Style</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="checkbox" checked="checked" disabled="disabled" />
+                <span>Green</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="checkbox" disabled="disabled" />
+                <span>Brown</span>
+            </label>
+            </p>
+        </form>
+    </div>
 
-    {% if listings %}
-    <tbody>
-        {% for listing in listings %}
-        <tr>
-            <td>{{ listing.id }}</td>
-            <td>{{ listing.address }}</td>
-            <td>{{ listing.price }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    {% else %}
-    <tbody>
-        <tr>
-            <td>No listings</td>
-        </tr>
-    </tbody>
-    {% endif %}
-</table>
+    <div class="col s10">
+        <table id = "properties">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Address</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+
+            {% if listings %}
+            <tbody>
+                {% for listing in listings %}
+                <tr>
+                    <td>{{ listing.id }}</td>
+                    <td>{{ listing.address }}</td>
+                    <td>{{ listing.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% else %}
+            <tbody>
+                <tr>
+                    <td>No listings</td>
+                </tr>
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
+</div>
