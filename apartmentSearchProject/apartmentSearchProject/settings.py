@@ -25,12 +25,13 @@ SECRET_KEY = '^f)iru73nvws+!1#^3xf3wl2tu&y+$9yk=v^j@_tc+v7^d&a^f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["3.86.212.249"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'apartmentSearchApp.apps.ApartmentsearchappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

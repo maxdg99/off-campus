@@ -7,3 +7,9 @@ __pycache__/
 # Ignore the AWS DB private key
 *.ppk
 *.pem
+
+# ignore vim swap files
+*.swp
+
+# ignore the database
+*.sqlite3
