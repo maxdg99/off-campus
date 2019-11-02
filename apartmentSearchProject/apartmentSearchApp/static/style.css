@@ -10,3 +10,8 @@
     height: 200px;
     width: 300px;
 }
+
+#submit {
+    margin: 10px;
+    background-color: #666666;
+}

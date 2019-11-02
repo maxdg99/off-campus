@@ -48,3 +48,46 @@ $('td.map').each(function () {
         renderMap(this, latitude, longitude)
     }
 })
+
+function reloadWithParams()
+{
+    var beds = $("#bedrooms").val();
+    var bath = $("#bathrooms").val();
+    var minPrice = $("#min-price").val();
+    var maxPrice = $("#max-price").val();
+    var showNoPrice = $("#show-no-price").val();
+    var minDistance = $("#min-distance").val();
+    var maxDistance = $("#min-distance").val();
+    var params = $.param({'beds':beds, 'baths':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance});
+    if(oneVal(beds) && oneVal(bath) && twoVal(minPrice, maxPrice) && twoVal(minDistance, maxDistance)) {
+        window.location.href = window.location.pathname+"?"+$.param({'foo':'bar','base':'ball'})
+        $("#submit").css('background', '#666666');
+    }
+    else {
+        $("#submit").css('background', '#bb0000');
+    } 
+}
+
+function oneVal(num) {
+    return num >= 0 || num.length === 0;
+}
+
+function twoVal(one, two) {
+    if(one.length === 0 && two.length === 0)
+    {
+        return true;
+    }
+    else if(one >= 0 && two.length === 0)
+    {
+        return true;
+    }
+    else if(one.length === 0 && two.length > 0)
+    {
+        return true;
+    }
+    else if(one.length > 0 && two.length > 0 && one >= 0 && two > 0 && one < two)
+    {
+        return true;
+    }
+    return false
+}
