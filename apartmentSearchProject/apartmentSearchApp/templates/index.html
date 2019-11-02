@@ -18,9 +18,10 @@
             <thead>
                 <tr>
                     <th>Map</th>
-                    <th>ID</th>
                     <th>Address</th>
                     <th>Price</th>
+                    <th>Bedrooms</th>
+                    <th>Bathrooms</th>
                 </tr>
             </thead>
 
@@ -28,13 +29,14 @@
             <tbody>
                 {% for listing in listings %}
                 <tr>
-                    <td style="height: 200px; 
-                               width: 200px;"
+                    <td style="height: 150px; 
+                               width: 300px;"
                                id="mapDiv{{listing.id}}">
                     </td>
-                    <td>{{ listing.id }}</td>
                     <td>{{ listing.address }}</td>
                     <td>{{ listing.price }}</td>
+                    <td>{{ listing.num_bedrooms }}</td>
+                    <td>{{ listing.num_bathrooms }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -55,7 +57,7 @@
 
         map.addLayer(new OpenLayers.Layer.OSM());
 
-        var lonLat = new OpenLayers.LonLat(latitude, longitude)
+        var lonLat = new OpenLayers.LonLat(longitude, latitude)
             .transform(
                 new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
                 map.getProjectionObject() // to Spherical Mercator Projection
@@ -72,9 +74,11 @@
     }
     
     function renderMapById(listingId) {
-        console.log("PENIS");
+        renderMap(listingId, 40.006150, -83.010930);
+    }
 
-        renderMap(listingId, -0.1279688, 51.5077286);
+    for (var i = 1; i < 17; i++) {
+        renderMapById(i);
     }
 </script>
 
