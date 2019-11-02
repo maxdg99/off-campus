@@ -1,2 +1,8 @@
 # Ignore .vscode folder
 .vscode/
+
+# Ignore the cache folder
+__pycache__/
+
+# Ignore the AWS DB private key
+._hackathon2019.pem
