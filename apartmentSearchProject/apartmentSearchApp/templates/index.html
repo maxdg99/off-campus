@@ -20,10 +20,10 @@
             background-color: #bb0000;
         }
 
-        #no-price-switch{
+        #no-price-switch {
             font-size: 13px;
         }
-        
+
         .map {
             height: 150px;
             width: 300px;
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <button class="btn waves-effect waves-light col s12" id = "submit" type="submit" name="action">
+                        <button class="btn waves-effect waves-light col s12" id="submit" type="submit" name="action">
                             Let's Find an Apartment!
                         </button>
                     </div>
@@ -138,6 +138,13 @@
             layers: [
                 new ol.layer.Tile({
                     source: new ol.source.OSM()
+                }),
+                new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
+                        })]
+                    })
                 })
             ],
             view: new ol.View({
