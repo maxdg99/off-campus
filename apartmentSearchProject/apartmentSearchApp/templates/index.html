@@ -5,8 +5,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-    <!-- OpenStreetMap Markers -->
-    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <!-- OpenLayers -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.0/css/ol.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.0/build/ol.js"></script>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <!-- Custom CSS -->
     <style>
@@ -16,6 +22,11 @@
 
         #no-price-switch{
             font-size: 13px;
+        }
+        
+        .map {
+            height: 150px;
+            width: 300px;
         }
     </style>
 </head>
@@ -97,9 +108,7 @@
                         {% for listing in listings %}
                         <tr>
                             {% if listing.latitude and listing.longitude %}
-                            <td style="height: 150px; 
-                               width: 300px;" id="mapDiv{{listing.id}}">
-                            </td>
+                            <td class="map" latitude="{{ listing.latitude }}" longitude="{{ listing.longitude }}"></td>
                             {% else %}
                             <td>N/A</td>
                             {% endif %}
@@ -122,35 +131,30 @@
         </div>
 </body>
 
-<script id="placeMarker">
-    function renderMap(listingId, latitude, longitude) {
-        map = new OpenLayers.Map("mapDiv" + listingId);
-
-        map.addLayer(new OpenLayers.Layer.OSM());
-
-        var lonLat = new OpenLayers.LonLat(longitude, latitude)
-            .transform(
-                new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-                map.getProjectionObject() // to Spherical Mercator Projection
-            );
-
-        var zoom = 16;
-
-        var markers = new OpenLayers.Layer.Markers("Markers");
-        map.addLayer(markers);
-
-        markers.addMarker(new OpenLayers.Marker(lonLat));
-
-        map.setCenter(lonLat, zoom);
+<script>
+    function renderMap(mapElement, latitude, longitude) {
+        var map = new ol.Map({
+            target: mapElement,
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([longitude, latitude]),
+                zoom: 15
+            })
+        });
     }
 
-    function renderMapById(listingId) {
-        renderMap(listingId, 40.006150, -83.010930);
-    }
+    $('td.map').each(function () {
+        var latitude = $(this).attr('latitude');
+        var longitude = $(this).attr('longitude');
 
-    for (var i = 1; i < 17; i++) {
-        renderMapById(i);
-    }
+        if (latitude && longitude) {
+            renderMap(this, latitude, longitude)
+        }
+    })
 </script>
 
 </html>
