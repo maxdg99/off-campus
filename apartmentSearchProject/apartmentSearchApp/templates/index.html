@@ -28,6 +28,12 @@
             height: 150px;
             width: 300px;
         }
+
+        #submit{
+            margin-top: 15px;
+            margin-right: 10px;
+            background-color: #666666;
+        }
     </style>
 </head>
 
@@ -44,24 +50,34 @@
                 <form action="#" id="filter">
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="bedrooms" type="text">
+                            <input id="bedrooms" type="number" min="0">
                             <label for="password"># Bedrooms</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="bathrooms" type="text">
+                            <input id="bathrooms" type="number" min="0">
                             <label for="password"># Bathrooms</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input id="min-price" type="text">
+                            <input id="min-price" type="number" min="0">
                             <label for="password">Min Price</label>
                         </div>
                         <div class="input-field col s6">
-                            <input id="max-price" type="text">
+                            <input id="max-price" type="text" min="0">
                             <label for="password">Max Price</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="min-distance" type="number" min="0">
+                            <label for="password">Min Distance</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="max-distacne" type="number" min="0">
+                            <label for="password">Max Distance</label>
                         </div>
                     </div>
                     <p id="no-price-switch">Show properties without a price</p>
@@ -72,16 +88,6 @@
                             <span class="lever"></span>
                             Yes
                         </label>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input id="min-distance" type="text">
-                            <label for="password">Min Distance</label>
-                        </div>
-                        <div class="input-field col s6">
-                            <input id="max-distacne" type="text">
-                            <label for="password">Max Distance</label>
-                        </div>
                     </div>
                     <div class="row">
                         <button onclick="reloadWithParams()" class="btn waves-effect waves-light col s12" id = "submit" type="submit" name="action">
@@ -141,15 +147,38 @@
         var showNoPrice = $("#show-no-price").val();
         var minDistance = $("#min-distance").val();
         var maxDistance = $("#min-distance").val();
-        var params = $.param({'beds':beds, 'bath':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance});
-        console.log(params);
-        if(!isNaN(beds) && !isNaN(bath) && !isNaN(minPrice) && !isNaN(maxPrice) && !isNaN(minDistance) && !isNaN(maxDistance) &&
-            beds > 0 && bath > 0 && minPrice > 0 && minPrice < maxPrice && minDistance > 0 && minDistance < maxDistance){
-                window.location.href = window.location.pathname+"?"+$.param({'foo':'bar','base':'ball'})
+        var params = $.param({'beds':beds, 'baths':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance});
+        if(oneVal(beds) && oneVal(bath) && twoVal(minPrice, maxPrice) && twoVal(minDistance, maxDistance)) {
+            window.location.href = window.location.pathname+"?"+$.param({'foo':'bar','base':'ball'})
+            $("#submit").css('background', '#666666');
         }
-        else{
-            alert("Hmm, your filters don't seem right.  Can you double check?")
+        else {
+            $("#submit").css('background', '#bb0000');
+        } 
+    }
+
+    function oneVal(num) {
+        return num >= 0 || num.length === 0;
+    }
+
+    function twoVal(one, two) {
+        if(one.length === 0 && two.length === 0)
+        {
+            return true;
         }
+        else if(one >= 0 && two.length === 0)
+        {
+            return true;
+        }
+        else if(one.length === 0 && two.length > 0)
+        {
+            return true;
+        }
+        else if(one.length > 0 && two.length > 0 && one >= 0 && two > 0 && one < two)
+        {
+            return true;
+        }
+        return false
     }
 
     function renderMap(mapElement, latitude, longitude) {
