@@ -1,9 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
+
 from apartmentSearchApp.models import Listing
+
 # Create your views here.
 def index(request):
-    return HttpResponse("Hello world. Let's get this bread my dudes!")
+    listings = Listing.listings.all()
+    context = { 'listings': listings }
+    return render(request, 'index.html', context)
 
 def banana(request):
     l = Listing()

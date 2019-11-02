@@ -1,0 +1,7 @@
+{% if listings %}
+    <ul>
+    {% for listing in listings %}
+        <li>Id: {{ listing.id }}, Line 1: {{ listing.address }}</a></li>
+    {% endfor %}
+    </ul>
+{% endif %}

@@ -25,4 +25,5 @@ class Listing(models.Model):
     url = models.CharField(max_length=1000)
     availability_date = models.DateField(null=True)
     active = models.BooleanField()
-    
+
+    listings = models.Manager()
