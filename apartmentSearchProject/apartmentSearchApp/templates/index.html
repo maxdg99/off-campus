@@ -1,31 +1,81 @@
-<!-- Materialize -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!DOCTYPE html>
+<html>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Address</th>
-            <th>Price</th>
-        </tr>
-    </thead>
+<head>
+    <title>Coordinated Open Apartment Mapper (COAM)</title>
 
-    {% if listings %}
-    <tbody>
-        {% for listing in listings %}
-        <tr>
-            <td>{{ listing.id }}</td>
-            <td>{{ listing.address }}</td>
-            <td>{{ listing.price }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    {% else %}
-    <tbody>
-        <tr>
-            <td>No listings</td>
-        </tr>
-    </tbody>
-    {% endif %}
-</table>
+    <!-- Materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <!-- Script for OpenMaps Markers -->
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <table>
+            <thead>
+                <tr>
+                    <th>Map</th>
+                    <th>ID</th>
+                    <th>Address</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+
+            {% if listings %}
+            <tbody>
+                {% for listing in listings %}
+                <tr>
+                    <td style="height: 200px; 
+                               width: 200px;"
+                               id="mapDiv{{listing.id}}">
+                    </td>
+                    <td>{{ listing.id }}</td>
+                    <td>{{ listing.address }}</td>
+                    <td>{{ listing.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% else %}
+            <tbody>
+                <tr>
+                    <td>No listings</td>
+                </tr>
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
+</body>
+
+<script id="placeMarker">
+    function renderMap(listingId, latitude, longitude) {
+        map = new OpenLayers.Map("mapDiv" + listingId);
+
+        map.addLayer(new OpenLayers.Layer.OSM());
+
+        var lonLat = new OpenLayers.LonLat(latitude, longitude)
+            .transform(
+                new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                map.getProjectionObject() // to Spherical Mercator Projection
+            );
+
+        var zoom = 16;
+
+        var markers = new OpenLayers.Layer.Markers("Markers");
+        map.addLayer(markers);
+
+        markers.addMarker(new OpenLayers.Marker(lonLat));
+
+        map.setCenter(lonLat, zoom);
+    }
+    
+    function renderMapById(listingId) {
+        console.log("PENIS");
+
+        renderMap(listingId, -0.1279688, 51.5077286);
+    }
+</script>
+
+</html>
