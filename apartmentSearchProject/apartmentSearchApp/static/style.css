@@ -1,0 +1,12 @@
+.nav-wrapper {
+    background-color: #bb0000;
+}
+
+#no-price-switch {
+    font-size: 13px;
+}
+
+.map {
+    height: 200px;
+    width: 300px;
+}
