@@ -1,31 +1,129 @@
-<!-- Materialize -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<head>
+    <title>Coordinated Open Apartment Mapper (COAM)</title>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Address</th>
-            <th>Price</th>
-        </tr>
-    </thead>
+    <!-- Materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-    {% if listings %}
-    <tbody>
-        {% for listing in listings %}
-        <tr>
-            <td>{{ listing.id }}</td>
-            <td>{{ listing.address }}</td>
-            <td>{{ listing.price }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    {% else %}
-    <tbody>
-        <tr>
-            <td>No listings</td>
-        </tr>
-    </tbody>
-    {% endif %}
-</table>
+    <!-- Script for OpenMaps Markers -->
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col s2">
+                <form action="#" id="filter">
+                    <p>
+                        <label>
+                            <input type="checkbox" />
+                            <span>Red</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="checkbox" checked="checked" />
+                            <span>Yellow</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Filled in</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input id="indeterminate-checkbox" type="checkbox" />
+                            <span>Indeterminate Style</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="checkbox" checked="checked" disabled="disabled" />
+                            <span>Green</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="checkbox" disabled="disabled" />
+                            <span>Brown</span>
+                        </label>
+                    </p>
+                </form>
+            </div>
+
+            <div class="col s10">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Map</th>
+                            <th>Address</th>
+                            <th>Price</th>
+                            <th>Bedrooms</th>
+                            <th>Bathrooms</th>
+                        </tr>
+                    </thead>
+
+                    {% if listings %}
+                    <tbody>
+                        {% for listing in listings %}
+                        <tr>
+                            {% if listing.latitude and listing.longitude %}
+                            <td style="height: 150px; 
+                               width: 300px;" id="mapDiv{{listing.id}}">
+                            </td>
+                            {% else %}
+                            <td>N/A</td>
+                            {% endif %}
+                            <td>{{ listing.address }}</td>
+                            <td>${{ listing.price }}</td>
+                            <td>{{ listing.num_bedrooms }}</td>
+                            <td>{{ listing.num_bathrooms }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% else %}
+                    <tbody>
+                        <tr>
+                            <td>No listings</td>
+                        </tr>
+                    </tbody>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+</body>
+
+<script id="placeMarker">
+    function renderMap(listingId, latitude, longitude) {
+        map = new OpenLayers.Map("mapDiv" + listingId);
+
+        map.addLayer(new OpenLayers.Layer.OSM());
+
+        var lonLat = new OpenLayers.LonLat(longitude, latitude)
+            .transform(
+                new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                map.getProjectionObject() // to Spherical Mercator Projection
+            );
+
+        var zoom = 16;
+
+        var markers = new OpenLayers.Layer.Markers("Markers");
+        map.addLayer(markers);
+
+        markers.addMarker(new OpenLayers.Marker(lonLat));
+
+        map.setCenter(lonLat, zoom);
+    }
+
+    function renderMapById(listingId) {
+        renderMap(listingId, 40.006150, -83.010930);
+    }
+
+    for (var i = 1; i < 17; i++) {
+        renderMapById(i);
+    }
+</script>
+
+</html>
