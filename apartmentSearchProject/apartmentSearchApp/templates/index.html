@@ -1,40 +1,21 @@
+{% load static %}
+
 <head>
     <title>COAM</title>
 
     <!-- Materialize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
     <!-- OpenLayers -->
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.0/css/ol.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.0/build/ol.js"></script>
-
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <!-- Custom CSS -->
-    <style>
-        .nav-wrapper {
-            background-color: #bb0000;
-        }
-
-        #no-price-switch{
-            font-size: 13px;
-        }
-
-        .map {
-            height: 150px;
-            width: 300px;
-        }
-
-        #submit{
-            margin-top: 15px;
-            margin-right: 10px;
-            background-color: #666666;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 </head>
 
 <body>
@@ -180,30 +161,6 @@
         }
         return false
     }
-
-    function renderMap(mapElement, latitude, longitude) {
-        var map = new ol.Map({
-            target: mapElement,
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                })
-            ],
-            view: new ol.View({
-                center: ol.proj.fromLonLat([longitude, latitude]),
-                zoom: 15
-            })
-        });
-    }
-
-    $('td.map').each(function () {
-        var latitude = $(this).attr('latitude');
-        var longitude = $(this).attr('longitude');
-
-        if (latitude && longitude) {
-            renderMap(this, latitude, longitude)
-        }
-    })
 </script>
 
 </html>
