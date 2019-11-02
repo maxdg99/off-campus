@@ -13,3 +13,5 @@ __pycache__/
 
 # ignore the database
 *.sqlite3
+googleMapsTest.html
+testApartments.csv
