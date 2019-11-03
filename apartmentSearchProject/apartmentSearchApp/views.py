@@ -1,15 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core import serializers
+
 
 from apartmentSearchApp.models import Listing
 
-# Create your views here.
-def index(request):
+def query_for_request(request):
     query = request.GET
-    page = request.GET.get('page', 1)
     # beds baths minPrice maxPrice showNoPrice minDistance maxDistance
     varargs = {}
     q = Q()
@@ -40,8 +40,13 @@ def index(request):
     if "maxDistance" in query and query["maxDistance"].isnumeric():
         q = q & Q(miles_from_campus__lte=query["maxDistance"])
 
-    listings_list = Listing.listings.filter(q)
+    return Listing.listings.filter(q)
 
+
+# Create your views here.
+def index(request):
+    page = request.GET.get('page', 1)
+    listings_list = query_for_request(request)
     paginator = Paginator(listings_list, 20)
 
     try:
@@ -53,6 +58,11 @@ def index(request):
 
     context = { 'listings': listings}
     return render(request, 'index.html', context)
+
+def query_json(request):
+    results = query_for_request(request)
+    
+    return HttpResponse(serializers.serialize('json', results), content_type="application/json")
 
 def banana(request):
     l = Listing()
