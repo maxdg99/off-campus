@@ -12,6 +12,8 @@ __pycache__/
 *.swp
 
 # ignore the database
-*.sqlite3
+db.sqlite3
+db.sqlite3-journal
+
 googleMapsTest.html
 testApartments.csv
