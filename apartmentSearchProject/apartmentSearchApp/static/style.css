@@ -17,7 +17,7 @@
 }
 
 #bigmap {
-    height: 40%
+    height: 50%;
 }
 
 img {
@@ -42,8 +42,13 @@ img {
 
 .sort-by {
     background-color: #888 !important;
+    margin-top: 10px;
 }
 
 .dropdown-content li a {
     color: #bb0000
+}
+
+.full-width {
+    width: 100%;
 }
