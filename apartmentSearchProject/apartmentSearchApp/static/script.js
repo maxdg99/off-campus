@@ -1,7 +1,6 @@
 $(document).ready(function(){
     $('select').formSelect();
 });
-$('#bigmap').toggle()
 
 function restoreFilters()
 {
