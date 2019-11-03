@@ -39,7 +39,7 @@
 
         <div class="row">
             <div class="col s12">
-                <form action="#" id="filter">
+                <form action="#" onsubmit="return reloadWithParams(event)" id="filter">
                     <div class="row">
                         <div class="input-field col s2">
                             <input id="bedrooms" type="number" min="0">
@@ -96,7 +96,7 @@
                         </div>
 
                         <div class="col s2">
-                            <button onclick="reloadWithParams()" class="btn waves-effect waves-light" id="submit">
+                            <button href="#" class="btn waves-effect waves-light" id="submit">
                                 Find apartments!
                             </button>
                         </div>

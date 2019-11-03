@@ -73,7 +73,7 @@ $('td.map').each(function () {
     }
 })
 
-function reloadWithParams()
+function reloadWithParams(e)
 {
     var beds = $("#bedrooms").val();
     var bath = $("#bathrooms").val();
@@ -89,7 +89,8 @@ function reloadWithParams()
     }
     else {
         $("#submit").css('background', '#bb0000');
-    } 
+    }
+    e.preventDefault()
 }
 
 function oneVal(num) {
