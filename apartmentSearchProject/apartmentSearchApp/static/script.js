@@ -37,6 +37,9 @@ function restoreFilters()
     {
         $("#max-distance").siblings().addClass('active');
     }
+
+    $("#sort").val(urlParams.get('order'));
+    $('#sort').formSelect();
 }
 
 function renderMap(mapElement, latitude, longitude) {
@@ -84,7 +87,8 @@ function reloadWithParams(e)
     var showNoPrice = $("#show-no-price").is(':checked');
     var minDistance = $("#min-distance").val();
     var maxDistance = $("#min-distance").val();
-    var params = $.param({'beds':beds, 'baths':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance});
+    var sort = $('#sort').val()
+    var params = $.param({'beds':beds, 'baths':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance, 'order': sort});
     if(oneVal(beds) && oneVal(bath) && twoVal(minPrice, maxPrice) && twoVal(minDistance, maxDistance)) {
         window.location.href = window.location.pathname+"?"+params
         $("#submit").css('background', '#666666');
