@@ -1,1 +1,2 @@
 # Apartment-Web-Scraper
+This is Max Gruber, Andrew Haberlandt, Alek Kundla, and Adam Lis's Hack OHI/O 2019 project. It is a web app build using Django, jQuery, and Materialize that allows the user to view aggregated property data from hometeamproperties.net and northsteppe.com. This data was acquired via web scraping. To try out the app yourself, download the files in this repository and rename sample-db.sqlite3 to db.sqlite3. Then you can run the app in Django.
