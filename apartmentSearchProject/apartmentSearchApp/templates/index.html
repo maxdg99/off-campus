@@ -5,14 +5,17 @@
 
     <!-- Materialize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- OpenLayers -->
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.0/css/ol.css" type="text/css">
+    
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.0/build/ol.js"></script>
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
@@ -24,6 +27,9 @@
             <a href="#" class="brand-logo center">Coordinated Open Apartment Mapper</a>
         </div>
     </nav>
+    <div class="container-fluid">
+        <div id="bigmap"><div id="popup"></div></div>
+    </div>
 
     <div class="container-fluid">
         <div class="row">
@@ -93,13 +99,13 @@
                     {% if listings %}
                     <tbody>
                         {% for listing in listings %}
-                        <tr>
+                        <tr class="listing">
                             {% if listing.latitude and listing.longitude %}
                             <td class="map" latitude="{{ listing.latitude }}" longitude="{{ listing.longitude }}"></td>
                             {% else %}
                             <td>N/A</td>
                             {% endif %}
-                            <td>{{ listing.address }}</td>
+                            <td class="address">{{ listing.address }}</td>
                             <td>${{ listing.price }}</td>
                             <td>{{ listing.num_bedrooms }}</td>
                             <td>{{ listing.num_bathrooms }}</td>

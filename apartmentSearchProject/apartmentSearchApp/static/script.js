@@ -91,3 +91,98 @@ function twoVal(one, two) {
     }
     return false
 }
+
+function makeBigMap() {
+    var features = []
+    var instances = M.Tooltip.init(document.getElementById("popup"), {});
+
+    var iconStyle = new ol.style.Style({});
+
+    $('tr.listing').each(function () {
+        var map = $(this).find("td.map")
+        var latitude = $(map).attr('latitude');
+        var longitude = $(map).attr('longitude');
+
+        var address = $(this).find("td.address")
+
+        if (latitude && longitude) {
+            var iconFeature = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude])),
+                name: address.text(),
+                population: 4000,
+                rainfall: 500,
+                style: iconStyle
+            });
+        
+            //iconFeature.setStyle(iconStyle);
+            features.push(iconFeature)
+        }
+    })
+
+    var vectorSource = new ol.source.Vector({
+    features: features
+    });
+
+    var vectorLayer = new ol.layer.Vector({
+    source: vectorSource
+    });
+
+    
+
+    var bigMap = new ol.Map({
+        target: document.getElementById("bigmap"),
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+            vectorLayer
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([-83.0, 40.0]),
+            zoom: 14
+        })
+    });
+
+    var popup = new ol.Overlay({
+        element: document.getElementById("popup"),
+        positioning: 'bottom-center',
+        stopEvent: false,
+        offset: [0, -50]
+      });
+      bigMap.addOverlay(popup);
+
+        // display popup on click
+    bigMap.on('click', function(evt) {
+        var feature = bigMap.forEachFeatureAtPixel(evt.pixel,
+            function(feature) {
+                return feature;
+            });
+        var pu = document.getElementById("popup")
+        if (feature) {
+            var coordinates = feature.getGeometry().getCoordinates();
+            popup.setPosition(coordinates);
+            // $(popup).popover({
+            //     placement: 'top',
+            //     html: true,
+            //     content: feature.get('name')
+            // });
+            $(pu).tooltip({html: feature.get('name')});
+            $(pu).tooltip("open")
+        } else {
+            $(pu).tooltip("close")
+        }
+    });
+    
+    // change mouse cursor when over marker
+    bigMap.on('pointermove', function(e) {
+        if (e.dragging) {
+        $(element).popover('destroy');
+        return;
+        }
+        var pixel = bigMap.getEventPixel(e.originalEvent);
+        var hit = bigMap.hasFeatureAtPixel(pixel);
+        bigMap.getTarget().style.cursor = hit ? 'pointer' : '';
+    });
+}
+
+makeBigMap()

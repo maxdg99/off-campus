@@ -24,7 +24,7 @@ def index(request):
         q1 = q1 & Q(price__lte=query["maxPrice"])
 
     if "showNoPrice" in query:
-        if query["showNoPrice"] != "off":
+        if query["showNoPrice"] != "false":
             q1 = q1 | Q(price__isnull=True)
         else:
             q1 = q1 & Q(price__isnull=False)
