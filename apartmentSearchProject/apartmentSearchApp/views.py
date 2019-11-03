@@ -40,8 +40,16 @@ def query_for_request(request):
     if "maxDistance" in query and query["maxDistance"].isnumeric():
         q = q & Q(miles_from_campus__lte=query["maxDistance"])
 
-    return Listing.listings.filter(q)
-
+    if "order" in query:
+        if query["order"] == "price_increasing":
+            return Listing.listings.filter(q).order_by('price')
+        elif query["order"] == "price_decreasing":
+            return Listing.listings.filter(q).order_by('-price')
+        elif query["order"] == "distance_decreasing":
+            return Listing.listings.filter(q).order_by('-miles_from_campus')
+    
+    # default is order by miles from campus, increasing
+    return Listing.listings.filter(q).order_by('miles_from_campus')
 
 # Create your views here.
 def index(request):

@@ -1,5 +1,7 @@
-$('.dropdown-trigger').dropdown();
-$('#bigmap').toggle()
+$(document).ready(function(){
+    $('select').formSelect();
+});
+
 function restoreFilters()
 {
     const urlParams = new URLSearchParams(window.location.search);
@@ -23,8 +25,7 @@ function restoreFilters()
     {
         $("#max-price").siblings().addClass('active');
     }
-    if(urlParams.get('showNoPrice') === "True") $("#show-no-price").prop('checked', true);
-    else if(!urlParams.get('showNoPrice')) $("#show-no-price").prop('checked', true);
+    if(urlParams.get('showNoPrice') === "true") $("#show-no-price").prop('checked', true);
     else $("#show-no-price").prop('checked', false);
     $("#min-distance").val(urlParams.get('minDistance'));
     if(urlParams.get('minDistance'))
@@ -36,6 +37,9 @@ function restoreFilters()
     {
         $("#max-distance").siblings().addClass('active');
     }
+
+    $("#sort").val(urlParams.get('order'));
+    $('#sort').formSelect();
 }
 
 function renderMap(mapElement, latitude, longitude) {
@@ -74,7 +78,7 @@ $('td.map').each(function () {
     }
 })
 
-function reloadWithParams()
+function reloadWithParams(e)
 {
     var beds = $("#bedrooms").val();
     var bath = $("#bathrooms").val();
@@ -83,15 +87,16 @@ function reloadWithParams()
     var showNoPrice = $("#show-no-price").is(':checked');
     var minDistance = $("#min-distance").val();
     var maxDistance = $("#min-distance").val();
-    var sort = $("#sort-options").val();
-    var params = $.param({'beds':beds, 'baths':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance});
+    var sort = $('#sort').val()
+    var params = $.param({'beds':beds, 'baths':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance, 'order': sort});
     if(oneVal(beds) && oneVal(bath) && twoVal(minPrice, maxPrice) && twoVal(minDistance, maxDistance)) {
         window.location.href = window.location.pathname+"?"+params
         $("#submit").css('background', '#666666');
     }
     else {
         $("#submit").css('background', '#bb0000');
-    } 
+    }
+    e.preventDefault()
 }
 
 function oneVal(num) {
@@ -131,10 +136,19 @@ function makeBigMap(results) {
         var latitude = l["latitude"]
         var longitude = l["longitude"]
         var address = l["address"]
+        var overlayHTML = ""
+        overlayHTML += "<a href=\""+l["url"]+"\" style=\"z-index: 1000;\"><strong>" + address + "</strong></a><div class=\"row\">";
+        overlayHTML += "<div class=\"col s6\"><p style=\"text-align: left;\">"+l["num_bedrooms"]+" bed, " + l["num_bathrooms"] + " bath</p></div>";
+        if (l["image_url"]) {
+            overlayHTML += "<div class=\"col s6\"><img style=\"text-align: right;\" src=\""+l["image_url"]+"\" width=80px></img></div></div>"
+        }
+        //overlayHTML += "<div class=\"btn\" href=\""+l["url"]+"\">b</div>";
+
+
         if (latitude && longitude) {
             var iconFeature = new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude])),
-                name: address,
+                name: overlayHTML,
                 population: 4000,
                 rainfall: 500,
                 style: iconStyle
@@ -197,7 +211,7 @@ function makeBigMap(results) {
     // change mouse cursor when over marker
     bigMap.on('pointermove', function(e) {
         if (e.dragging) {
-        $(element).popover('destroy');
+        $('#popup').tooltip('close');
         return;
         }
         var pixel = bigMap.getEventPixel(e.originalEvent);
