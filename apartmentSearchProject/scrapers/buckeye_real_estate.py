@@ -29,7 +29,7 @@ class BuckeyePropertiesScraper(Scraper):
             image = image['data-original']
 
             url = prop.find('a')
-            url = "https://buckeye.appfolio.com/" + url['href']
+            url = "https://buckeye.appfolio.com" + url['href']
 
             price = (prop.find('div', {'class':'sidebar__price rent-banner__text js-listing-blurb-rent'})).getText(strip=True)
             address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
