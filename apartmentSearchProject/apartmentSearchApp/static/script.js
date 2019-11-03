@@ -1,3 +1,5 @@
+$('.dropdown-trigger').dropdown();
+$('#bigmap').toggle()
 function restoreFilters()
 {
     const urlParams = new URLSearchParams(window.location.search);
@@ -58,6 +60,7 @@ function renderMap(mapElement, latitude, longitude) {
 }
 
 function toggleBigMap() {
+    loadMap();
     $('#bigmap').toggle();
 }
 
@@ -113,23 +116,23 @@ function twoVal(one, two) {
     return false
 }
 
-function makeBigMap() {
+var mapLoaded = false
+function makeBigMap(results) {
+    mapLoaded = true
     var features = []
     var instances = M.Tooltip.init(document.getElementById("popup"), {});
 
     var iconStyle = new ol.style.Style({});
 
-    $('tr.listing').each(function () {
-        var map = $(this).find("td.map")
-        var latitude = $(map).attr('latitude');
-        var longitude = $(map).attr('longitude');
-
-        var address = $(this).find("a.address")
-
+    for (listing of results) {
+        var l = listing.fields
+        var latitude = l["latitude"]
+        var longitude = l["longitude"]
+        var address = l["address"]
         if (latitude && longitude) {
             var iconFeature = new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude])),
-                name: address.text(),
+                name: address,
                 population: 4000,
                 rainfall: 500,
                 style: iconStyle
@@ -138,7 +141,7 @@ function makeBigMap() {
             //iconFeature.setStyle(iconStyle);
             features.push(iconFeature)
         }
-    })
+    }
 
     var vectorSource = new ol.source.Vector({
     features: features
@@ -201,4 +204,12 @@ function makeBigMap() {
     });
 }
 
-makeBigMap()
+function loadMap() {
+    if (!mapLoaded) {
+        const urlParams = new URLSearchParams(window.location.search);
+        $.get('/query_json'+window.location.search).done(function (data) {
+            console.log(data)
+            makeBigMap(data);
+        })
+    }
+}

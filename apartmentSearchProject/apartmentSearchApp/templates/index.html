@@ -27,7 +27,7 @@
         <div class="nav-wrapper">
             <a href="#" class="brand-logo center">Coordinated Open Apartment Mapper</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li><a href="#" onclick="toggleBigMap()">Toggle Large Map</a></li>
+                <li><a href="#" onclick="toggleBigMap()">Toggle Large Map</a></li>
             </ul>
         </div>
     </nav>
@@ -76,7 +76,7 @@
                             <div class="switch">
                                 <label>
                                     No
-                                    <input id="show-no-price" type="checkbox">
+                                    <input id="show-no-price" type="checkbox" checked="checked">
                                     <span class="lever"></span>
                                     Yes
                                 </label>
@@ -84,8 +84,20 @@
                         </div>
 
                         <div class="col s2">
+                            <a class='dropdown-trigger btn sort-by' href='#' data-target='sort-options'>Sort By</a>
+
+                            <!-- Dropdown Structure -->
+                            <ul id='sort-options' class='dropdown-content'>
+                                <li><a href="#">Price Increasing</a></li>
+                                <li><a href="#">Price Decreasing</a></li>
+                                <li><a href="#">Distance Increasing</a></li>
+                                <li><a href="#">Distance Decreasing</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col s2">
                             <button onclick="reloadWithParams()" class="btn waves-effect waves-light" id="submit">
-                                Let's find apartments!
+                                Find apartments!
                             </button>
                         </div>
                     </div>
