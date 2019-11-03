@@ -7,6 +7,9 @@ from django.core import serializers
 
 
 from apartmentSearchApp.models import Listing
+from apartmentSearchApp.compute_averages import compute_averages
+
+averages = compute_averages()
 
 def query_for_request(request):
     query = request.GET
@@ -21,18 +24,19 @@ def query_for_request(request):
 
     
     q1 = Q()
+    price_constrained = False
     if "minPrice" in query and query["minPrice"].isnumeric():
         q1 = q1 & Q(price__gte=query["minPrice"])
+        price_constrained = True
     if "maxPrice" in query and query["maxPrice"].isnumeric():
         q1 = q1 & Q(price__lte=query["maxPrice"])
+        price_constrained = True
 
-    if "showNoPrice" in query:
-        if query["showNoPrice"] != "false":
-            q1 = q1 | Q(price__isnull=True)
-        else:
-            q1 = q1 & Q(price__isnull=False)
-
-
+    if "showNoPrice" in query and query["showNoPrice"] == "false":
+        q1 = q1 & Q(price__isnull=False)
+    elif price_constrained:
+        q1 = q1 | Q(price__isnull=True)
+    
     q = q & q1
 
     if "minDistance" in query and query["minDistance"].isnumeric():
@@ -64,7 +68,14 @@ def index(request):
     except EmptyPage:
         listings = paginator.page(paginator.num_pages)
 
-    context = { 'listings': listings, 'page': page, 'paginator': paginator}
+    for x in listings:
+        if x.price is None:
+            continue
+        avg = averages[(x.num_bedrooms, x.num_bathrooms)]
+        x.diff_raw = x.price - avg
+        x.percent_diff = f"{(x.price - avg) / avg * 100:+.0f}"
+
+    context = { 'listings': listings, 'averages': averages, 'paginator': paginator}
     return render(request, 'index.html', context)
 
 def query_json(request):

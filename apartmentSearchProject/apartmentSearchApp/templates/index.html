@@ -127,7 +127,9 @@
                             <td><a class="address" href="{{ listing.url }}" target="_blank">{{ listing.address }}</a>
                             </td>
 
-                            {% if listing.price %}
+                            {% if listing.price and listing.percent_diff is not None %}
+                            <td>${{ listing.price }} <br>{% if listing.diff_raw <= 0 %}<span class="new badge" data-badge-caption="vs. avg">{% else %}<span class="new badge red" data-badge-caption="vs. avg">{% endif %}{{ listing.percent_diff }}%</span></td>
+                            {% elif listing.price %}
                             <td>${{ listing.price }}</td>
                             {% else %}
                             <td>N/A</td>

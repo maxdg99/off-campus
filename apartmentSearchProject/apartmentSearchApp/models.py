@@ -17,4 +17,7 @@ class Listing(models.Model):
     availability_date = models.DateField(null=True)
     active = models.BooleanField()
 
+    percent_diff = None # populated at runtime
+    diff_raw = 0
+
     listings = models.Manager()
