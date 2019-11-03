@@ -51,7 +51,7 @@ def index(request):
     except EmptyPage:
         listings = paginator.page(paginator.num_pages)
 
-    context = { 'listings': listings }
+    context = { 'listings': listings}
     return render(request, 'index.html', context)
 
 def banana(request):

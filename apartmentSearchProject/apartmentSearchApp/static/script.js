@@ -1,3 +1,16 @@
+function restoreFilters()
+{
+    const urlParams = new URLSearchParams(window.location.search);
+    $("#bedrooms").val(urlParams.get('beds'));
+    $("#bathrooms").val(urlParams.get('baths'));
+    $("#min-price").val(urlParams.get('minPrice'));
+    $("#max-price").val(urlParams.get('maxPrice'));
+    if(urlParams.get('showNoPrice') === "True") $("#show-no-price").prop('checked', true);
+    else $("#show-no-price").prop('checked', false);
+    $("#min-distance").val(urlParams.get('minDistance'));
+    $("#max-distance").val(urlParams.get('maxDistance'));
+}
+
 function renderMap(mapElement, latitude, longitude) {
     var map = new ol.Map({
         target: mapElement,
@@ -141,11 +154,6 @@ function makeBigMap() {
         if (feature) {
             var coordinates = feature.getGeometry().getCoordinates();
             popup.setPosition(coordinates);
-            // $(popup).popover({
-            //     placement: 'top',
-            //     html: true,
-            //     content: feature.get('name')
-            // });
             $(pu).tooltip({html: feature.get('name')});
             $(pu).tooltip("open")
         } else {
