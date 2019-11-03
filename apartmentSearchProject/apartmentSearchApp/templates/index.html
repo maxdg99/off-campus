@@ -34,7 +34,9 @@
 
     <div class="container-fluid">
         <div id="bigmap" style="display: none;">
-            <div id="popup"></div>
+            <div id="popup"><div class="card" id="popup-content" style="display: none;">
+                    <!-- Card Content -->
+                  </div></div>
         </div>
 
         <form action="#" onsubmit="return reloadWithParams(event)" id="filter">
@@ -175,7 +177,7 @@
 
                 {% if paginator.num_pages > 10 %}
 
-                    {% if listings.number > 3 %}
+                    {% if listings.number > 1 %}
                         <li class="waves-effect"><a onclick="goToPage(1)">1</a></li>
                         <li>...</li>
                     {% endif %}

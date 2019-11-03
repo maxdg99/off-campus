@@ -143,7 +143,7 @@ var mapLoaded = false
 function makeBigMap(results) {
     mapLoaded = true
     var features = []
-    var instances = M.Tooltip.init(document.getElementById("popup"), {});
+    //var instances = M.Tooltip.init(document.getElementById("popup"), {});
 
     var iconStyle = new ol.style.Style({});
 
@@ -153,7 +153,7 @@ function makeBigMap(results) {
         var longitude = l["longitude"]
         var address = l["address"]
         var overlayHTML = ""
-        overlayHTML += "<a href=\""+l["url"]+"\" style=\"z-index: 1000;\"><strong>" + address + "</strong></a><div class=\"row\">";
+        overlayHTML += "<a href=\""+l["url"]+"\" target=\"_blank\"><strong>" + address + "</strong></a><div class=\"row\">";
         overlayHTML += "<div class=\"col s6\"><p style=\"text-align: left;\">"+l["num_bedrooms"]+" bed, " + l["num_bathrooms"] + " bath</p></div>";
         if (l["image_url"]) {
             overlayHTML += "<div class=\"col s6\"><img style=\"text-align: right;\" src=\""+l["image_url"]+"\" width=80px></img></div></div>"
@@ -187,7 +187,7 @@ function makeBigMap(results) {
         element: document.getElementById("popup"),
         positioning: 'bottom-center',
         stopEvent: true,
-        offset: [0, -50]
+        offset: [0, 0]
       });
 
     var bigMap = new ol.Map({
@@ -215,17 +215,17 @@ function makeBigMap(results) {
         if (feature) {
             var coordinates = feature.getGeometry().getCoordinates();
             popup.setPosition(coordinates);
-            $(pu).tooltip({html: feature.get('name')});
-            $(pu).tooltip("open")
+            $('#popup-content').html(feature.get('name'))
+            $('#popup-content').show()
         } else {
-            $(pu).tooltip("close")
+            $('#popup-content').hide()
         }
     });
     
     // change mouse cursor when over marker
     bigMap.on('pointermove', function(e) {
         if (e.dragging) {
-        $('#popup').tooltip('close');
+            $('#popup-content').hide()
         return;
         }
         var pixel = bigMap.getEventPixel(e.originalEvent);
