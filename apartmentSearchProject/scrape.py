@@ -24,7 +24,7 @@ def insert_listing_from_dict(l):
             l["latitude"], l["longitude"] = getLatLong(l["address"])
             print(f'{l["latitude"]} {l["longitude"]}')
         else:
-            obj.miles_from_campus = distance(obj.latitude, obj.longitude)
+            obj.miles_from_campus = round(distance(obj.latitude, obj.longitude), 2)
             print("\t\tDistance: "+str(distance(obj.latitude, obj.longitude)))
 
         for key, value in l.items():
