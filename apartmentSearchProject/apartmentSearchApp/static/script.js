@@ -1,5 +1,8 @@
-$('.dropdown-trigger').dropdown();
+$(document).ready(function(){
+    $('select').formSelect();
+});
 $('#bigmap').toggle()
+
 function restoreFilters()
 {
     const urlParams = new URLSearchParams(window.location.search);

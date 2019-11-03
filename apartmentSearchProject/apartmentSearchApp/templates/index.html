@@ -37,73 +37,68 @@
             <div id="popup"></div>
         </div>
 
-        <div class="row">
-            <div class="col s12">
-                <form action="#" onsubmit="return reloadWithParams(event)" id="filter">
-                    <div class="row">
-                        <div class="input-field col s2">
-                            <input id="bedrooms" type="number" min="0">
-                            <label for="password">Bedrooms</label>
-                        </div>
+        <form action="#" onsubmit="return reloadWithParams(event)" id="filter">
+            <div class="row">
+                <div class="input-field col s2">
+                    <input id="bedrooms" type="number" min="0">
+                    <label for="password">Bedrooms</label>
+                </div>
 
-                        <div class="input-field col s2">
-                            <input id="bathrooms" type="number" min="0">
-                            <label for="password">Bathrooms</label>
-                        </div>
+                <div class="input-field col s2">
+                    <input id="bathrooms" type="number" min="0">
+                    <label for="password">Bathrooms</label>
+                </div>
 
-                        <div class="input-field col s2">
-                            <input id="min-price" type="number" min="0">
-                            <label for="password">Minimum Price</label>
-                        </div>
+                <div class="input-field col s2">
+                    <input id="min-price" type="number" min="0">
+                    <label for="password">Minimum Price</label>
+                </div>
 
-                        <div class="input-field col s2">
-                            <input id="max-price" type="text" min="0">
-                            <label for="password">Maximum Price</label>
-                        </div>
+                <div class="input-field col s2">
+                    <input id="max-price" type="text" min="0">
+                    <label for="password">Maximum Price</label>
+                </div>
 
-                        <div class="input-field col s2">
-                            <input id="min-distance" type="number" min="0">
-                            <label for="password">Minimum Distance</label>
-                        </div>
+                <div class="input-field col s2">
+                    <input id="min-distance" type="number" min="0">
+                    <label for="password">Minimum Distance</label>
+                </div>
 
-                        <div class="input-field col s2">
-                            <input id="max-distacne" type="number" min="0">
-                            <label for="password">Maximum Distance</label>
-                        </div>
+                <div class="input-field col s2">
+                    <input id="max-distacne" type="number" min="0">
+                    <label for="password">Maximum Distance</label>
+                </div>
 
-                        <div class="col s2">
-                            <p id="no-price-switch">Show properties without a price</p>
-                            <div class="switch">
-                                <label>
-                                    No
-                                    <input id="show-no-price" type="checkbox" checked="checked">
-                                    <span class="lever"></span>
-                                    Yes
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col s2">
-                            <a class='dropdown-trigger btn sort-by full-width' href='#' data-target='sort-options'>Sort By</a>
-
-                            <!-- Dropdown Structure -->
-                            <ul id='sort-options' class='dropdown-content'>
-                                <li><a href="#">Price Increasing</a></li>
-                                <li><a href="#">Price Decreasing</a></li>
-                                <li><a href="#">Distance Increasing</a></li>
-                                <li><a href="#">Distance Decreasing</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="col s2">
-                            <button href="#" class="btn waves-effect waves-light" id="submit">
-                                Find apartments!
-                            </button>
-                        </div>
+                <div class="col s2">
+                    <p id="no-price-switch">Show properties without a price</p>
+                    <div class="switch">
+                        <label>
+                            No
+                            <input id="show-no-price" type="checkbox" checked="checked">
+                            <span class="lever"></span>
+                            Yes
+                        </label>
                     </div>
-                </form>
+                </div>
+
+                <div class="input-field col s2">
+                    <select>
+                        <option value="" disabled selected>Choose your option</option>
+                        <option value="1">Price Increasing</option>
+                        <option value="1">Price Decreasing</option>
+                        <option value="1">Distance Increasing</option>
+                        <option value="1">Distance Decreasing</option>
+                    </select>
+                    <label>Sort By</label>
+                </div>
+
+                <div class="col s2">
+                    <button href="#" class="btn waves-effect waves-light full-width" id="submit">
+                        Find apartments!
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
 
         <div class="row">
             <div class="col s12">
