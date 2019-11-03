@@ -31,24 +31,34 @@
                 <form action="#" id="filter">
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="bedrooms" type="text">
+                            <input id="bedrooms" type="number" min="0">
                             <label for="password"># Bedrooms</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="bathrooms" type="text">
+                            <input id="bathrooms" type="number" min="0">
                             <label for="password"># Bathrooms</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input id="min-price" type="text">
+                            <input id="min-price" type="number" min="0">
                             <label for="password">Min Price</label>
                         </div>
                         <div class="input-field col s6">
-                            <input id="max-price" type="text">
+                            <input id="max-price" type="text" min="0">
                             <label for="password">Max Price</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="min-distance" type="number" min="0">
+                            <label for="password">Min Distance</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="max-distacne" type="number" min="0">
+                            <label for="password">Max Distance</label>
                         </div>
                     </div>
                     <p id="no-price-switch">Show properties without a price</p>
@@ -59,16 +69,6 @@
                             <span class="lever"></span>
                             Yes
                         </label>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input id="min-distance" type="text">
-                            <label for="password">Min Distance</label>
-                        </div>
-                        <div class="input-field col s6">
-                            <input id="max-distacne" type="text">
-                            <label for="password">Max Distance</label>
-                        </div>
                     </div>
                     <div class="row">
                         <button onclick="reloadWithParams()" class="btn waves-effect waves-light col s12" id = "submit" type="submit" name="action">
