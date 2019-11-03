@@ -15,7 +15,9 @@ class HometeamScraper(Scraper):
         l = {}
         l["image_url"] = listingDiv.find("img")["src"]
         l["url"] = urljoin(HometeamScraper.hometeamURL, listingDiv.find("a")["href"])
-        l["address"] = listingDiv.find("h4").text
+        address = listingDiv.find("h4").text
+        address = address[0:address.find(":")].strip()
+        l["address"] = address + ", Columbus, OH 43210"
 
         bedbath = listingDiv.find("strong").text.split()
         l["num_bedrooms"] = bedbath[0]

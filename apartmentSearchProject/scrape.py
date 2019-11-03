@@ -7,6 +7,7 @@ from apartmentSearchApp.models import Listing
 from scrapers.scraper import Scraper
 from scrapers.hometeam import HometeamScraper
 from scrapers.northsteppe import NorthsteppeScraper
+from apartmentSearchProject.utility import getLatLong, distance
 
 options = [cls for cls in Scraper.__subclasses__()]
 
@@ -17,11 +18,25 @@ def insert_listing_from_dict(l):
     try:
         obj = Listing.listings.get(address=l["address"])
         print("exists: "+l["address"])
+
+        if (obj.latitude is None):
+            # Get lat long
+            l["latitude"], l["longitude"] = getLatLong(l["address"])
+            print(f'{l["latitude"]} {l["longitude"]}')
+        else:
+            obj.miles_from_campus = distance(obj.latitude, obj.longitude)
+            print("\t\tDistance: "+str(distance(obj.latitude, obj.longitude)))
+
         for key, value in l.items():
             setattr(obj, key, value)
         obj.save()
     except Listing.DoesNotExist:
         print("inserting: "+l["address"])
+
+        # Get lat long
+        l["latitude"], l["longitude"] = getLatLong(l["address"])
+        print(f'{l["latitude"]} {l["longitude"]}')
+
         obj = Listing(**l)
         obj.save()
 

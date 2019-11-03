@@ -1,12 +1,44 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.db.models import Q
 
 from apartmentSearchApp.models import Listing
 
 # Create your views here.
 def index(request):
-    listings = Listing.listings.all()
+    query = request.GET
+    # beds baths minPrice maxPrice showNoPrice minDistance maxDistance
+    varargs = {}
+    q = Q()
+    if "beds" in query:
+        q = q & Q(num_bedrooms=query["beds"])
+    if "baths" in query:
+        q = q & Q(num_bathrooms=query["baths"])
+
+    
+    q1 = Q()
+    if "minPrice" in query:
+        q1 = q1 & Q(price__gte=query["minPrice"])
+    if "maxPrice" in query:
+        q1 = q1 & Q(price__lte=query["maxPrice"])
+
+    if "showNoPrice" in query:
+        if query["showNoPrice"] != "off":
+            q1 = q1 | Q(price__isnull=True)
+        else:
+            q1 = q1 & Q(price__isnull=False)
+
+
+    q = q & q1
+
+    if "minDistance" in query:
+        q = q & Q(miles_from_campus__gte=query["minDistance"])
+    if "maxDistance" in query:
+        q = q & Q(miles_from_campus__lte=query["maxDistance"])
+
+    listings = Listing.listings.filter(q)
+
     context = { 'listings': listings }
     return render(request, 'index.html', context)
 
