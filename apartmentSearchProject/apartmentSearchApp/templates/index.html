@@ -1,7 +1,7 @@
 {% load static %}
 
 <head>
-    <title>COAM</title>
+    <title>Rentify</title>
 
     <!-- Materialize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -25,7 +25,7 @@
 <body onload="restoreFilters()">
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo center">Coordinated Open Apartment Mapper</a>
+            <a href="#" class="brand-logo center">Rentify</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="#" onclick="toggleBigMap()">Toggle Large Map</a></li>
             </ul>
@@ -175,7 +175,7 @@
 
                 {% if paginator.num_pages > 10 %}
 
-                    {% if listings.number > 3 %}
+                    {% if listings.number > 1 %}
                         <li class="waves-effect"><a onclick="goToPage(1)">1</a></li>
                         <li>...</li>
                     {% endif %}
