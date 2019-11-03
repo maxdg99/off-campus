@@ -13,7 +13,7 @@
 
 #submit {
     margin: 10px;
-    background-color: #666666;
+    background-color: #888;
 }
 
 #bigmap {
@@ -33,15 +33,15 @@ img {
 }
 
 .switch label input[type=checkbox]:checked+.lever {
-    background-color: #666666;
+    background-color: #888;
 }
 
 .switch label input[type=checkbox]:checked+.lever:after {
-    background-color: #666666;
+    background-color: #888;
 }
 
 .sort-by {
-    background-color: #666666 !important;
+    background-color: #888 !important;
 }
 
 .dropdown-content li a {
