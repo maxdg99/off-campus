@@ -20,6 +20,10 @@ function renderMap(mapElement, latitude, longitude) {
     });
 }
 
+function toggleBigMap() {
+    $('#bigmap').toggle();
+}
+
 $('td.map').each(function () {
     var latitude = $(this).attr('latitude');
     var longitude = $(this).attr('longitude');

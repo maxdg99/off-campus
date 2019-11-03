@@ -13,7 +13,7 @@
 
 #submit {
     margin: 10px;
-    background-color: #666666;
+    background-color: #bb0000;
 }
 
 #bigmap {
@@ -29,5 +29,5 @@ img {
 }
 
 .pagination li.active {
-    background-color: #666666;
+    background-color: #bb0000;
 }
