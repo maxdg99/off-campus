@@ -33,7 +33,7 @@
     </nav>
 
     <div class="container-fluid">
-        <div id="bigmap">
+        <div id="bigmap" style="display: none;">
             <div id="popup"></div>
         </div>
 
@@ -70,8 +70,9 @@
                             <input id="max-distacne" type="number" min="0">
                             <label for="password">Maximum Distance</label>
                         </div>
-
-                        <div class="col s2">
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s2">
                             <p id="no-price-switch">Show properties without a price</p>
                             <div class="switch">
                                 <label>
@@ -83,16 +84,15 @@
                             </div>
                         </div>
 
-                        <div class="col s2">
-                            <a class='dropdown-trigger btn sort-by' href='#' data-target='sort-options'>Sort By</a>
-
+                        <div class="input-field col s2">
                             <!-- Dropdown Structure -->
-                            <ul id='sort-options' class='dropdown-content'>
-                                <li><a href="#">Price Increasing</a></li>
-                                <li><a href="#">Price Decreasing</a></li>
-                                <li><a href="#">Distance Increasing</a></li>
-                                <li><a href="#">Distance Decreasing</a></li>
-                            </ul>
+                            <select id='sort-options'>
+                                    <option value="distance-increasing" selected>Distance Increasing</option>
+                                    <option value="distance-decrasing">Distance Decreasing</option>
+                                    <option value="price-increasing">Price Increasing</option>
+                                    <option value="price-decrasing">Price Decreasing</option>
+                            </select>
+                            <label>Sort by</label>
                         </div>
 
                         <div class="col s2">

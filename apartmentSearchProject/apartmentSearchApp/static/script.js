@@ -1,5 +1,4 @@
 $('.dropdown-trigger').dropdown();
-$('#bigmap').toggle()
 function restoreFilters()
 {
     const urlParams = new URLSearchParams(window.location.search);
@@ -23,7 +22,7 @@ function restoreFilters()
     {
         $("#max-price").siblings().addClass('active');
     }
-    if(urlParams.get('showNoPrice') === "True") $("#show-no-price").prop('checked', true);
+    if(urlParams.get('showNoPrice') === "true") $("#show-no-price").prop('checked', true);
     else $("#show-no-price").prop('checked', false);
     $("#min-distance").val(urlParams.get('minDistance'));
     if(urlParams.get('minDistance'))
