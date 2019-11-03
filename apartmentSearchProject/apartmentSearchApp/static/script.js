@@ -24,6 +24,7 @@ function restoreFilters()
         $("#max-price").siblings().addClass('active');
     }
     if(urlParams.get('showNoPrice') === "True") $("#show-no-price").prop('checked', true);
+    else if(!urlParams.get('showNoPrice')) $("#show-no-price").prop('checked', true);
     else $("#show-no-price").prop('checked', false);
     $("#min-distance").val(urlParams.get('minDistance'));
     if(urlParams.get('minDistance'))
@@ -82,6 +83,7 @@ function reloadWithParams()
     var showNoPrice = $("#show-no-price").is(':checked');
     var minDistance = $("#min-distance").val();
     var maxDistance = $("#min-distance").val();
+    var sort = $("#sort-options").val();
     var params = $.param({'beds':beds, 'baths':bath, 'minPrice':minPrice, 'maxPrice':maxPrice, 'showNoPrice':showNoPrice, 'minDistance':minDistance, 'maxDistance':maxDistance});
     if(oneVal(beds) && oneVal(bath) && twoVal(minPrice, maxPrice) && twoVal(minDistance, maxDistance)) {
         window.location.href = window.location.pathname+"?"+params

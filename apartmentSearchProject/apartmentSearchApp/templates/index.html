@@ -168,27 +168,76 @@
             </div>
         </div>
         {% if listings.has_other_pages %}
-        <ul class="pagination center">
-            {% if listings.has_previous %}
-            <li class="waves-effect"><a href="?page={{ listings.previous_page_number }}"><i
-                        class="material-icons">chevron_left</i></a></li>
-            {% else %}
-            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-            {% endif %}
-            {% for i in listings.paginator.page_range %}
-            {% if listings.number == i %}
-            <li class="active"><a>{{ i }}</a></li>
-            {% else %}
-            <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
-            {% endfor %}
-            {% if listings.has_next %}
-            <li class="waves-effect"><a href="?page={{ listings.next_page_number }}"><i
-                        class="material-icons">chevron_right</i></a></li>
-            {% else %}
-            <li class="disabled"><i class="material-icons">chevron_right</i></li>
-            {% endif %}
-        </ul>
+            <ul class="pagination center">
+
+                {% if listings.has_previous %}
+                    <li class="waves-effect"><a href="?page={{ listings.previous_page_number }}"><i
+                            class="material-icons">chevron_left</i></a></li>
+                {% else %}
+                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                {% endif %}
+
+                {% if paginator.num_pages > 30 %}
+
+                    {% if listings.number > 3 %}
+                        <li class="waves-effect"><a href='?page=1'>1</a></li>
+                        <li>...</li>
+                    {% endif %}
+
+                    {% if paginator.num_pages > page|add:"3" %}
+                    
+                        <li class="active"><a>{{ page }}</a></li>
+
+                        {% if paginator.num_pages > page|add:"1" %}
+                            <li class="waves-effect"><a href='?page={{page|add:"1"}}'>{{ page|add:"1" }}</a></li>
+                        {% endif %}
+
+                        {% if paginator.num_pages > page|add:"2" %}
+                            <li class="waves-effect"><a href='?page={{ page|add:"2"}}'>{{ page|add:"2" }}</a></li>
+                        {% endif %}
+
+                        {% if page != paginator.num_pages %}
+                            <li>...</li>
+                        {% endif %}
+
+                        <li class="waves-effect"><a href="?page={{paginator.num_pages}}">{{paginator.num_pages}}</a></li>
+                    
+                    {% else %}
+                        {% if paginator.num_pages > page %}
+                        <li class="waves-effect"><a href='?page={{page}}'>{{page}}</a></li>
+                        {% endif %}
+
+                        {% if paginator.num_pages > page|add:"1" %}
+                        <li class="waves-effect"><a href='?page={{page|add:"1"}}'>{{ page|add:"1" }}</a></li>
+                        {% endif %}
+
+                        {% if paginator.num_pages > page|add:"2" %}
+                        <li class="waves-effect"><a href='?page={{page|add:"2"}}'>{{ page|add:"2" }}</a></li>
+                        {% endif %}
+
+                        {% if paginator.num_pages > page|add:"3" %}
+                        <li class="waves-effect"><a href='?page={{page|add:"3"}}'>{{ page|add:"3" }}</a></li>
+                        {% endif %}
+
+                    {% endif %}
+                        
+                {% else %}
+                    {% for i in listings.paginator.page_range %}
+                        {% if listings.number == i %}
+                            <li class="active"><a>{{ i }}</a></li>
+                        {% else %}
+                            <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if listings.has_next %}
+                    <li class="waves-effect"><a href="?page={{ listings.next_page_number }}"><i
+                                class="material-icons">chevron_right</i></a></li>
+                {% else %}
+                        <li class="disabled"><i class="material-icons">chevron_right</i></li>
+                {% endif %}
+            </ul>
         {% endif %}
 </body>
 

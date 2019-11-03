@@ -56,7 +56,7 @@ def index(request):
     except EmptyPage:
         listings = paginator.page(paginator.num_pages)
 
-    context = { 'listings': listings}
+    context = { 'listings': listings, 'page': page, 'paginator': paginator}
     return render(request, 'index.html', context)
 
 def query_json(request):
