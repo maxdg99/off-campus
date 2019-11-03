@@ -2,6 +2,20 @@ $(document).ready(function(){
     $('select').formSelect();
 });
 
+function goToPage(page)
+{
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('page'))
+    {
+        urlParams.set('page', page);
+    }
+    else
+    {
+        urlParams.append('page', page);
+    }
+    window.location.href = window.location.pathname + '?' + urlParams.toString();
+}
+
 function restoreFilters()
 {
     const urlParams = new URLSearchParams(window.location.search);
@@ -26,6 +40,7 @@ function restoreFilters()
         $("#max-price").siblings().addClass('active');
     }
     if(urlParams.get('showNoPrice') === "true") $("#show-no-price").prop('checked', true);
+    else if(!urlParams.has('showNoPrice')) $("#show-no-price").prop('checked', true);
     else $("#show-no-price").prop('checked', false);
     $("#min-distance").val(urlParams.get('minDistance'));
     if(urlParams.get('minDistance'))

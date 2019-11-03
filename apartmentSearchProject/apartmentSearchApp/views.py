@@ -75,7 +75,7 @@ def index(request):
         x.diff_raw = x.price - avg
         x.percent_diff = f"{(x.price - avg) / avg * 100:+.0f}"
 
-    context = { 'listings': listings, 'averages': averages}
+    context = { 'listings': listings, 'averages': averages, 'paginator': paginator}
     return render(request, 'index.html', context)
 
 def query_json(request):
