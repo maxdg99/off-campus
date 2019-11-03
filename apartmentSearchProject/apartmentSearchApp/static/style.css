@@ -17,7 +17,7 @@
 }
 
 #bigmap {
-    height: 40%
+    height: 50%;
 }
 
 img {
@@ -42,4 +42,10 @@ img {
 
 .sort-by {
     background-color: #888 !important;
+    margin-top: 10px;
+}
+
+
+.full-width {
+    width: 100%;
 }
