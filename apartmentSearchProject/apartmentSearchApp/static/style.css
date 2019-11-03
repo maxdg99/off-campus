@@ -19,3 +19,15 @@
 #bigmap {
     height: 40%
 }
+
+img {
+    max-width: 300px;
+}
+
+.address {
+    font-weight: bold;
+}
+
+.pagination li.active {
+    background-color: #666666;
+}

@@ -42,33 +42,33 @@
                             <input id="bedrooms" type="number" min="0">
                             <label for="password"># Bedrooms</label>
                         </div>
-                    </div>
-                    <div class="row">
+
                         <div class="input-field col s12">
                             <input id="bathrooms" type="number" min="0">
                             <label for="password"># Bathrooms</label>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s6">
+
+                        <div class="input-field col s12">
                             <input id="min-price" type="number" min="0">
                             <label for="password">Min Price</label>
                         </div>
-                        <div class="input-field col s6">
+
+                        <div class="input-field col s12">
                             <input id="max-price" type="text" min="0">
                             <label for="password">Max Price</label>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s6">
+
+                        <div class="input-field col s12">
                             <input id="min-distance" type="number" min="0">
                             <label for="password">Min Distance</label>
                         </div>
-                        <div class="input-field col s6">
+
+                        <div class="input-field col s12">
                             <input id="max-distacne" type="number" min="0">
                             <label for="password">Max Distance</label>
                         </div>
                     </div>
+                    
                     <p id="no-price-switch">Show properties without a price</p>
                     <div class="switch">
                         <label>
@@ -81,7 +81,7 @@
                 </form>
                 <div class="row">
                     <button onclick="reloadWithParams()" class="btn waves-effect waves-light col s12" id="submit">
-                        Let's Find an Apartment!
+                        Search
                     </button>
                 </div>
             </div>
@@ -91,10 +91,10 @@
                     <thead>
                         <tr>
                             <th>Image</th>
-                            <th>Address</th>
+                            <th>Address and Link</th>
                             <th>Price</th>
-                            <th>Bedrooms</th>
-                            <th>Bathrooms</th>
+                            <th>Beds</th>
+                            <th>Baths</th>
                             <th>Map</th>
                             <th>Distance from OSU</th>
                         </tr>
@@ -110,7 +110,7 @@
                             <td>N/A</td>
                             {% endif %}
 
-                            <td><a class="address" href="{{ listing.url }}">{{ listing.address }}</a></td>
+                            <td><a class="address" href="{{ listing.url }}" target="_blank">{{ listing.address }}</a></td>
 
                             {% if listing.price %}
                             <td>${{ listing.price }}</td>
