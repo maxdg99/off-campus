@@ -83,11 +83,13 @@
                 <table class="striped">
                     <thead>
                         <tr>
-                            <th>Map</th>
+                            <th>Image</th>
                             <th>Address</th>
                             <th>Price</th>
                             <th>Bedrooms</th>
                             <th>Bathrooms</th>
+                            <th>Map</th>
+                            <th>Distance from OSU</th>
                         </tr>
                     </thead>
 
@@ -95,15 +97,35 @@
                     <tbody>
                         {% for listing in listings %}
                         <tr>
+                            {% if listing.image_url %}
+                            <td><img src="{{ listing.image_url }}" height="200"></td>
+                            {% else %}
+                            <td>N/A</td>
+                            {% endif %}
+
+                            <td><a href="{{ listing.url }}">{{ listing.address }}</a></td>
+
+                            {% if listing.price %}
+                            <td>${{ listing.price }}</td>
+                            {% else %}
+                            <td>N/A</td>
+                            {% endif %}
+                            
+                            <td>{{ listing.num_bedrooms }}</td>
+                            
+                            <td>{{ listing.num_bathrooms }}</td>
+                            
                             {% if listing.latitude and listing.longitude %}
                             <td class="map" latitude="{{ listing.latitude }}" longitude="{{ listing.longitude }}"></td>
                             {% else %}
                             <td>N/A</td>
                             {% endif %}
-                            <td>{{ listing.address }}</td>
-                            <td>${{ listing.price }}</td>
-                            <td>{{ listing.num_bedrooms }}</td>
-                            <td>{{ listing.num_bathrooms }}</td>
+                            
+                            {% if listing.miles_from_campus %}
+                            <td>{{ listing.miles_from_campus }} mi</td>
+                            {% else %}
+                            <td>N/A</td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
