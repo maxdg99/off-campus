@@ -5,6 +5,7 @@
 
     <!-- Materialize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- OpenLayers -->
     <link rel="stylesheet"
@@ -65,17 +66,17 @@
                     <div class="switch">
                         <label>
                             No
-                            <input id = "show-no-price" type="checkbox">
+                            <input id="show-no-price" type="checkbox">
                             <span class="lever"></span>
                             Yes
                         </label>
                     </div>
                 </form>
                 <div class="row">
-                        <button onclick="reloadWithParams()" class="btn waves-effect waves-light col s12" id = "submit">
-                            Let's Find an Apartment!
-                        </button>
-                    </div>
+                    <button onclick="reloadWithParams()" class="btn waves-effect waves-light col s12" id="submit">
+                        Let's Find an Apartment!
+                    </button>
+                </div>
             </div>
 
             <div class="col s10">
@@ -116,6 +117,27 @@
                 </table>
             </div>
         </div>
+        {% if listings.has_other_pages %}
+        <ul class="pagination center">
+            {% if listings.has_previous %}
+            <li class="waves-effect"><a href="?page={{ listings.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            {% endif %}
+            {% for i in listings.paginator.page_range %}
+            {% if listings.number == i %}
+            <li class="active"><a>{{ i }}</a></li>
+            {% else %}
+            <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if listings.has_next %}
+            <li class="waves-effect"><a href="?page={{ listings.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
+            {% else %}
+            <li class="disabled"><i class="material-icons">chevron_right</i></li>
+            {% endif %}
+        </ul>
+        {% endif %}
 </body>
 
 <!-- Custom JS -->

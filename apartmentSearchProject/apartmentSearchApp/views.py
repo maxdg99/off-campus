@@ -2,12 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from apartmentSearchApp.models import Listing
 
 # Create your views here.
 def index(request):
     query = request.GET
+    page = request.GET.get('page', 1)
     # beds baths minPrice maxPrice showNoPrice minDistance maxDistance
     varargs = {}
     q = Q()
@@ -37,7 +39,16 @@ def index(request):
     if "maxDistance" in query:
         q = q & Q(miles_from_campus__lte=query["maxDistance"])
 
-    listings = Listing.listings.filter(q)
+    listings_list = Listing.listings.filter(q)
+
+    paginator = Paginator(listings_list, 20)
+
+    try:
+        listings = paginator.page(page)
+    except PageNotAnInteger:
+        listings = paginator.page(1)
+    except EmptyPage:
+        listings = paginator.page(paginator.num_pages)
 
     context = { 'listings': listings }
     return render(request, 'index.html', context)
