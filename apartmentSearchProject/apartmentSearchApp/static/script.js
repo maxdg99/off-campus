@@ -13,7 +13,8 @@ function goToPage(page)
     {
         urlParams.append('page', page);
     }
-    window.location.href = window.location.pathname + '?' + urlParams.toString();
+    console.log("localhost:8000/?" + urlParams.toString());
+    window.location.href = "http://localhost:8000/?" + urlParams.toString();
 }
 
 function restoreFilters()
