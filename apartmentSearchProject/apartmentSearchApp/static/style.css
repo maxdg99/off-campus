@@ -13,9 +13,21 @@
 
 #submit {
     margin: 10px;
-    background-color: #666666;
+    background-color: #bb0000;
 }
 
 #bigmap {
     height: 40%
+}
+
+img {
+    max-width: 300px;
+}
+
+.address {
+    font-weight: bold;
+}
+
+.pagination li.active {
+    background-color: #bb0000;
 }
