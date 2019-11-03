@@ -2,13 +2,37 @@ function restoreFilters()
 {
     const urlParams = new URLSearchParams(window.location.search);
     $("#bedrooms").val(urlParams.get('beds'));
+    if(urlParams.get('beds'))
+    {
+        $("#bedrooms").siblings().addClass('active');
+    }
     $("#bathrooms").val(urlParams.get('baths'));
+    if(urlParams.get('baths'))
+    {
+        $("#bathrooms").siblings().addClass('active');
+    }
     $("#min-price").val(urlParams.get('minPrice'));
+    if(urlParams.get('minPrice'))
+    {
+        $("#min-price").siblings().addClass('active');
+    }
     $("#max-price").val(urlParams.get('maxPrice'));
+    if(urlParams.get('maxPrice'))
+    {
+        $("#max-price").siblings().addClass('active');
+    }
     if(urlParams.get('showNoPrice') === "True") $("#show-no-price").prop('checked', true);
     else $("#show-no-price").prop('checked', false);
     $("#min-distance").val(urlParams.get('minDistance'));
+    if(urlParams.get('minDistance'))
+    {
+        $("#min-distance").siblings().addClass('active');
+    }
     $("#max-distance").val(urlParams.get('maxDistance'));
+    if(urlParams.get('maxDistance'))
+    {
+        $("#max-distance").siblings().addClass('active');
+    }
 }
 
 function renderMap(mapElement, latitude, longitude) {
