@@ -178,16 +178,16 @@
                         <li>...</li>
                     {% endif %}
 
-                    {% if paginator.num_pages > page|add:"3" %}
+                    {% if paginator.num_pages > listings.number|add:"3" %}
                     
-                        <li class="active"><a>{{ page }}</a></li>
+                        <li class="active"><a>{{ listings.number }}</a></li>
 
-                        {% if paginator.num_pages > page|add:"1" %}
-                            <li class="waves-effect"><a href='?page={{page|add:"1"}}'>{{ page|add:"1" }}</a></li>
+                        {% if paginator.num_pages > listings.number|add:"1" %}
+                            <li class="waves-effect"><a onclick="goToPage({{listings.number|add:'1'}})">{{ listings.number|add:"1" }}</a></li>
                         {% endif %}
 
-                        {% if paginator.num_pages > page|add:"2" %}
-                            <li class="waves-effect"><a href='?page={{ page|add:"2"}}'>{{ page|add:"2" }}</a></li>
+                        {% if paginator.num_pages > listings.number|add:"2" %}
+                            <li class="waves-effect"><a href='?page={{ listings.number|add:"2"}}'>{{ listings.number|add:"2" }}</a></li>
                         {% endif %}
 
                         {% if page != paginator.num_pages %}
@@ -197,20 +197,20 @@
                         <li class="waves-effect"><a href="?page={{paginator.num_pages}}">{{paginator.num_pages}}</a></li>
                     
                     {% else %}
-                        {% if paginator.num_pages > page %}
-                        <li class="waves-effect"><a href='?page={{page}}'>{{page}}</a></li>
+                        {% if paginator.num_pages >= listings.number %}
+                        <li class="active"><a href='?page={{listings.number}}'>{{listings.number}}</a></li>
                         {% endif %}
 
-                        {% if paginator.num_pages > page|add:"1" %}
-                        <li class="waves-effect"><a href='?page={{page|add:"1"}}'>{{ page|add:"1" }}</a></li>
+                        {% if paginator.num_pages >= listings.number|add:"1" %}
+                        <li class="waves-effect"><a href='?page={{listings.number|add:"1"}}'>{{ listings.number|add:"1" }}</a></li>
                         {% endif %}
 
-                        {% if paginator.num_pages > page|add:"2" %}
-                        <li class="waves-effect"><a href='?page={{page|add:"2"}}'>{{ page|add:"2" }}</a></li>
+                        {% if paginator.num_pages >= listings.number|add:"2" %}
+                        <li class="waves-effect"><a href='?page={{listings.number|add:"2"}}'>{{ listings.number|add:"2" }}</a></li>
                         {% endif %}
 
-                        {% if paginator.num_pages > page|add:"3" %}
-                        <li class="waves-effect"><a href='?page={{page|add:"3"}}'>{{ page|add:"3" }}</a></li>
+                        {% if paginator.num_pages >= listings.number|add:"3" %}
+                        <li class="waves-effect"><a href='?page={{listings.number|add:"3"}}'>{{ listings.number|add:"3" }}</a></li>
                         {% endif %}
 
                     {% endif %}
@@ -220,7 +220,7 @@
                         {% if listings.number == i %}
                             <li class="active"><a>{{ i }}</a></li>
                         {% else %}
-                            <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+                            <li class="waves-effect"><a onclick = "goToPage({{i}})">{{ i }}</a></li>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
