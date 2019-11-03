@@ -167,7 +167,12 @@ function makeBigMap(results) {
     source: vectorSource
     });
 
-    
+    var popup = new ol.Overlay({
+        element: document.getElementById("popup"),
+        positioning: 'bottom-center',
+        stopEvent: true,
+        offset: [0, -50]
+      });
 
     var bigMap = new ol.Map({
         target: document.getElementById("bigmap"),
@@ -177,20 +182,13 @@ function makeBigMap(results) {
             }),
             vectorLayer
         ],
+        overlays: [popup],
         view: new ol.View({
             center: ol.proj.fromLonLat([-83.0, 40.0]),
             zoom: 14
-        })
+        }),
+        insertFirst: true
     });
-
-    var popup = new ol.Overlay({
-        element: document.getElementById("popup"),
-        positioning: 'bottom-center',
-        stopEvent: false,
-        offset: [0, -50]
-      });
-      bigMap.addOverlay(popup);
-
         // display popup on click
     bigMap.on('click', function(evt) {
         var feature = bigMap.forEachFeatureAtPixel(evt.pixel,
