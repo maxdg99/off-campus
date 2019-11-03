@@ -1,3 +1,5 @@
+$('.dropdown-trigger').dropdown();
+
 function renderMap(mapElement, latitude, longitude) {
     var map = new ol.Map({
         target: mapElement,
