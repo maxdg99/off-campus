@@ -33,7 +33,7 @@
     </nav>
 
     <div class="container-fluid">
-        <div id="bigmap">
+        <div id="bigmap" style="display: none;">
             <div id="popup"></div>
         </div>
 
@@ -83,11 +83,10 @@
 
                 <div class="input-field col s2">
                     <select>
-                        <option value="" disabled selected>Choose your option</option>
-                        <option value="1">Price Increasing</option>
-                        <option value="1">Price Decreasing</option>
-                        <option value="1">Distance Increasing</option>
-                        <option value="1">Distance Decreasing</option>
+                        <option value="distance-increasing" selected>Distance Increasing</option>
+                        <option value="distance-decreasing">Distance Decreasing</option>
+                        <option value="price-increasing">Price Increasing</option>
+                        <option value="price-decreasing">Price Decreasing</option>
                     </select>
                     <label>Sort By</label>
                 </div>
