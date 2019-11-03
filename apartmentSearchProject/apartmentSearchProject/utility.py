@@ -32,7 +32,7 @@ def getLatLong(address):
 
 def distance(lat, lon):
     clocktower = (40.0049371,-83.012978)
-    R = 6371e3 # metres
+    R = 6371e3 # meters
     loc = (lat, lon)
     clocktowerLatR = clocktower[0] / 180 * math.pi
     locLatR = lat / 180 * math.pi
@@ -44,8 +44,4 @@ def distance(lat, lon):
 
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     d = R * c
-    return d
-
-# lat, lon = getLatLong("581 Lear Road 44012")
-# print("Latitude: " + lat)
-# print("Longitude: " + lon)
+    return d * 0.000621371 # miles
