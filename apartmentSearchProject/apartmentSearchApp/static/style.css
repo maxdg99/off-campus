@@ -13,7 +13,7 @@
 
 #submit {
     margin: 10px;
-    background-color: #bb0000;
+    background-color: #888;
 }
 
 #bigmap {
@@ -30,4 +30,20 @@ img {
 
 .pagination li.active {
     background-color: #bb0000;
+}
+
+.switch label input[type=checkbox]:checked+.lever {
+    background-color: #888;
+}
+
+.switch label input[type=checkbox]:checked+.lever:after {
+    background-color: #888;
+}
+
+.sort-by {
+    background-color: #888 !important;
+}
+
+.dropdown-content li a {
+    color: #bb0000
 }
