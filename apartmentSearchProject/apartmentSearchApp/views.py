@@ -11,16 +11,17 @@ def index(request):
     # beds baths minPrice maxPrice showNoPrice minDistance maxDistance
     varargs = {}
     q = Q()
-    if "beds" in query:
+    if "beds" in query and query["beds"].isnumeric():
         q = q & Q(num_bedrooms=query["beds"])
-    if "baths" in query:
+
+    if "baths" in query and query["baths"].isnumeric():
         q = q & Q(num_bathrooms=query["baths"])
 
     
     q1 = Q()
-    if "minPrice" in query:
+    if "minPrice" in query and query["minPrice"].isnumeric():
         q1 = q1 & Q(price__gte=query["minPrice"])
-    if "maxPrice" in query:
+    if "maxPrice" in query and query["maxPrice"].isnumeric():
         q1 = q1 & Q(price__lte=query["maxPrice"])
 
     if "showNoPrice" in query:
@@ -32,9 +33,9 @@ def index(request):
 
     q = q & q1
 
-    if "minDistance" in query:
+    if "minDistance" in query and query["minDistance"].isnumeric():
         q = q & Q(miles_from_campus__gte=query["minDistance"])
-    if "maxDistance" in query:
+    if "maxDistance" in query and query["maxDistance"].isnumeric():
         q = q & Q(miles_from_campus__lte=query["maxDistance"])
 
     listings = Listing.listings.filter(q)
