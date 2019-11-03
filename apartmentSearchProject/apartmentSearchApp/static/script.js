@@ -136,10 +136,19 @@ function makeBigMap(results) {
         var latitude = l["latitude"]
         var longitude = l["longitude"]
         var address = l["address"]
+        var overlayHTML = ""
+        overlayHTML += "<a href=\""+l["url"]+"\" style=\"z-index: 1000;\"><strong>" + address + "</strong></a><div class=\"row\">";
+        overlayHTML += "<div class=\"col s6\"><p style=\"text-align: left;\">"+l["num_bedrooms"]+" bed, " + l["num_bathrooms"] + " bath</p></div>";
+        if (l["image_url"]) {
+            overlayHTML += "<div class=\"col s6\"><img style=\"text-align: right;\" src=\""+l["image_url"]+"\" width=80px></img></div></div>"
+        }
+        //overlayHTML += "<div class=\"btn\" href=\""+l["url"]+"\">b</div>";
+
+
         if (latitude && longitude) {
             var iconFeature = new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude])),
-                name: address,
+                name: overlayHTML,
                 population: 4000,
                 rainfall: 500,
                 style: iconStyle
@@ -202,7 +211,7 @@ function makeBigMap(results) {
     // change mouse cursor when over marker
     bigMap.on('pointermove', function(e) {
         if (e.dragging) {
-        $(element).popover('destroy');
+        $('#popup').tooltip('close');
         return;
         }
         var pixel = bigMap.getEventPixel(e.originalEvent);
