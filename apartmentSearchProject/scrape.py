@@ -8,6 +8,8 @@ from scrapers.scraper import Scraper
 from scrapers.hometeam import HometeamScraper
 from scrapers.northsteppe import NorthsteppeScraper
 from scrapers.veniceProperties import VenicePropertiesScraper
+from scrapers.buckeye_real_estate import BuckeyePropertiesScraper
+
 from apartmentSearchProject.utility import getLatLong, distance
 
 options = [cls for cls in Scraper.__subclasses__()]

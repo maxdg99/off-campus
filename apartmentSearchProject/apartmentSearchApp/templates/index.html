@@ -26,7 +26,7 @@
     <nav>
         <div class="nav-wrapper">
             <a href="#" class="brand-logo center">Rentify</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <ul id="nav-mobile" class="right">
                 <li><a href="#" onclick="toggleBigMap()">Toggle Large Map</a></li>
             </ul>
         </div>
@@ -34,42 +34,44 @@
 
     <div class="container-fluid">
         <div id="bigmap" style="display: none;">
-            <div id="popup"></div>
+            <div id="popup"><div class="card" id="popup-content" style="display: none;">
+                    <!-- Card Content -->
+                  </div></div>
         </div>
 
         <form action="#" onsubmit="return reloadWithParams(event)" id="filter">
             <div class="row">
-                <div class="input-field col s2">
+                <div class="input-field col l2">
                     <input id="bedrooms" type="number" min="0">
-                    <label for="password">Bedrooms</label>
+                    <label for="bedrooms">Bedrooms</label>
                 </div>
 
-                <div class="input-field col s2">
+                <div class="input-field col l2">
                     <input id="bathrooms" type="number" min="0">
-                    <label for="password">Bathrooms</label>
+                    <label for="bathrooms">Bathrooms</label>
                 </div>
 
-                <div class="input-field col s2">
+                <div class="input-field col l2">
                     <input id="min-price" type="number" min="0">
-                    <label for="password">Minimum Price</label>
+                    <label for="min-price">Minimum Price</label>
                 </div>
 
-                <div class="input-field col s2">
+                <div class="input-field col l2">
                     <input id="max-price" type="text" min="0">
-                    <label for="password">Maximum Price</label>
+                    <label for="max-price">Maximum Price</label>
                 </div>
 
-                <div class="input-field col s2">
+                <div class="input-field col l2">
                     <input id="min-distance" type="number" min="0">
-                    <label for="password">Minimum Distance</label>
+                    <label for="min-distance">Minimum Distance</label>
                 </div>
 
-                <div class="input-field col s2">
-                    <input id="max-distacne" type="number" min="0">
-                    <label for="password">Maximum Distance</label>
+                <div class="input-field col l2">
+                    <input id="max-distance" type="number" min="0">
+                    <label for="max-distance">Maximum Distance</label>
                 </div>
 
-                <div class="col s2">
+                <div class="col l2">
                     <p id="no-price-switch">Show properties without a price</p>
                     <div class="switch">
                         <label>
@@ -81,7 +83,7 @@
                     </div>
                 </div>
 
-                <div class="input-field col s2">
+                <div class="input-field col l2">
                     <select id="sort">
                         <option value="distance_increasing" selected>Distance Increasing</option>
                         <option value="distance_decreasing">Distance Decreasing</option>
@@ -91,7 +93,7 @@
                     <label>Sort By</label>
                 </div>
 
-                <div class="col s2">
+                <div class="col l2">
                     <button href="#" class="btn waves-effect waves-light full-width" id="submit">
                         Find apartments!
                     </button>
