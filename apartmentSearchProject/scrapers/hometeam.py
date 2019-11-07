@@ -3,6 +3,7 @@ import requests
 from urllib.parse import urljoin
 from scrapers.scraper import Scraper
 
+# LEAVE THIS HERE FOR HISTORICAL REASONS - WE MAY USE THIS HOMETEAM SCRAPER CUZ THEY HAVE IMAGES
 class HometeamScraper(Scraper):
     hometeamURL = "https://www.hometeamproperties.net/osu-off-campus-housing"
     northsteppeURL = "https://northsteppe.appfolio.com/listings?1572716642290&filters%5Bproperty_list%5D=All%20OSU%20Campus%20Area%20Properties&theme_color=%23194261&filters%5Border_by%5D=date_posted"

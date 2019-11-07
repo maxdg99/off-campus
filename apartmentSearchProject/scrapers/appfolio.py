@@ -3,20 +3,21 @@ from bs4 import BeautifulSoup
 import requests
 from scrapers.scraper import Scraper
 import datetime
+from urllib.parse import urljoin
 
-class BuckeyePropertiesScraper(Scraper):
+class AppfolioScraper():
 
     # URL of all properties
-    buckeyeURL = "https://buckeye.appfolio.com/listings"
+    #url = "https://ht.appfolio.com/listings"
 
     headers = {
         "User-Agent": "Mozilla/5.0"
     }
 
     # Parses listings from page
-    def process_listings(callback):
+    def process_listings(appfolioURL, callback):
         # Retrieves all information for webpage
-        ns = requests.get(url=BuckeyePropertiesScraper.buckeyeURL, headers=BuckeyePropertiesScraper.headers)
+        ns = requests.get(url=appfolioURL, headers=AppfolioScraper.headers)
         # Pulls out just the HTML Template
         nsHTML = ns.text
         # Create an HTML Scraper for the webpage
@@ -29,17 +30,22 @@ class BuckeyePropertiesScraper(Scraper):
             image = image['data-original']
 
             url = prop.find('a')
-            url = "https://buckeye.appfolio.com" + url['href']
+            url = urljoin(appfolioURL, url['href'])
 
             price = (prop.find('div', {'class':'sidebar__price rent-banner__text js-listing-blurb-rent'})).getText(strip=True)
             address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
-            bedAndBath = (prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})).getText(strip=True)
+            bb = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
+            if bb is None:
+                continue
+            bedAndBath = bb.getText(strip=True)
             bedAndBath = bedAndBath.split()
             print(bedAndBath)
-            bed = bedAndBath[0]
+            bed = 0
+            if len(bedAndBath) > 2 and bedAndBath[1] == "bd":
+                bed = bedAndBath[0]
 
             bath = 0
-            if len(bedAndBath) > 2:
+            if len(bedAndBath) > 4 and bedAndBath[4] == "ba":
                 bath = bedAndBath[3]
 
             available = (prop.find('dd', {'class':'detail-box__value js-listing-available'}))
@@ -51,12 +57,14 @@ class BuckeyePropertiesScraper(Scraper):
             else:
                 description = ""
             
-            print(address + " " + available)
+            print(address + " " + str(available))
 
             if available == "NOW":
                 avail_date = datetime.datetime.now().date()
-            else:
+            elif available:
                 avail_date = datetime.datetime.strptime(available, "%m/%d/%y").date()
+            else:
+                avail_date = None
             try:
                 price = int(price[1:].replace(",", ""))
             except:
@@ -65,3 +73,29 @@ class BuckeyePropertiesScraper(Scraper):
             d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "description": description, "availability_date": avail_date, "active": True}
             print(d)
             callback(d)
+
+
+class HometeamAppfolioScraper(Scraper):
+    url = "https://ht.appfolio.com/listings"
+    
+    def process_listings(callback):
+        AppfolioScraper.process_listings(HometeamAppfolioScraper.url, callback)
+
+class NorthsteppeScraper(Scraper):
+    url = "https://northsteppe.appfolio.com/listings?1572716642290&filters%5Bproperty_list%5D=All%20OSU%20Campus%20Area%20Properties&theme_color=%23194261&filters%5Border_by%5D=date_posted"
+    
+    def process_listings(callback):
+        AppfolioScraper.process_listings(NorthsteppeScraper.url, callback)
+
+class VeniceScraper(Scraper):
+    url = "https://veniceprops.appfolio.com/listings/listings"
+
+    def process_listings(callback):
+        AppfolioScraper.process_listings(VeniceScraper.url, callback)
+
+
+class BuckeyeScraper(Scraper):
+    url = "https://buckeye.appfolio.com/listings"
+
+    def process_listings(callback):
+        AppfolioScraper.process_listings(BuckeyeScraper.url, callback)
