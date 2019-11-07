@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import base64
 import json
+from scrapers.scraper import Scraper
+import datetime
 
 class PellaScraper(Scraper):
     baseURL = "http://pellaco.com/property-search?term_node_tid_depth=All&field_bedrooms_tid=All&page="
@@ -9,8 +11,6 @@ class PellaScraper(Scraper):
     def process_listings(callback):
         pageNumber = 0  
         isNextPage = True
-        pcProperties = []
-        numProp = 0
         while isNextPage:
             firstTime = False
             pc = requests.get(url=baseURL+str(pageNumber))
@@ -23,19 +23,27 @@ class PellaScraper(Scraper):
             if len(pcProperties) == 0:
                 isNextPage = False
             for prop in pcProperties:
-                numProp += 1
                 link = prop.find('a')['href']
                 image = prop.find('img')["src"]
                 address = prop.find('h2').getText()
+                if address.find("St") >= 0:
+                    address = address[:address.find("St")]
+                if address.find("Ave") >= 0:
+                    address = address[:address.find("Ave")]
                 if address.find("-") >= 0:
                     address = address[address.find("-"):]
                 address =  address + "Columbus Ohio 43210"
-                price = prop.find("div", {'class':'hover-details'}).findChildren("div", recursive=False)[1].getText();
+                price = prop.find("div", {'class':'hover-details'}).findChildren("div", recursive=False)[1].getText()
+                price = price[1:price.find(".")]
                 bedrooms = prop.find("div", {'class':'field-item even'}).getText()
+                bedrooms = bedrooms[:bedrooms.find(" ")]
                 pageRequest = requests.get(url=link)
                 listingHTML = pageRequest.text
                 listingSoup = BeautifulSoup(listingHTML, 'html.parser')
                 bath = listingSoup.find("div", {'class':'field field-name-field-baths field-type-taxonomy-term-reference field-label-hidden'})
                 bath = bath.find("div", {'class':'field-item even'}).getText()
                 bath = bath[0:bath.find(" ")]
+            d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": None, "active": True}
+            print(d)
+            callback(d)
             
