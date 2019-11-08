@@ -15,14 +15,14 @@ class PellaScraper(Scraper):
             firstTime = False
             pc = requests.get(url=baseURL+str(pageNumber))
             pageNumber+=1
-            pcHTML = pc.text
-            pcSoup = BeautifulSoup(pcHTML, 'html.parser')
-            pcProperties = pcSoup.find_all('div', {'class':'four columns views-column-1'})
-            pcProperties.extend(pcSoup.find_all('div', {'class':'four columns views-column-2'}))
-            pcProperties.extend(pcSoup.find_all('div', {'class':'four columns views-column-3'}))
-            if len(pcProperties) == 0:
+            html = request.text
+            soup = BeautifulSoup(html, 'html.parser')
+            properties = soup.find_all('div', {'class':'four columns views-column-1'})
+            properties.extend(soup.find_all('div', {'class':'four columns views-column-2'}))
+            properties.extend(soup.find_all('div', {'class':'four columns views-column-3'}))
+            if len(properties) == 0:
                 isNextPage = False
-            for prop in pcProperties:
+            for prop in properties:
                 link = prop.find('a')['href']
                 image = prop.find('img')["src"]
                 address = prop.find('h2').getText()
@@ -43,7 +43,7 @@ class PellaScraper(Scraper):
                 bath = listingSoup.find("div", {'class':'field field-name-field-baths field-type-taxonomy-term-reference field-label-hidden'})
                 bath = bath.find("div", {'class':'field-item even'}).getText()
                 bath = bath[0:bath.find(" ")]
-            d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": None, "active": True}
-            print(d)
-            callback(d)
+                d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": datetime.datetime.now().date()one, "active": True}
+                print(d)
+                callback(d)
             
