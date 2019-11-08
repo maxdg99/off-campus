@@ -43,7 +43,7 @@ class PellaScraper(Scraper):
                 bath = listingSoup.find("div", {'class':'field field-name-field-baths field-type-taxonomy-term-reference field-label-hidden'})
                 bath = bath.find("div", {'class':'field-item even'}).getText()
                 bath = bath[0:bath.find(" ")]
-                d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": datetime.datetime.now().date()one, "active": True}
+                d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": datetime.datetime.now().date(), "active": True}
                 print(d)
                 callback(d)
             
