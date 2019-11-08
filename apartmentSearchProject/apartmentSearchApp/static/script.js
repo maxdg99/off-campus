@@ -119,12 +119,19 @@ function oneVal(num) {
     return num >= 0 || num.length === 0;
 }
 
+// this code is jank af
 function twoVal(one, two) {
+    var oneNum = parseInt(one)
+    var twoNum = parseInt(two)
+    if ((oneNum.length > 0 && oneNum == NaN) || (twoNum.length > 0 && twoNum == NaN)) {
+        // they entered something but it was invalid
+        return false
+    }
     if(one.length === 0 && two.length === 0)
     {
         return true;
     }
-    else if(one >= 0 && two.length === 0)
+    else if(one.length > 0 && two.length === 0)
     {
         return true;
     }
@@ -132,7 +139,7 @@ function twoVal(one, two) {
     {
         return true;
     }
-    else if(one.length > 0 && two.length > 0 && one >= 0 && two > 0 && one < two)
+    else if(one.length > 0 && two.length > 0 && oneNum >= 0 && twoNum > 0 && oneNum < twoNum)
     {
         return true;
     }

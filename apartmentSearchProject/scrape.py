@@ -5,10 +5,8 @@ import json
 from urllib.parse import urljoin
 from apartmentSearchApp.models import Listing
 from scrapers.scraper import Scraper
-from scrapers.hometeam import HometeamScraper
-from scrapers.northsteppe import NorthsteppeScraper
-from scrapers.veniceProperties import VenicePropertiesScraper
-from scrapers.buckeye_real_estate import BuckeyePropertiesScraper
+from scrapers.appfolio import BuckeyeScraper # this imports all of the appfolio scrapers idk why
+from scrapers.pella import PellaScraper
 
 from apartmentSearchProject.utility import getLatLong, distance
 
@@ -39,6 +37,10 @@ def insert_listing_from_dict(l):
         # Get lat long
         l["latitude"], l["longitude"] = getLatLong(l["address"])
         print(f'{l["latitude"]} {l["longitude"]}')
+
+        if l["latitude"] is not None:
+            obj.miles_from_campus = round(distance(obj["latitude"], obj["longitude"]), 2)
+            print("\t\tDistance: "+str(distance(obj["latitude"], obj["longitude"])))
 
         obj = Listing(**l)
         obj.save()

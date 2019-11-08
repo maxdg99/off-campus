@@ -1,7 +1,7 @@
 {% load static %}
 
 <head>
-    <title>Rentify</title>
+    <title>Off Campus</title>
 
     <!-- Materialize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -25,7 +25,7 @@
 <body onload="restoreFilters()">
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo center">Rentify</a>
+            <a href="#" class="brand-logo center">Off Campus</a>
             <ul id="nav-mobile" class="right">
                 <li><a href="#" onclick="toggleBigMap()">Toggle Large Map</a></li>
             </ul>
@@ -34,9 +34,11 @@
 
     <div class="container-fluid">
         <div id="bigmap" style="display: none;">
-            <div id="popup"><div class="card" id="popup-content" style="display: none;">
+            <div id="popup">
+                <div class="card" id="popup-content" style="display: none;">
                     <!-- Card Content -->
-                  </div></div>
+                </div>
+            </div>
         </div>
 
         <form action="#" onsubmit="return reloadWithParams(event)" id="filter">
@@ -130,7 +132,9 @@
                             </td>
 
                             {% if listing.price and listing.percent_diff is not None %}
-                            <td>${{ listing.price }} <br>{% if listing.diff_raw <= 0 %}<span class="new badge" data-badge-caption="vs. avg">{% else %}<span class="new badge red" data-badge-caption="vs. avg">{% endif %}{{ listing.percent_diff }}%</span></td>
+                            <td>${{ listing.price }} <br>{% if listing.diff_raw <= 0 %}<span class="new badge"
+                                    data-badge-caption="vs. avg">{% else %}<span class="new badge red"
+                                        data-badge-caption="vs. avg">{% endif %}{{ listing.percent_diff }}%</span></td>
                             {% elif listing.price %}
                             <td>${{ listing.price }}</td>
                             {% else %}
@@ -166,77 +170,86 @@
             </div>
         </div>
         {% if listings.has_other_pages %}
-            <ul class="pagination center">
+        <ul class="pagination center">
 
-                {% if listings.has_previous %}
-                    <li class="waves-effect"><a onclick="goToPage({{listings.previous_page_number}})"><i
-                            class="material-icons">chevron_left</i></a></li>
-                {% else %}
-                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                {% endif %}
+            {% if listings.has_previous %}
+            <li class="waves-effect"><a onclick="goToPage({{listings.previous_page_number}})"><i
+                        class="material-icons">chevron_left</i></a></li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            {% endif %}
 
-                {% if paginator.num_pages > 10 %}
+            {% if paginator.num_pages > 10 %}
 
-                    {% if listings.number > 1 %}
-                        <li class="waves-effect"><a onclick="goToPage(1)">1</a></li>
-                        <li>...</li>
-                    {% endif %}
+            {% if listings.number > 1 %}
+            <li class="waves-effect"><a onclick="goToPage(1)">1</a></li>
+            <li>...</li>
+            {% endif %}
 
-                    {% if paginator.num_pages > listings.number|add:"3" %}
-                    
-                        <li class="active"><a>{{ listings.number }}</a></li>
+            {% if paginator.num_pages > listings.number|add:"3" %}
 
-                        {% if paginator.num_pages > listings.number|add:"1" %}
-                            <li class="waves-effect"><a onclick="goToPage({{listings.number|add:'1'}})">{{ listings.number|add:"1" }}</a></li>
-                        {% endif %}
+            <li class="active"><a>{{ listings.number }}</a></li>
 
-                        {% if paginator.num_pages > listings.number|add:"2" %}
-                            <li class="waves-effect"><a onclick='goToPage({{ listings.number|add:"2"}})'>{{ listings.number|add:"2" }}</a></li>
-                        {% endif %}
+            {% if paginator.num_pages > listings.number|add:"1" %}
+            <li class="waves-effect"><a
+                    onclick="goToPage({{listings.number|add:'1'}})">{{ listings.number|add:"1" }}</a></li>
+            {% endif %}
 
-                        {% if page != paginator.num_pages %}
-                            <li>...</li>
-                        {% endif %}
+            {% if paginator.num_pages > listings.number|add:"2" %}
+            <li class="waves-effect"><a
+                    onclick='goToPage({{ listings.number|add:"2"}})'>{{ listings.number|add:"2" }}</a></li>
+            {% endif %}
 
-                        <li class="waves-effect" onclick='goToPage({{paginator.num_pages}})'><a>{{paginator.num_pages}}</a></li>
-                    
-                    {% else %}
-                        {% if paginator.num_pages >= listings.number %}
-                        <li class="active"><a onclick='goToPage({{listings.number}})'>{{listings.number}}</a></li>
-                        {% endif %}
+            {% if page != paginator.num_pages %}
+            <li>...</li>
+            {% endif %}
 
-                        {% if paginator.num_pages >= listings.number|add:"1" %}
-                        <li class="waves-effect"><a onclick='goToPage({{listings.number|add:"1"}})'>{{ listings.number|add:"1" }}</a></li>
-                        {% endif %}
+            <li class="waves-effect" onclick='goToPage({{paginator.num_pages}})'><a>{{paginator.num_pages}}</a></li>
 
-                        {% if paginator.num_pages >= listings.number|add:"2" %}
-                        <li class="waves-effect"><a onclick='goToPage({{listings.number|add:"2"}})'>{{ listings.number|add:"2" }}</a></li>
-                        {% endif %}
+            {% else %}
+            {% if paginator.num_pages >= listings.number %}
+            <li class="active"><a onclick='goToPage({{listings.number}})'>{{listings.number}}</a></li>
+            {% endif %}
 
-                        {% if paginator.num_pages >= listings.number|add:"3" %}
-                        <li class="waves-effect" onclick='goToPage({{listings.number|add:"3"}})'><a >{{ listings.number|add:"3" }}</a></li>
-                        {% endif %}
+            {% if paginator.num_pages >= listings.number|add:"1" %}
+            <li class="waves-effect"><a
+                    onclick='goToPage({{listings.number|add:"1"}})'>{{ listings.number|add:"1" }}</a></li>
+            {% endif %}
 
-                    {% endif %}
-                        
-                {% else %}
-                    {% for i in listings.paginator.page_range %}
-                        {% if listings.number == i %}
-                            <li class="active"><a>{{ i }}</a></li>
-                        {% else %}
-                            <li class="waves-effect"><a onclick = "goToPage({{i}})">{{ i }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+            {% if paginator.num_pages >= listings.number|add:"2" %}
+            <li class="waves-effect"><a
+                    onclick='goToPage({{listings.number|add:"2"}})'>{{ listings.number|add:"2" }}</a></li>
+            {% endif %}
 
-                {% if listings.has_next %}
-                    <li class="waves-effect" onclick='goToPage({{listings.next_page_number}})'><a><i
-                                class="material-icons">chevron_right</i></a></li>
-                {% else %}
-                        <li class="disabled"><i class="material-icons">chevron_right</i></li>
-                {% endif %}
-            </ul>
+            {% if paginator.num_pages >= listings.number|add:"3" %}
+            <li class="waves-effect" onclick='goToPage({{listings.number|add:"3"}})'>
+                <a>{{ listings.number|add:"3" }}</a></li>
+            {% endif %}
+
+            {% endif %}
+
+            {% else %}
+            {% for i in listings.paginator.page_range %}
+            {% if listings.number == i %}
+            <li class="active"><a>{{ i }}</a></li>
+            {% else %}
+            <li class="waves-effect"><a onclick="goToPage({{i}})">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+            {% if listings.has_next %}
+            <li class="waves-effect" onclick='goToPage({{listings.next_page_number}})'><a><i
+                        class="material-icons">chevron_right</i></a></li>
+            {% else %}
+            <li class="disabled"><i class="material-icons">chevron_right</i></li>
+            {% endif %}
+        </ul>
         {% endif %}
+
+        <footer class="center">
+            &copy; 2019 Max Gruber, Andrew Haberlandt, Adam Lis
+        </footer>
 </body>
 
 <!-- Custom JS -->
