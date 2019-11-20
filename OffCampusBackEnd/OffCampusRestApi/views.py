@@ -52,7 +52,7 @@ def getAllListings(request):
 
 def __getFilteredListings(request):
     queryParams = request.GET
-    listingsFilter = Q()
+    listingsFilter = Q(active=True)
 
     # Parses beds and baths
     if "beds" in queryParams and queryParams["beds"].isnumeric():

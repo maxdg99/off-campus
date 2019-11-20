@@ -39,8 +39,8 @@ def insert_listing_from_dict(l):
         print(f'{l["latitude"]} {l["longitude"]}')
 
         if l["latitude"] is not None:
-            obj.miles_from_campus = round(distance(obj["latitude"], obj["longitude"]), 2)
-            print("\t\tDistance: "+str(distance(obj["latitude"], obj["longitude"])))
+            l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)
+            print("\t\tDistance: "+str(distance(l["latitude"], l["longitude"])))
 
         obj = Listing(**l)
         obj.save()
@@ -49,6 +49,10 @@ def insert_listing_from_dict(l):
         print("multiple returned for: "+l["address"])
 
 
-for o in options:
-    o.process_listings(insert_listing_from_dict)
+def scrape():
+    Listing.listings.all().update(active=False)
+    for o in options:
+        o.process_listings(insert_listing_from_dict)
+
+scrape()
     
