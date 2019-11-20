@@ -5,8 +5,8 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core import serializers
 
-from apartmentSearchApp.models import Listing
-from apartmentSearchApp.compute_averages import compute_averages
+from OffCampusRestApi.models import Listing
+from OffCampusRestApi.compute_averages import compute_averages
 
 averages = compute_averages()
 

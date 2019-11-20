@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from urllib.parse import urljoin
-from scrapers.scraper import Scraper
+from OffCampusWebScrapers.scraper import Scraper
 
 # LEAVE THIS HERE FOR HISTORICAL REASONS - WE MAY USE THIS HOMETEAM SCRAPER CUZ THEY HAVE IMAGES
 class HometeamScraper(Scraper):

@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import base64
 import json
-from scrapers.scraper import Scraper
+from OffCampusWebScrapers.scraper import Scraper
 import datetime
 import re
 

@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core import serializers
 
 
-from apartmentSearchApp.models import Listing
+from OffCampusRestApi.models import Listing
 
 def compute_averages():
     d = {}

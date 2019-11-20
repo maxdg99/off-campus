@@ -1,7 +1,7 @@
 # Imports
 from bs4 import BeautifulSoup
 import requests
-from scrapers.scraper import Scraper
+from OffCampusWebScrapers.scraper import Scraper
 import datetime
 from urllib.parse import urljoin
 

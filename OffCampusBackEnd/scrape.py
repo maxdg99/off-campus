@@ -3,12 +3,12 @@ import requests
 import base64
 import json
 from urllib.parse import urljoin
-from apartmentSearchApp.models import Listing
-from scrapers.scraper import Scraper
-from scrapers.appfolio import BuckeyeScraper # this imports all of the appfolio scrapers idk why
-from scrapers.pella import PellaScraper
+from OffCampusRestApi.models import Listing
+from OffCampusWebScrapers.scraper import Scraper
+from OffCampusWebScrapers.appfolio import BuckeyeScraper # this imports all of the appfolio scrapers idk why
+from OffCampusWebScrapers.pella import PellaScraper
 
-from apartmentSearchProject.utility import getLatLong, distance
+from OffCampusBackEnd.utility import getLatLong, distance
 
 options = [cls for cls in Scraper.__subclasses__()]
 
