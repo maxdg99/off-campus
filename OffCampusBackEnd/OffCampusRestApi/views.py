@@ -26,7 +26,9 @@ def getSearchListingsPage(request):
 
 def getPaginatedListings(request):
     listings = __getPaginatedListings(request)
-    return HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    __allowCors(response)
+    return response
 
 
 # TODO: change page to pageNumber and add pageSize query parameter
@@ -47,7 +49,15 @@ def __getPaginatedListings(request):
 
 def getAllListings(request):
     listings = Listing.listings.all()
-    return HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    __allowCors(response)
+    return response
+
+def __allowCors(response):
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
 
 
 def __getFilteredListings(request):

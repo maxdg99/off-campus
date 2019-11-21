@@ -61,8 +61,9 @@
 
     <div class="uk-container">
       <div class="uk-grid uk-grid-small">
-        <div v-for="x in searchResults" class="uk-width-1-1@s uk-width-1-2@m">
-          <Listing v-bind:msg="x"/>
+        <div v-for="x in searchResults" class="uk-width-1-1@s uk-width-1-2@m" v-bind:key="x.pk">
+          <!-- <a v-bind:msg="x.pk">test</a> -->
+          <Listing v-bind:msg="x.fields.toString()"/>
         </div>
       </div>
     </div>
@@ -80,12 +81,12 @@ export default {
   },
   data: function() {
     return {
-      searchResults: [1, 2, 3, 4, 5]
+      searchResults: []
     };
   },
-  // mounted: function() {
-  //   this.search();
-  // },
+  mounted: function() {
+    this.search();
+  },
   methods: {
     search: function() {
       axios({
@@ -94,6 +95,7 @@ export default {
       }).then(
         result => {
           this.searchResults = result.data;
+          console.log(this.searchResults.length)
         },
         error => {
           console.error(error);
