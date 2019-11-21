@@ -20,6 +20,9 @@ def insert_listing_from_dict(l):
         obj = Listing.listings.get(address=l["address"])
         print("exists: "+l["address"])
 
+        # Set updated date
+        obj.date_updated = datetime.datetime.now().date()
+        
         if (obj.latitude is None):
             # Get lat long
             l["latitude"], l["longitude"] = getLatLong(l["address"])
@@ -43,6 +46,10 @@ def insert_listing_from_dict(l):
             print("\t\tDistance: "+str(distance(l["latitude"], l["longitude"])))
 
         obj = Listing(**l)
+
+        # Set created date
+        obj.date_created = datetime.datetime.now().date()
+
         obj.save()
 
     except Listing.MultipleObjectsReturned:

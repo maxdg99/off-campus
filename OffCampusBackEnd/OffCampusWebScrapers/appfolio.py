@@ -70,7 +70,7 @@ class AppfolioScraper():
             except:
                 price = -1
 
-            d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "description": description, "availability_date": avail_date, "active": True}
+            d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "availability_date": avail_date, "availability_mode": 'Date', "listed": True, "description": description}
             print(d)
             callback(d)
 
