@@ -1,32 +1,35 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <nav class="uk-navbar-container uk-margin" uk-navbar>
+      <div class="uk-navbar-left">
+        <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
+        <ul class="uk-navbar-nav">
+          <li>
+            <router-link to="/search">Search</router-link>
+          </li>
+        </ul>
+      </div>
+      <div class="uk-navbar-right">
+        <div class="uk-navbar-item">
+          <form>
+            <button class="uk-button uk-button-default">Log In</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <router-view />
   </div>
 </template>
 
+<script>
+import UIkit from "uikit";
+import Icons from "uikit/dist/js/uikit-icons";
+UIkit.use(Icons);
+export default {
+  name: "App"
+};
+</script>
+
 <style lang="less">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+@import "../node_modules/uikit/src/less/uikit.less";
 </style>
