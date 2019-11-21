@@ -26,5 +26,5 @@ def compute_averages():
             sum += l.price
         avg = sum / len(listings)
         averages[key] = avg
-        print(str(key)+": "+str(avg)+" - "+str(p))
+        #print(str(key)+": "+str(avg)+" - "+str(p))
     return averages

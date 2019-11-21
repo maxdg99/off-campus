@@ -53,6 +53,4 @@ def scrape():
     Listing.listings.all().update(active=False)
     for o in options:
         o.process_listings(insert_listing_from_dict)
-
-scrape()
     
