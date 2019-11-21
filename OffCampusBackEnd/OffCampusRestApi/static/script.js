@@ -2,6 +2,36 @@ $(document).ready(function(){
     $('select').formSelect();
 });
 
+$(document).ready(function(){
+    $.ajax({
+
+    })
+});
+
+$('#signinButton').click(function() {
+    auth2.grantOfflineAccess().then(signInCallback);
+});
+
+function signInCallback(authResult) {
+  if (authResult['code']) {
+    $.ajax({
+      type: 'POST',
+      url: 'http://example.com/storeauthcode',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+          
+      },
+      processData: false,
+      data: authResult['code']
+    });
+  } else {
+
+  }
+}
+
 function goToPage(page)
 {
     const urlParams = new URLSearchParams(window.location.search);
