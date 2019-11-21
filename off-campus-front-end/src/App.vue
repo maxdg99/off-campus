@@ -22,6 +22,11 @@
   </div>
 </template>
 
+<style lang="less">
+@import "../node_modules/uikit/src/less/uikit.less";
+@import "../node_modules/uikit/src/less/uikit.less";
+</style>
+
 <script>
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
@@ -30,7 +35,3 @@ export default {
   name: "App"
 };
 </script>
-
-<style lang="less">
-@import "../node_modules/uikit/src/less/uikit.less";
-</style>

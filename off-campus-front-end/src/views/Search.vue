@@ -61,9 +61,9 @@
 
     <div class="uk-container">
       <div class="uk-grid uk-grid-small">
-        <div v-for="x in searchResults" class="uk-width-1-1@s uk-width-1-2@m" v-bind:key="x.pk">
+        <div v-for="listing in searchResults" class="uk-width-1-1@s uk-width-1-2@m" v-bind:key="listing.pk">
           <!-- <a v-bind:msg="x.pk">test</a> -->
-          <Listing v-bind:msg="x.fields.toString()"/>
+          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields"/>
         </div>
       </div>
     </div>
