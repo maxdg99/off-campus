@@ -52,11 +52,54 @@
         </div>
 
         <div>
-          <button class="uk-button uk-button-default">Submit</button>
+          <button class="uk-button uk-button-default" v-on:click="search">Search</button>
         </div>
       </form>
     </div>
 
-    <div class="uk-container">SEARCH RESULTS</div>
+    <br>
+
+    <div class="uk-container">
+      <div class="uk-grid uk-grid-small">
+        <div v-for="x in searchResults" class="uk-width-1-1@s uk-width-1-2@m">
+          <Listing v-bind:msg="x"/>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+import Listing from "@/components/Listing.vue";
+
+export default {
+  name: "search",
+  components: {
+    Listing
+  },
+  data: function() {
+    return {
+      searchResults: [1, 2, 3, 4, 5]
+    };
+  },
+  // mounted: function() {
+  //   this.search();
+  // },
+  methods: {
+    search: function() {
+      axios({
+        method: "GET",
+        url: "http://localhost:8000/paginatedListings"
+      }).then(
+        result => {
+          this.searchResults = result.data;
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    }
+  }
+};
+</script>
