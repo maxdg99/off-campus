@@ -35,8 +35,7 @@ export default {
     listing: Object
   },
   mounted: function() {
-    console.log(this.id);
-    console.log(this.listing);
+
   }
 };
 </script>

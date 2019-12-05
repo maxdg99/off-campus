@@ -4,37 +4,37 @@
       <form class="uk-grid">
         <div class="uk-width-medium">
           <label for="bedrooms">Bedrooms</label>
-          <input class="uk-input" id="bedrooms" type="number" min="0" />
+          <input class="uk-input" id="bedrooms" type="number" min="0" v-model="bedrooms" />
         </div>
 
         <div class="uk-width-medium">
           <label for="bathrooms">Bathrooms</label>
-          <input class="uk-input" id="bathrooms" type="number" min="0" />
+          <input class="uk-input" id="bathrooms" type="number" min="0" v-model="bathrooms" />
         </div>
 
         <div class="uk-width-medium">
           <label for="min-price">Minimum Price</label>
-          <input class="uk-input" id="min-price" type="number" min="0" />
+          <input class="uk-input" id="min-price" type="number" min="0" v-model="min_price" />
         </div>
 
         <div class="uk-width-medium">
           <label for="max-price">Maximum Price</label>
-          <input class="uk-input" id="max-price" type="number" min="0" />
+          <input class="uk-input" id="max-price" type="number" min="0" v-model="max_price" />
         </div>
 
         <div class="uk-width-medium">
           <label for="min-distance">Minimum Distance</label>
-          <input class="uk-input" id="min-distance" type="number" min="0" />
+          <input class="uk-input" id="min-distance" type="number" min="0" v-model="min_dist" />
         </div>
 
         <div class="uk-width-medium">
           <label for="max-distance">Maximum Distance</label>
-          <input class="uk-input" id="max-distance" type="number" min="0" />
+          <input class="uk-input" id="max-distance" type="number" min="0" v-model="max_dist" />
         </div>
 
         <div class="uk-margin uk-width-medium">
           <label>
-            <input class="uk-checkbox" type="checkbox" />
+            <input class="uk-checkbox" type="checkbox" v-model="show_without_price" />
             Show properties without a price
           </label>
         </div>
@@ -42,7 +42,7 @@
         <div class="uk-width-medium">
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
-            <select class="uk-select" id="sort">
+            <select class="uk-select" id="sort" v-model="sort">
               <option value="distance_increasing" selected>Distance Increasing</option>
               <option value="distance_decreasing">Distance Decreasing</option>
               <option value="price_increasing">Price Increasing</option>
@@ -81,7 +81,15 @@ export default {
   },
   data: function() {
     return {
-      searchResults: []
+      searchResults: [],
+      bedrooms: "",
+      bathrooms: "",
+      min_price: "",
+      max_price: "",
+      min_dist: "",
+      max_dist: "",
+      sort: "distance_increasing",
+      show_without_price: true
     };
   },
   mounted: function() {
@@ -89,9 +97,11 @@ export default {
   },
   methods: {
     search: function() {
+
       axios({
         method: "GET",
-        url: "http://localhost:8000/paginatedListings"
+        url: "http://localhost:8000/paginatedListings",
+        params: {beds: this.bedrooms, baths: this.bathrooms, minPrice: this.min_price, maxPrice: this.max_price, minDistance: this.min_dist, maxDistance: this.max_dist, showNoPrice: this.show_without_price, order: this.sort}
       }).then(
         result => {
           this.searchResults = result.data;
