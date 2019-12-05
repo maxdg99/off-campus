@@ -24,7 +24,7 @@
 
 <style lang="less">
 @import "../node_modules/uikit/src/less/uikit.less";
-@import "../node_modules/uikit/src/less/uikit.less";
+@import "../node_modules/uikit/src/less/uikit.theme.less";
 </style>
 
 <script>
