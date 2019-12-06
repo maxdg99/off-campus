@@ -77,7 +77,8 @@
     :active-class="'uk-active'"
     :disabled-class="'uk-disabled'"
     :prev-text="'<span uk-pagination-previous></span>'"
-    :next-text="'<span uk-pagination-next></span>'">
+    :next-text="'<span uk-pagination-next></span>'"
+    onclick="window.scroll({ top: 0, left: 0, behavior: 'smooth' });">
   </Paginate>
   </div>
 </template>
@@ -85,7 +86,7 @@
 <script>
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
-import Paginate from 'vuejs-paginate'
+import Paginate from 'vuejs-paginate';
 
 export default {
   name: "search",
