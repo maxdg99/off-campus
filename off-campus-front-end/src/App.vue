@@ -17,7 +17,7 @@
         </div>
       </div>
     </nav>
-    <router-view />
+    <router-view/>
     <footer class="uk-text-center">&copy; 2019 Max Gruber, Andrew Haberlandt, Adam Lis</footer>
   </div>
 </template>
