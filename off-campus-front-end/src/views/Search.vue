@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <div class="uk-container">
-      <form uk-grid>
+      <form uk-grid onsubmit="return false;">
         <div class="uk-width-1-2@s uk-width-1-4@m">
           <label for="bedrooms">Bedrooms</label>
           <input class="uk-input" id="bedrooms" type="number" min="0" v-model="bedrooms" />
@@ -52,7 +52,7 @@
         </div>
 
         <div>
-          <button class="uk-button uk-button-default" v-on:click="search">Search</button>
+          <button class="uk-button uk-button-default" v-on:click="search" href="#">Search</button>
         </div>
       </form>
     </div>
