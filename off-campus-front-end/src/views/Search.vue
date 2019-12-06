@@ -67,17 +67,32 @@
         </div>
       </div>
     </div>
+      <Paginate
+    v-model="page"
+    :page-count="20"
+    :page-range="3"
+    :margin-pages="2"
+    :click-handler="search"
+    :container-class="'uk-pagination uk-flex-center'"
+    :page-class="''"
+    :active-class="'uk-active'"
+    :disabled-class="'uk-disabled'"
+    :prev-text="'<span uk-pagination-previous></span>'"
+    :next-text="'<span uk-pagination-next></span>'">
+  </Paginate>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
+import Paginate from 'vuejs-paginate'
 
 export default {
   name: "search",
   components: {
-    Listing
+    Listing,
+    Paginate
   },
   data: function() {
     return {
@@ -89,7 +104,8 @@ export default {
       min_dist: "",
       max_dist: "",
       sort: "distance_increasing",
-      show_without_price: true
+      show_without_price: true,
+      page: 1
     };
   },
   mounted: function() {
@@ -101,7 +117,7 @@ export default {
       axios({
         method: "GET",
         url: "http://localhost:8000/paginatedListings",
-        params: {beds: this.bedrooms, baths: this.bathrooms, minPrice: this.min_price, maxPrice: this.max_price, minDistance: this.min_dist, maxDistance: this.max_dist, showNoPrice: this.show_without_price, order: this.sort}
+        params: {page: this.page, beds: this.bedrooms, baths: this.bathrooms, minPrice: this.min_price, maxPrice: this.max_price, minDistance: this.min_dist, maxDistance: this.max_dist, showNoPrice: this.show_without_price, order: this.sort}
       }).then(
         result => {
           this.searchResults = result.data;
