@@ -47,6 +47,7 @@
   margin-left: 20%;
   margin-right: 10%;
   font-size: 1.125em;
+  color: black;
 }
 
 .listing-info-row {

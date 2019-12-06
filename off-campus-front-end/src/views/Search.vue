@@ -52,7 +52,7 @@
         </div>
 
         <div>
-          <button class="uk-button uk-button-default" v-on:click="search" href="#">Search</button>
+          <button class="uk-button uk-button-primary" v-on:click="search" v-bind:disabled="searching" href="#">Search</button>
         </div>
       </form>
     </div>
@@ -95,6 +95,7 @@ export default {
   },
   data: function() {
     return {
+      searching: false,
       searchResults: [],
       bedrooms: "",
       bathrooms: "",
@@ -113,19 +114,20 @@ export default {
   },
   methods: {
     search: function() {
-
+      this.searching = true;
       axios({
         method: "GET",
         url: "http://localhost:8000/paginatedListings",
         params: {page: this.page, beds: this.bedrooms, baths: this.bathrooms, minPrice: this.min_price, maxPrice: this.max_price, minDistance: this.min_dist, maxDistance: this.max_dist, showNoPrice: this.show_without_price, order: this.sort}
       }).then(
         result => {
-          this.page_count = result.data.page_count
+          this.page_count = result.data.page_count;
           this.searchResults = result.data.listings;
-          console.log(this.searchResults.length)
+          this.searching = false;
         },
         error => {
           console.error(error);
+          this.searching = false;
         }
       );
     }

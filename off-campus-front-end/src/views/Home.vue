@@ -1,20 +1,16 @@
 <template>
   <div class="home">
     <div class="uk-container uk-text-center">
-      <img alt="Vue logo" src="../assets/logo.png" />
-      <HelloWorld msg="Welcome to Your Vue.js App" />
+      <h3>Welcome to Off Campus!</h3>
+      <p>Searching for off campus housing doesn't have to be difficult. That's why we made this website: to make finding housing easier for students like you. We aggregate data from multiple property companies and allow you to search and sort that property data. Say goodbye to endlessly scrolling through property company websites.</p>
+      <router-link to="/search" tag="button" class="uk-button uk-button-primary">Search Now</router-link>
     </div>
+    <br>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
-  name: "home",
-  components: {
-    HelloWorld
-  }
+  name: "home"
 };
 </script>
