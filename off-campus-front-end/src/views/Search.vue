@@ -1,45 +1,45 @@
 <template>
   <div class="search">
     <div class="uk-container">
-      <form uk-grid onsubmit="return false;">
-        <div class="uk-width-1-2@s uk-width-1-4@m">
+      <form class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m" uk-grid onsubmit="return false;">
+        <div>
           <label for="bedrooms">Bedrooms</label>
           <input class="uk-input" id="bedrooms" type="number" min="0" v-model="bedrooms" />
         </div>
 
-        <div class="uk-width-1-2@s uk-width-1-4@m">
+        <div>
           <label for="bathrooms">Bathrooms</label>
           <input class="uk-input" id="bathrooms" type="number" min="0" v-model="bathrooms" />
         </div>
 
-        <div class="uk-width-1-2@s uk-width-1-4@m">
+        <div>
           <label for="min-price">Minimum Price</label>
           <input class="uk-input" id="min-price" type="number" min="0" v-model="min_price" />
         </div>
 
-        <div class="uk-width-1-2@s uk-width-1-4@m">
+        <div>
           <label for="max-price">Maximum Price</label>
           <input class="uk-input" id="max-price" type="number" min="0" v-model="max_price" />
         </div>
 
-        <div class="uk-width-1-2@s uk-width-1-4@m">
+        <div>
           <label for="min-distance">Minimum Distance</label>
           <input class="uk-input" id="min-distance" type="number" min="0" v-model="min_dist" />
         </div>
 
-        <div class="uk-width-1-2@s uk-width-1-4@m">
+        <div>
           <label for="max-distance">Maximum Distance</label>
           <input class="uk-input" id="max-distance" type="number" min="0" v-model="max_dist" />
         </div>
 
-        <div class="uk-margin uk-width-1-2@s uk-width-1-4@m">
+        <div class="uk-margin search-filter-checkbox">
           <label>
             <input class="uk-checkbox" type="checkbox" v-model="show_without_price" />
             Show properties without a price
           </label>
         </div>
 
-        <div class="uk-width-1-2@s uk-width-1-4@m">
+        <div>
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
             <select class="uk-select" id="sort" v-model="sort">
@@ -82,6 +82,19 @@
   </Paginate>
   </div>
 </template>
+
+<style scoped>
+@media (max-width: 639px) {
+  .search-filter-checkbox {
+    margin-bottom: 0;
+  }
+}
+@media (min-width: 640px) {
+  .search-filter-checkbox {
+    padding-top: 15px;
+  }
+}
+</style>
 
 <script>
 import axios from "axios";
