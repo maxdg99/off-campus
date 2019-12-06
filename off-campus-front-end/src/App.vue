@@ -3,7 +3,7 @@
     <nav class="uk-navbar-container uk-margin" uk-navbar>
       <div class="uk-navbar-left">
         <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
-        <ul class="uk-navbar-nav">
+        <ul class="uk-navbar-nav uk-visible@s">
           <li>
             <router-link to="/search">Search</router-link>
           </li>
@@ -12,7 +12,7 @@
       <div class="uk-navbar-right">
         <div class="uk-navbar-item">
           <form>
-            <button class="uk-button uk-button-default">Log In</button>
+            <button class="uk-button uk-button-default" disabled>Log In</button>
           </form>
         </div>
       </div>
