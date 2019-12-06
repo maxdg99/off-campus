@@ -8,13 +8,15 @@ from django.core import serializers
 from OffCampusRestApi.models import Listing
 from OffCampusRestApi.compute_averages import compute_averages
 
+import json
+
 averages = compute_averages()
 
 
 def getSearchListingsPage(request):
     listingsPage = __getPaginatedListings(request)
 
-    for listing in listingsPage:
+    for listing in listingsPage["listings"]:
         if listing.price is not None:
             avg = averages[(listing.num_bedrooms, listing.num_bathrooms)]
             listing.diff_raw = listing.price - avg
@@ -25,8 +27,9 @@ def getSearchListingsPage(request):
 
 
 def getPaginatedListings(request):
-    listings = __getPaginatedListings(request)
-    response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    queryResult = __getPaginatedListings(request)
+    queryResult["listings"] = json.loads(serializers.serialize('json', queryResult["listings"])) # this is dumb-af but it's what i gotta do
+    response = JsonResponse(queryResult)
     __allowCors(response)
     return response
 
@@ -44,7 +47,7 @@ def __getPaginatedListings(request):
     except EmptyPage:
         listingsPage = paginator.page(paginator.num_pages)
 
-    return listingsPage
+    return {"page_count": paginator.num_pages, "listings": listingsPage}
 
 
 def getAllListings(request):

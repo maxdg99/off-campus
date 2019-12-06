@@ -68,7 +68,7 @@
     </div>
       <Paginate
     v-model="page"
-    :page-count="20"
+    :page-count="page_count"
     :page-range="3"
     :margin-pages="2"
     :click-handler="search"
@@ -104,7 +104,8 @@ export default {
       max_dist: "",
       sort: "distance_increasing",
       show_without_price: true,
-      page: 1
+      page: 1,
+      page_count: 1
     };
   },
   mounted: function() {
@@ -119,7 +120,8 @@ export default {
         params: {page: this.page, beds: this.bedrooms, baths: this.bathrooms, minPrice: this.min_price, maxPrice: this.max_price, minDistance: this.min_dist, maxDistance: this.max_dist, showNoPrice: this.show_without_price, order: this.sort}
       }).then(
         result => {
-          this.searchResults = result.data;
+          this.page_count = result.data.page_count
+          this.searchResults = result.data.listings;
           console.log(this.searchResults.length)
         },
         error => {
