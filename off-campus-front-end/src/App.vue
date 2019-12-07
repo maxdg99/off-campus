@@ -5,6 +5,9 @@
         <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
         <ul class="uk-navbar-nav uk-visible@s">
           <li>
+            <router-link to="/">Home</router-link>
+          </li>
+          <li>
             <router-link to="/search">Search</router-link>
           </li>
         </ul>
