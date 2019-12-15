@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import base64
-import json
+import json, sys
 from urllib.parse import urljoin
 from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
@@ -12,7 +12,7 @@ from OffCampusBackEnd.utility import getLatLong, distance
 
 options = [cls for cls in Scraper.__subclasses__()]
 
-print(options)
+print("Available classnames: "+str(options))
 
 
 def insert_listing_from_dict(l):
@@ -49,8 +49,14 @@ def insert_listing_from_dict(l):
         print("multiple returned for: "+l["address"])
 
 
-def scrape():
+def scrape(classnames=None):
+    if classnames is None:
+        classes = options
+    else:
+        classes = []
+        for x in classnames:
+            classes.append(getattr(sys.modules[__name__], x))
     Listing.listings.all().update(active=False)
-    for o in options:
+    for o in classes:
         o.process_listings(insert_listing_from_dict)
     
