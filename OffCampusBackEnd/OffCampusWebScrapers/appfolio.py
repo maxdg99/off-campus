@@ -75,12 +75,6 @@ class AppfolioScraper():
             callback(d)
 
 
-class HometeamAppfolioScraper(Scraper):
-    url = "https://ht.appfolio.com/listings"
-    
-    def process_listings(callback):
-        AppfolioScraper.process_listings(HometeamAppfolioScraper.url, callback)
-
 class NorthsteppeScraper(Scraper):
     url = "https://northsteppe.appfolio.com/listings?1572716642290&filters%5Bproperty_list%5D=All%20OSU%20Campus%20Area%20Properties&theme_color=%23194261&filters%5Border_by%5D=date_posted"
     

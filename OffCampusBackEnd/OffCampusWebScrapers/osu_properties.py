@@ -41,7 +41,12 @@ class PellaScraper(Scraper):
 
         return propList
 
-    def _advance_one_property(js): 
+    def _advance_one_property(js):
+        js = js[js.find(";")+1:]
+        js = js.strip()
+        while "/*" in js[:js.find(";")]:
+            js = js[js.find(";")+1:]
+            js = js.strip()
         return js[js.find(";")+1:]
 
     def _advance_one_element(prop):

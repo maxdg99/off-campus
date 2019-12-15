@@ -4,19 +4,33 @@ $(document).ready(function(){
 
 $(document).ready(function(){
     $.ajax({
-
-    })
+        type: 'Get',
+        url: 'http://localhost:8000/isSignedIn',
+        success: function(result){
+            result.signedIn;
+            // TODO: This is true or false.  Change buttons accordingly
+        }
+    });
 });
 
 $('#signinButton').click(function() {
     auth2.grantOfflineAccess().then(signInCallback);
+    // TODO: Show signout
+});
+
+$('#signout').click(function() {
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8000/signOut'
+    })
+    // TODO: Show signin
 });
 
 function signInCallback(authResult) {
   if (authResult['code']) {
     $.ajax({
       type: 'POST',
-      url: 'http://example.com/storeauthcode',
+      url: 'http://localhost:8000/authUser',
       headers: {
         'X-Requested-With': 'XMLHttpRequest'
       },

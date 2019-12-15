@@ -14,7 +14,6 @@ options = [cls for cls in Scraper.__subclasses__()]
 
 print(options)
 
-
 def insert_listing_from_dict(l):
     try:
         obj = Listing.listings.get(address=l["address"])
@@ -54,7 +53,6 @@ def insert_listing_from_dict(l):
 
     except Listing.MultipleObjectsReturned:
         print("multiple returned for: "+l["address"])
-
 
 def scrape():
     Listing.listings.all().update(active=False)
