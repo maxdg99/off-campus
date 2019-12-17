@@ -10,11 +10,10 @@ from OffCampusRestApi.compute_averages import compute_averages
 
 import json
 
-averages = compute_averages()
-
-
 def getSearchListingsPage(request):
     listingsPage = __getPaginatedListings(request)
+    if not averages:
+        averages = compute_averages()
 
     for listing in listingsPage["listings"]:
         if listing.price is not None:

@@ -12,7 +12,8 @@ class HometeamScraper(Scraper):
         "User-Agent": "Mozilla/5.0"
     }
 
-    def dict_from_listing(listingDiv):
+    @classmethod
+    def dict_from_listing(cls, listingDiv):
         l = {}
         l["image_url"] = listingDiv.find("img")["src"]
         l["url"] = urljoin(HometeamScraper.hometeamURL, listingDiv.find("a")["href"])
@@ -23,12 +24,14 @@ class HometeamScraper(Scraper):
         bedbath = listingDiv.find("strong").text.split()
         l["num_bedrooms"] = bedbath[0]
         l["num_bathrooms"] = bedbath[2]
+        l["scraper"] = cls.__name__
 
         l["active"] = True
 
         return l
 
-    def process_listings(callback):
+    @classmethod
+    def process_listings(cls, callback):
         ht = requests.get(url=HometeamScraper.hometeamURL)
         htHTML = ht.text
         htSoup = BeautifulSoup(htHTML, 'html.parser')

@@ -5,7 +5,7 @@ import json, sys
 from urllib.parse import urljoin
 from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
-from OffCampusWebScrapers.appfolio import BuckeyeScraper # this imports all of the appfolio scrapers idk why
+from OffCampusWebScrapers.appfolio import * # this imports all of the appfolio scrapers idk why
 from OffCampusWebScrapers.pella import PellaScraper
 
 from OffCampusBackEnd.utility import getLatLong, distance
@@ -52,11 +52,12 @@ def insert_listing_from_dict(l):
 def scrape(classnames=None):
     if classnames is None:
         classes = options
+        Listing.listings.all().update(active=False)
     else:
         classes = []
         for x in classnames:
             classes.append(getattr(sys.modules[__name__], x))
-    Listing.listings.all().update(active=False)
+        Listing.listings.filter(scraper__in=classnames).update(active=False)
     for o in classes:
         o.process_listings(insert_listing_from_dict)
     

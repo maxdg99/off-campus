@@ -8,7 +8,8 @@ import datetime
 class PellaScraper(Scraper):
     baseURL = "http://pellaco.com/property-search?term_node_tid_depth=All&field_bedrooms_tid=All&page="
     
-    def process_listings(callback):
+    @classmethod
+    def process_listings(cls, callback):
         pageNumber = 0  
         isNextPage = True
         while isNextPage:
@@ -43,7 +44,7 @@ class PellaScraper(Scraper):
                 bath = listingSoup.find("div", {'class':'field field-name-field-baths field-type-taxonomy-term-reference field-label-hidden'})
                 bath = bath.find("div", {'class':'field-item even'}).getText()
                 bath = bath[0:bath.find(" ")]
-                d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": datetime.datetime.now().date(), "active": True}
+                d = {"scraper": cls.__name__, "image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": datetime.datetime.now().date(), "active": True}
                 print(d)
                 callback(d)
             

@@ -8,7 +8,8 @@ import re
 
 class PellaScraper(Scraper):
     
-    def process_listings(callback):
+    @classmethod
+    def process_listings(cls, callback):
         reqURL = "https://www.osuproperties.com/properties/properties.js"
         baseURL = "https://www.osuproperties.com/propview.asp?cat="
         baseImage = "https://www.osuproperties.com/properties/"
@@ -49,6 +50,6 @@ class PellaScraper(Scraper):
             propJS = propJS[propJS.find("',")+1:]
             propJS = propJS[propJS.find("',")+1:]
             availability = propJS[propJS.find("'")+1:propJS.find("',")]
-            d = {"image_url": baseImage + image, "url": baseURL + urlAddOns[int(beds)-1], "price": int(price), "address": address, "num_bedrooms": int(beds), "num_bathrooms": int(bathroom), "description": description, "availability_date": availability, "active": True}
+            d = {"scraper": cls.__name__, "image_url": baseImage + image, "url": baseURL + urlAddOns[int(beds)-1], "price": int(price), "address": address, "num_bedrooms": int(beds), "num_bathrooms": int(bathroom), "description": description, "availability_date": availability, "active": True}
             print(d)
             callback(d)
