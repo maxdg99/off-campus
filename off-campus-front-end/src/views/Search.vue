@@ -4,37 +4,37 @@
       <form class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m" uk-grid onsubmit="return false;">
         <div>
           <label for="bedrooms">Bedrooms</label>
-          <input class="uk-input" id="bedrooms" type="number" min="0" v-model="bedrooms" />
+          <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
         </div>
 
         <div>
           <label for="bathrooms">Bathrooms</label>
-          <input class="uk-input" id="bathrooms" type="number" min="0" v-model="bathrooms" />
+          <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
         </div>
 
         <div>
           <label for="min-price">Minimum Price</label>
-          <input class="uk-input" id="min-price" type="number" min="0" v-model="min_price" />
+          <input class="uk-input" id="min-price" type="number" min="0" v-model="filters.min_price" />
         </div>
 
         <div>
           <label for="max-price">Maximum Price</label>
-          <input class="uk-input" id="max-price" type="number" min="0" v-model="max_price" />
+          <input class="uk-input" id="max-price" type="number" min="0" v-model="filters.max_price" />
         </div>
 
         <div>
           <label for="min-distance">Minimum Distance</label>
-          <input class="uk-input" id="min-distance" type="number" min="0" v-model="min_dist" />
+          <input class="uk-input" id="min-distance" type="number" min="0" v-model="filters.min_dist" />
         </div>
 
         <div>
           <label for="max-distance">Maximum Distance</label>
-          <input class="uk-input" id="max-distance" type="number" min="0" v-model="max_dist" />
+          <input class="uk-input" id="max-distance" type="number" min="0" v-model="filters.max_dist" />
         </div>
 
         <div class="uk-margin search-filter-checkbox">
           <label>
-            <input class="uk-checkbox" type="checkbox" v-model="show_without_price" />
+            <input class="uk-checkbox" type="checkbox" v-model="filters.show_without_price" />
             Show properties without a price
           </label>
         </div>
@@ -42,7 +42,7 @@
         <div>
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
-            <select class="uk-select" id="sort" v-model="sort">
+            <select class="uk-select" id="sort" v-model="filters.sort">
               <option value="distance_increasing" selected>Distance Increasing</option>
               <option value="distance_decreasing">Distance Decreasing</option>
               <option value="price_increasing">Price Increasing</option>
@@ -67,7 +67,7 @@
       </div>
     </div>
       <Paginate
-    v-model="page"
+    v-model="filters.page"
     :page-count="page_count"
     :page-range="3"
     :margin-pages="2"
@@ -101,6 +101,17 @@ import axios from "axios";
 import Listing from "@/components/Listing.vue";
 import Paginate from 'vuejs-paginate';
 
+function updateFiltersToMatchQuery(filters, query) {
+  for (var key in filters) {
+      if (key in query) {
+        filters[key] = query[key]
+      }
+    }
+
+    filters["show_without_price"] = query["show_without_price"] !== "false"
+    filters["page"] = parseInt(query["page"]) || 1
+}
+
 export default {
   name: "search",
   components: {
@@ -108,9 +119,8 @@ export default {
     Paginate
   },
   data: function() {
-    return {
-      searching: false,
-      searchResults: [],
+    console.log(this.$route.query)
+    var filtersInit = {
       bedrooms: "",
       bathrooms: "",
       min_price: "",
@@ -118,10 +128,16 @@ export default {
       min_dist: "",
       max_dist: "",
       sort: "distance_increasing",
-      show_without_price: true,
-      page: 1,
+    }
+
+    updateFiltersToMatchQuery(filtersInit, this.$route.query)
+
+    return {
+      searching: false,
+      searchResults: [],
+      filters: filtersInit,
       page_count: 1
-    };
+    }
   },
   mounted: function() {
     this.search();
@@ -129,10 +145,15 @@ export default {
   methods: {
     search: function() {
       this.searching = true;
+      console.log(this.$data)
+      this.$router.push({query: this.$data.filters}).catch(err => {
+        // This would throw an error if the query didn't actually update
+        console.log("Failed to update router... perhaps the URL didn't change.");
+      })
       axios({
         method: "GET",
         url: "http://localhost:8000/paginatedListings",
-        params: {page: this.page, beds: this.bedrooms, baths: this.bathrooms, minPrice: this.min_price, maxPrice: this.max_price, minDistance: this.min_dist, maxDistance: this.max_dist, showNoPrice: this.show_without_price, order: this.sort}
+        params: {page: this.filters.page, beds: this.filters.bedrooms, baths: this.filters.bathrooms, minPrice: this.filters.min_price, maxPrice: this.filters.max_price, minDistance: this.filters.min_dist, maxDistance: this.filters.max_dist, showNoPrice: this.filters.show_without_price, order: this.filters.sort}
       }).then(
         result => {
           this.page_count = result.data.page_count;
@@ -144,6 +165,14 @@ export default {
           this.searching = false;
         }
       );
+    }
+  },
+  watch: {
+    $route(to, from) {
+      // This handles forward/backward buttons in browser
+      console.log("Route to query: "+to.query);
+      updateFiltersToMatchQuery(this.filters, to.query)
+      this.search()
     }
   }
 };
