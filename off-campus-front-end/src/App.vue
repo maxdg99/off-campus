@@ -14,13 +14,41 @@
       </div>
       <div class="uk-navbar-right">
         <div class="uk-navbar-item">
-          <form>
+          <a
+            class="uk-navbar-toggle uk-hidden@s"
+            uk-toggle="target: #mobile-sidebar"
+            uk-navbar-toggle-icon
+          ></a>
+          <form class="uk-visible@s">
+            <!-- TODO: implement login with Google -->
             <button class="uk-button uk-button-default" disabled>Log In</button>
           </form>
         </div>
       </div>
     </nav>
-    <router-view/>
+
+    <div id="mobile-sidebar" uk-offcanvas="overlay: true; flip: true">
+      <div class="uk-offcanvas-bar">
+        <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+        <ul class="uk-navbar-nav uk-flex uk-flex-column">
+          <li class="uk-nav-header">Navigation</li>
+          <li>
+            <router-link to="/" uk-toggle="target: #mobile-sidebar">Home</router-link>
+          </li>
+          <li>
+            <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
+          </li>
+          <li>
+            <!-- TODO: implement login with Google -->
+            <a>Log In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <router-view />
+
     <footer class="uk-text-center">&copy; 2019 Max Gruber, Andrew Haberlandt, Adam Lis</footer>
   </div>
 </template>
@@ -28,6 +56,8 @@
 <style lang="less">
 @import "../node_modules/uikit/src/less/uikit.less";
 @import "../node_modules/uikit/src/less/uikit.theme.less";
+@offcanvas-bar-background: #fff;
+@offcanvas-bar-color-mode: dark;
 </style>
 
 <script>

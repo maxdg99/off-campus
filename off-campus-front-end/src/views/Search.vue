@@ -52,7 +52,7 @@
         </div>
 
         <div>
-          <button class="uk-button uk-button-primary" v-on:click="search" v-bind:disabled="searching" href="#">Search</button>
+          <button class="uk-button uk-button-primary" v-on:click="search" v-bind:disabled="searching">Search</button>
         </div>
       </form>
     </div>
