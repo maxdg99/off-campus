@@ -5,6 +5,7 @@ class Listing(models.Model):
 
     price = models.PositiveIntegerField(null=True)
     address = models.CharField(max_length=100)
+    unit = models.CharField(null=True, max_length=10)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     num_bedrooms = models.PositiveIntegerField()

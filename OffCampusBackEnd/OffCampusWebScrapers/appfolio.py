@@ -61,16 +61,19 @@ class AppfolioScraper():
 
             if available == "NOW":
                 avail_date = datetime.datetime.now().date()
+                avail_mode = 'Now'
             elif available:
                 avail_date = datetime.datetime.strptime(available, "%m/%d/%y").date()
+                avail_mode = 'Date'
             else:
                 avail_date = None
+                avail_mode = 'None'
             try:
                 price = int(price[1:].replace(",", ""))
             except:
                 price = -1
 
-            d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "availability_date": avail_date, "availability_mode": 'Date', "listed": True, "description": description}
+            d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "availability_date": avail_date, "availability_mode": avail_mode, "listed": True, "description": description}
             print(d)
             callback(d)
 
