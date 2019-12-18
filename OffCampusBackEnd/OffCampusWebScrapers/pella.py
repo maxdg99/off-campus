@@ -7,8 +7,10 @@ import datetime
 
 class PellaScraper(Scraper):
     baseURL = "http://pellaco.com/property-search?term_node_tid_depth=All&field_bedrooms_tid=All&page="
-    def process_listings(callback):
-        pageNumber = 0
+    
+    @classmethod
+    def process_listings(cls, callback):
+        pageNumber = 0  
         isNextPage = True
         while isNextPage:
             firstTime = False
@@ -73,7 +75,7 @@ class PellaScraper(Scraper):
                     avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
                     avail_mode = "Month"
                     isAvailable = True
-                d = {"image_url": image, "url": link, "price": int(price), "address": address, "num_bedrooms": int(bedrooms), "num_bathrooms": int(bath), "availability_date": avail_date, "availability_mode": avail_mode, "listed": isAvailable, "description": description}
+                d = {"scraper": cls.__name__, "image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": datetime.datetime.now().date(), "active": True}
                 print(d)
                 callback(d)
             

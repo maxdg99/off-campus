@@ -16,9 +16,10 @@ class Listing(models.Model):
     url = models.CharField(max_length=1000)
     availability_date = models.DateField(null=True)
     availability_mode = models.CharField(max_length=10, choices=AVAILABILITY_MODE)
-    listed = models.BooleanField()
     date_found = models.DateField()
     date_updated = models.DateField()
+    active = models.BooleanField()
+    scraper = models.CharField(max_length=100, null=True)
 
     percent_diff = None # populated at runtime
     diff_raw = 0

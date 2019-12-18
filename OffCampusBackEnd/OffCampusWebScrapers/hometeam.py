@@ -22,10 +22,11 @@ class HometeamScraper(Scraper):
     def add_ht_appfolio_listings(data):
         htAppfolioListings.append(data)
 
-    def dict_from_listing(listingDiv):
+    @classmethod
+    def dict_from_listing(cls, listingDiv):
         data = {}
         data["image_url"] = listingDiv.find("img")["src"]
-        data["url"] = urljoin(hometeamURL, listingDiv.find("a")["href"])
+        data["url"] = urljoin(HometeamScraper.hometeamURL, listingDiv.find("a")["href"])
         address = listingDiv.find("h4").text
         address = address[0:address.find(":")].strip()
         data["address"] = address
@@ -34,19 +35,20 @@ class HometeamScraper(Scraper):
         data["campus"] = campus.text
 
         bedbath = listingDiv.find("strong").text.split()
+        
         data["num_bedrooms"] = bedbath[0]
         data["num_bathrooms"] = bedbath[2]
+        data["scraper"] = cls.__name__
 
         data["price"] = None
         data["availability_date"] = None
         data["availability_mode"] = 'None'
-        data["listed"] = False
+        data["active"] = False
 
         return data
 
-    def process_listings(callback):
-        HometeamAppfolioScraper.process_listings(add_ht_appfolio_listings)
-
+    @classmethod
+    def process_listings(cls, callback):
         ht = requests.get(url=HometeamScraper.hometeamURL)
         htHTML = ht.text
         htSoup = BeautifulSoup(htHTML, 'html.parser')
@@ -63,7 +65,7 @@ class HometeamScraper(Scraper):
                         city = "Mansfield"
                     else:
                         city = "Columbus"
-                    listing = {"image_url": ht["image_url"], "url": ht["url"], "price": af["price"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "num_bedrooms": ht["num_bedrooms"], "num_bathrooms": ht["num_bathrooms"], "availability_date": af["availability_date"], "availability_mode": 'Date', "listed": True, "description": None, "unit": data["unit"]}
+                    listing = {"image_url": ht["image_url"], "url": ht["url"], "price": af["price"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "num_bedrooms": ht["num_bedrooms"], "num_bathrooms": ht["num_bathrooms"], "availability_date": af["availability_date"], "availability_mode": 'Date', "active": True, "description": None, "unit": data["unit"], "scraper": ht["scraper"]}
                     print(listing)
                     callback(listing)
 

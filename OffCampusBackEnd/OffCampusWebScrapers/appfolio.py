@@ -15,7 +15,7 @@ class AppfolioScraper():
     }
 
     # Parses listings from page
-    def process_listings(appfolioURL, callback):
+    def process_listings(appfolioURL, className, callback):
         # Retrieves all information for webpage
         ns = requests.get(url=appfolioURL, headers=AppfolioScraper.headers)
         # Pulls out just the HTML Template
@@ -73,7 +73,7 @@ class AppfolioScraper():
             except:
                 price = -1
 
-            d = {"image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "availability_date": avail_date, "availability_mode": avail_mode, "listed": True, "description": description}
+            d = {"scraper": className, "image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "description": description, "availability_date": avail_date, "active": True}
             print(d)
             callback(d)
 
@@ -81,18 +81,21 @@ class AppfolioScraper():
 class NorthsteppeScraper(Scraper):
     url = "https://northsteppe.appfolio.com/listings?1572716642290&filters%5Bproperty_list%5D=All%20OSU%20Campus%20Area%20Properties&theme_color=%23194261&filters%5Border_by%5D=date_posted"
     
-    def process_listings(callback):
-        AppfolioScraper.process_listings(NorthsteppeScraper.url, callback)
+    @classmethod
+    def process_listings(cls, callback):
+        AppfolioScraper.process_listings(NorthsteppeScraper.url, cls.__name__, callback)
 
 class VeniceScraper(Scraper):
     url = "https://veniceprops.appfolio.com/listings/listings"
 
-    def process_listings(callback):
-        AppfolioScraper.process_listings(VeniceScraper.url, callback)
+    @classmethod
+    def process_listings(cls, callback):
+        AppfolioScraper.process_listings(VeniceScraper.url, cls.__name__, callback)
 
 
 class BuckeyeScraper(Scraper):
     url = "https://buckeye.appfolio.com/listings"
 
-    def process_listings(callback):
-        AppfolioScraper.process_listings(BuckeyeScraper.url, callback)
+    @classmethod
+    def process_listings(cls, callback):
+        AppfolioScraper.process_listings(BuckeyeScraper.url, cls.__name__, callback)

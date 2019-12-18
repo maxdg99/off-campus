@@ -1,20 +1,43 @@
-# Ignore .vscode folder
-.vscode/
+# FRONT END IGNORES
+.DS_Store
+node_modules
+/dist
 
-# Ignore the cache folder
-__pycache__/
+# local env files
+.env.local
+.env.*.local
 
-# Ignore the AWS DB private key
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+
+# BACK END IGNORES
+# Ignore folders
+.vscode
+__pycache__
+
+# Ignore files
+# AWS DB private key
 *.ppk
 *.pem
-
-# ignore vim swap files
+# Vim swap files
 *.swp
-
-# ignore the database
+# Database
 db.sqlite3
 db.sqlite3-journal
-
+# Other stuff (should we remove this?)
 googleMapsTest.html
 testApartments.csv
 OffCampusBackEnd/OffCampusRestApi/client_secret.json

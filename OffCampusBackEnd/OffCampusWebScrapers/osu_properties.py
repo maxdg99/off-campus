@@ -58,8 +58,9 @@ class PellaScraper(Scraper):
         while "<" in x:
             x = x[:x.find("<")] + x[x.find(">")+1:]
         return x
-
-    def process_listings(callback):
+    
+    @classmethod
+    def process_listings(cls, callback):
         reqURL = "https://www.osuproperties.com/properties/properties.js"
         baseURL = "https://www.osuproperties.com/propview.asp?cat="
         baseImage = "https://www.osuproperties.com/properties/"
@@ -118,6 +119,6 @@ class PellaScraper(Scraper):
                     avail_date = datetime.datetime.strptime(match[0], "%B %d, %Y").date()
                     avail_mode = "Date"
         
-            d = {"image_url": baseImage + image, "url": baseURL + urlAddOns[int(beds)-1], "price": int(price), "address": address, "num_bedrooms": int(beds), "num_bathrooms": bathroom, "availability_date": avail_date, "availability_mode": avail_mode, "listed": listed, "description": description}
+            d = {"scraper": cls.__name__, "image_url": baseImage + image, "url": baseURL + urlAddOns[int(beds)-1], "price": int(price), "address": address, "num_bedrooms": int(beds), "num_bathrooms": int(bathroom), "description": description, "availability_date": availability, "active": True}
             print(d)
             callback(d)

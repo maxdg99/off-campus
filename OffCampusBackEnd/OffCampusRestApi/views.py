@@ -11,13 +11,16 @@ from OffCampusRestApi.compute_averages import compute_averages
 from apiclient import discovery
 import httplib2
 from oauth2client import client
+import json
 
 averages = compute_averages()
 
 def getSearchListingsPage(request):
     listingsPage = __getPaginatedListings(request)
+    if not averages:
+        averages = compute_averages()
 
-    for listing in listingsPage:
+    for listing in listingsPage["listings"]:
         if listing.price is not None:
             avg = averages[(listing.num_bedrooms, listing.num_bathrooms)]
             listing.diff_raw = listing.price - avg
@@ -28,8 +31,11 @@ def getSearchListingsPage(request):
 
 
 def getPaginatedListings(request):
-    listings = __getPaginatedListings(request)
-    return HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    queryResult = __getPaginatedListings(request)
+    queryResult["listings"] = json.loads(serializers.serialize('json', queryResult["listings"])) # this is dumb-af but it's what i gotta do
+    response = JsonResponse(queryResult)
+    __allowCors(response)
+    return response
 
 
 # TODO: change page to pageNumber and add pageSize query parameter
@@ -45,7 +51,7 @@ def __getPaginatedListings(request):
     except EmptyPage:
         listingsPage = paginator.page(paginator.num_pages)
 
-    return listingsPage
+    return {"page_count": paginator.num_pages, "listings": listingsPage}
 
 def isSignedIn(request):
     response = {}
@@ -94,7 +100,15 @@ def authorizeUser(request):
 
 def getAllListings(request):
     listings = Listing.listings.all()
-    return HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    __allowCors(response)
+    return response
+
+def __allowCors(response):
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
 
 
 def __getFilteredListings(request):

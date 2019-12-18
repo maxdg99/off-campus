@@ -1,18 +1,18 @@
 from bs4 import BeautifulSoup
 import requests
 import base64
-import json
+import json, sys
 from urllib.parse import urljoin
 from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
-from OffCampusWebScrapers.appfolio import BuckeyeScraper # this imports all of the appfolio scrapers idk why
+from OffCampusWebScrapers.appfolio import * # this imports all of the appfolio scrapers idk why
 from OffCampusWebScrapers.pella import PellaScraper
 
 from OffCampusBackEnd.utility import getLatLong, distance
 
 options = [cls for cls in Scraper.__subclasses__()]
 
-print(options)
+print("Available classnames: "+str(options))
 
 def insert_listing_from_dict(l):
     try:
@@ -54,10 +54,16 @@ def insert_listing_from_dict(l):
     except Listing.MultipleObjectsReturned:
         print("multiple returned for: "+l["address"])
 
-def scrape():
-    Listing.listings.all().update(active=False)
-    for o in options:
-        o.process_listings(insert_listing_from_dict)
 
-scrape()
+def scrape(classnames=None):
+    if classnames is None:
+        classes = options
+        Listing.listings.all().update(active=False)
+    else:
+        classes = []
+        for x in classnames:
+            classes.append(getattr(sys.modules[__name__], x))
+        Listing.listings.filter(scraper__in=classnames).update(active=False)
+    for o in classes:
+        o.process_listings(insert_listing_from_dict)
     
