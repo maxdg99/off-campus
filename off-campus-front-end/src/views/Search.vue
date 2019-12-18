@@ -70,7 +70,7 @@
         <div>
           <button
             class="uk-button uk-button-primary"
-            v-on:click="search"
+            v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
           >Search</button>
         </div>
@@ -95,7 +95,7 @@
       :page-count="pageCount"
       :page-range="3"
       :margin-pages="2"
-      :click-handler="search"
+      :click-handler="updateRouteToMatchFilters"
       :container-class="'uk-pagination uk-flex-center'"
       :page-class="''"
       :active-class="'uk-active'"
@@ -143,7 +143,7 @@ export default {
     const form = document.querySelector("form.search-filters");
     form.addEventListener("input", this.onFilterInput);
     this.updateFiltersFromQueryString(this.$route.query);
-    this.search();
+    this.updateListingsToMatchFilters();
   },
   methods: {
     updateFiltersFromQueryString: function(query) {
@@ -171,9 +171,35 @@ export default {
     onFilterInput: function() {
       this.filtersHaveChanged = true;
     },
-    search: function() {
+    updateListingsToMatchFilters: function() {
       this.searching = true;
-
+      axios({
+        method: "GET",
+        url: "http://localhost:8000/paginatedListings",
+        params: {
+          page: this.filters.page,
+          beds: this.filters.bedrooms,
+          baths: this.filters.bathrooms,
+          minPrice: this.filters.minPrice,
+          maxPrice: this.filters.maxPrice,
+          minDistance: this.filters.minDistance,
+          maxDistance: this.filters.maxDistance,
+          showNoPrice: this.filters.showWithoutPrice,
+          order: this.filters.sortBy
+        }
+      }).then(
+        result => {
+          this.pageCount = result.data.page_count;
+          this.searchResults = result.data.listings;
+          this.searching = false;
+        },
+        error => {
+          console.error(error);
+          this.searching = false;
+        }
+      );
+    },
+    updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
       if (this.filtersHaveChanged) {
@@ -184,33 +210,6 @@ export default {
       // Only makes http call if query string changed
       this.$router.push(
         { query: this.filters },
-        success => {
-          axios({
-            method: "GET",
-            url: "http://localhost:8000/paginatedListings",
-            params: {
-              page: this.filters.page,
-              beds: this.filters.bedrooms,
-              baths: this.filters.bathrooms,
-              minPrice: this.filters.minPrice,
-              maxPrice: this.filters.maxPrice,
-              minDistance: this.filters.minDistance,
-              maxDistance: this.filters.maxDistance,
-              showNoPrice: this.filters.showWithoutPrice,
-              order: this.filters.sortBy
-            }
-          }).then(
-            result => {
-              this.pageCount = result.data.page_count;
-              this.searchResults = result.data.listings;
-              this.searching = false;
-            },
-            error => {
-              console.error(error);
-              this.searching = false;
-            }
-          );
-        },
         error => {
           console.log(error);
           this.searching = false;
@@ -222,7 +221,7 @@ export default {
     // Handles forward/backward buttons in browser
     $route(to, from) {
       this.updateFiltersFromQueryString(to.query);
-      this.search();
+      this.updateListingsToMatchFilters();
     }
   }
 };
