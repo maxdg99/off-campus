@@ -48,6 +48,7 @@ def insert_listing_from_dict(l):
 
         # Set created date
         obj.date_created = datetime.datetime.now().date()
+        obj.date_updated = obj.date_created
 
         obj.save()
 
