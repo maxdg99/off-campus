@@ -178,15 +178,13 @@ export default {
 
       if (this.filtersHaveChanged) {
         this.filters.page = 1;
+        this.filtersHaveChanged = false;
       }
-
-      console.log(this.filters);
 
       // Only makes http call if query string changed
       this.$router.push(
         { query: this.filters },
         success => {
-          console.log("Router push was successful");
           axios({
             method: "GET",
             url: "http://localhost:8000/paginatedListings",
@@ -203,20 +201,17 @@ export default {
             }
           }).then(
             result => {
-              console.log("HTTP request was successful");
               this.pageCount = result.data.page_count;
               this.searchResults = result.data.listings;
               this.searching = false;
             },
             error => {
-              console.log("HTTP request failed");
               console.error(error);
               this.searching = false;
             }
           );
         },
         error => {
-          console.log("Router push failed");
           console.log(error);
           this.searching = false;
         }
