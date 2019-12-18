@@ -207,14 +207,7 @@ export default {
         this.filtersHaveChanged = false;
       }
 
-      // Only makes http call if query string changed
-      this.$router.push(
-        { query: this.filters },
-        error => {
-          console.log(error);
-          this.searching = false;
-        }
-      );
+      this.$router.push({ query: this.filters });
     }
   },
   watch: {
