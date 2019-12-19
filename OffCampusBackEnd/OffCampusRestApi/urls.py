@@ -6,7 +6,4 @@ urlpatterns = [
     path('', views.getSearchListingsPage, name='index'),
     path('paginatedListings', views.getPaginatedListings, name='paginatedListings'),
     path('allListings', views.getAllListings, name='allListings'),
-    path('authUser', views.authorizeUser, name='authUser'),
-    path('isSignedIn', views.isSignedIn, name='isSignedIn'),
-    path('signOut', views.signOut, name='signOut')
 ]
