@@ -1,7 +1,7 @@
 from django.db import models
 
 class Listing(models.Model):
-    AVAILABILITY_MODE = ['Season', 'Month', 'Now', 'None', 'Date']
+    AVAILABILITY_MODE = [('S', 'Season'), ('M', 'Month'), ('N', 'Now'), ('-', 'None'), ('D', 'Date')]
 
     price = models.PositiveIntegerField(null=True)
     address = models.CharField(max_length=100)
@@ -15,7 +15,7 @@ class Listing(models.Model):
     miles_from_campus = models.FloatField(null=True)
     url = models.CharField(max_length=1000)
     availability_date = models.DateField(null=True)
-    availability_mode = models.CharField(max_length=10, choices=AVAILABILITY_MODE)
+    availability_mode = models.CharField(max_length=2, choices=AVAILABILITY_MODE)
     date_found = models.DateField()
     date_updated = models.DateField()
     active = models.BooleanField()

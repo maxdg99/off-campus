@@ -13,8 +13,7 @@ import httplib2
 from oauth2client import client
 import json
 
-averages = compute_averages()
-
+averages = None
 def getSearchListingsPage(request):
     listingsPage = __getPaginatedListings(request)
     if not averages:

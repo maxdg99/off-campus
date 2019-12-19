@@ -119,5 +119,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-MIDDLEWARE_CLASSES = ('django.contrib.sessions.middleware.SessionMiddleware')
-INSTALLED_APPS = ('django.contrib.sessions')
