@@ -1,79 +1,73 @@
 # Imports
 from bs4 import BeautifulSoup
-import requests
-from OffCampusWebScrapers.scraper import Scraper
 import datetime
+from OffCampusWebScrapers.scraper import Scraper
+import requests
+import re
 from urllib.parse import urljoin
+from OffCampusBackEnd.utility import format_address
 
 class AppfolioScraper():
 
-    # URL of all properties
-    #url = "https://ht.appfolio.com/listings"
-
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
-
-    # Parses listings from page
     def process_listings(appfolioURL, className, callback):
         # Retrieves all information for webpage
-        ns = requests.get(url=appfolioURL, headers=AppfolioScraper.headers)
+        req = requests.get(url=appfolioURL, headers={"User-Agent": "Mozilla/5.0"})
         # Pulls out just the HTML Template
-        nsHTML = ns.text
+        html = req.text
         # Create an HTML Scraper for the webpage
-        nsSoup = BeautifulSoup(nsHTML, 'html.parser')
+        soup = BeautifulSoup(html, 'html.parser')
         # FInd each housing entry
-        nsProperties = nsSoup.find_all('div', {'class', 'listing-item result js-listing-item'})
+        properties = soup.find_all('div', {'class', 'listing-item result js-listing-item'})
 
-        for prop in nsProperties:
-            image = prop.find('img')
-            image = image['data-original']
+        for prop in properties:
+            image = prop.find('img')['data-original']
 
-            url = prop.find('a')
-            url = urljoin(appfolioURL, url['href'])
+            url = urljoin(appfolioURL, prop.find('a')['href'])
 
             price = (prop.find('div', {'class':'sidebar__price rent-banner__text js-listing-blurb-rent'})).getText(strip=True)
-            address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
-            bb = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
-            if bb is None:
+
+            address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText(strip=True)
+
+            bed_and_bath = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
+            if bed_and_bath is None:
                 continue
-            bedAndBath = bb.getText(strip=True)
-            bedAndBath = bedAndBath.split()
-            print(bedAndBath)
-            bed = 0
-            if len(bedAndBath) > 2 and bedAndBath[1] == "bd":
-                bed = bedAndBath[0]
+            bed_and_bath = bed_and_bath.getText(strip=True).split()
 
-            bath = 0
-            if len(bedAndBath) > 4 and bedAndBath[4] == "ba":
-                bath = bedAndBath[3]
+            beds = 0
+            if len(bed_and_bath) > 2 and bed_and_bath[1] == "bd":
+                beds = bed_and_bath[0]
+                int(beds)
 
-            available = (prop.find('dd', {'class':'detail-box__value js-listing-available'}))
-            if available:
-                available = available.getText(strip=True)
+            baths = 0
+            if len(bed_and_bath) > 4 and bed_and_bath[4] == "ba":
+                baths = bed_and_bath[3]
+                baths = float(baths)
+
+            availability = prop.find('dd', {'class':'detail-box__value js-listing-available'})
+            if availability:
+                availability = availability.getText(strip=True)
+                if availability == "NOW":
+                    availability_date = None
+                    availability_mode = "Now"
+                else:
+                    availability_date = datetime.datetime.strptime(availability, "%m/%d/%y")
+                    availability_mode = "Date"
+            else:
+                availability_date = None
+                availability_mode = "None"
+
+            try:
+                price = int(price[1:].replace(",", ""))
+            except:
+                price = None
+
             description = (prop.find('h2', {'class': 'listing-item__title js-listing-title'}))
             if description:
                 description = description.getText(strip=True)
             else:
                 description = ""
-            
-            print(address + " " + str(available))
 
-            if available == "NOW":
-                avail_date = datetime.datetime.now().date()
-                avail_mode = 'Now'
-            elif available:
-                avail_date = datetime.datetime.strptime(available, "%m/%d/%y").date()
-                avail_mode = 'Date'
-            else:
-                avail_date = None
-                avail_mode = 'None'
-            try:
-                price = int(price[1:].replace(",", ""))
-            except:
-                price = -1
-
-            d = {"scraper": className, "image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bed, "num_bathrooms": bath, "description": description, "availability_date": avail_date, "active": True}
+            d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
             print(d)
             callback(d)
 

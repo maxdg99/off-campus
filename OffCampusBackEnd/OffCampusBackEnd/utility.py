@@ -5,22 +5,21 @@ import re
 import math
 
 def getLatLong(address):
-    to_find = re.compile("St|Ave")
+    to_find = re.compile("Street|St|Avenue|Ave|Road|Rd")
     match = to_find.search(address)
     if match:
         idx = address.find(",")
-        if idx != match.end():
+        if idx != match.end() and ',' in address:
             print("before: "+address)
             address = address[0:match.end()] + address[idx:]
             print("after "+address)
 
 
     query = {"key": "7a42def0c4b84b58a6bef95d82a82bcb", "q": address}
-    # print(urllib.parse.urlencode(query))
     r = requests.get('https://api.opencagedata.com/geocode/v1/json', params=query)
     o = r.json()
     latLongParent = o["results"][0]["geometry"]
-    #print(json.dumps(o))
+    address = address[:address.find(", United States of America")]
     if latLongParent and "lat" in latLongParent:
         latitude = latLongParent["lat"]
         longitude = latLongParent["lng"]
@@ -31,17 +30,64 @@ def getLatLong(address):
     return (None, None)
 
 def distance(lat, lon):
-    clocktower = (40.0049371,-83.012978)
+    keypoint = (40.0016731,-83.0156426) # Currently: 18th Ave Library
     R = 6371e3 # meters
     loc = (lat, lon)
-    clocktowerLatR = clocktower[0] / 180 * math.pi
+    keypointLatR = keypoint[0] / 180 * math.pi
     locLatR = lat / 180 * math.pi
 
-    deltaLat = (clocktower[0] - loc[0]) / 180 * math.pi
-    deltaLon = (clocktower[1] - loc[1]) / 180 * math.pi
+    deltaLat = (keypoint[0] - loc[0]) / 180 * math.pi
+    deltaLon = (keypoint[1] - loc[1]) / 180 * math.pi
 
-    a = math.sin(deltaLat / 2) * math.sin(deltaLat / 2) + math.cos(locLatR) * math.cos(clocktowerLatR) * math.sin(deltaLon / 2) * math.sin(deltaLon / 2)
+    a = math.sin(deltaLat / 2) * math.sin(deltaLat / 2) + math.cos(locLatR) * math.cos(keypointLatR) * math.sin(deltaLon / 2) * math.sin(deltaLon / 2)
 
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     d = R * c
     return d * 0.000621371 # miles
+
+def get_region(lat, lon):
+    thompsonLibraryLatitude = 39.99925
+    laneAndHighLongitude = -83.00936
+    kingAndCanonLongitude = -83.02211
+
+    if lat > thompsonLibraryLatitude:
+        result = 'north'
+    else:
+        result = 'south'
+
+    if lon < kingAndCanonLongitude:
+        result += 'west'
+    elif lon > laneAndHighLongitude:
+        result += 'east'
+    
+    return result
+
+def format_address(address):
+    replacements = {
+        " North": " N. ",
+        " East": " E. ",
+        " South": " S. ",
+        " West": " W. ",
+        " Rd": " Road ",
+        " St": " Street ",
+        " Ave": " Avenue ",
+        " Columbus": "",
+        " Mansfield": "",
+        " OH": ""
+    }
+
+    modifiers = [".", ",", " "]
+
+    for key in replacements:
+        for mod in modifiers:
+            address_re = re.compile(re.escape(key+mod), re.IGNORECASE)
+            address = address_re.sub(replacements[key], address)
+            print(address)
+
+    zipcode = re.search("\d{5}", address)
+    if zipcode:
+        address = address.replace(zipcode[0], " ")
+
+    address = address.replace(",", "")
+
+    return address

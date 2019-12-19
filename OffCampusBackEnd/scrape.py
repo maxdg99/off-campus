@@ -5,10 +5,14 @@ import json, sys
 from urllib.parse import urljoin
 from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
-from OffCampusWebScrapers.appfolio import * # this imports all of the appfolio scrapers idk why
+from OffCampusWebScrapers.appfolio import *
 from OffCampusWebScrapers.pella import PellaScraper
-
-from OffCampusBackEnd.utility import getLatLong, distance
+from OffCampusWebScrapers.eventide import EventideScraper
+from OffCampusWebScrapers.hometeam import HometeamScraper
+from OffCampusWebScrapers.peak import PeakScraper
+from OffCampusWebScrapers.osu_properties import OSUPropertiesScraper
+from OffCampusWebScrapers.krg import KRGScraper
+from OffCampusBackEnd.utility import getLatLong, distance, format_address, get_region
 
 options = [cls for cls in Scraper.__subclasses__()]
 
@@ -22,27 +26,34 @@ def insert_listing_from_dict(l):
         # Set updated date
         obj.date_updated = datetime.datetime.now().date()
         
-        if (obj.latitude is None):
-            # Get lat long
-            l["latitude"], l["longitude"] = getLatLong(l["address"])
-            print(f'{l["latitude"]} {l["longitude"]}')
-        else:
-            obj.miles_from_campus = round(distance(obj.latitude, obj.longitude), 2)
-            print("\t\tDistance: "+str(distance(obj.latitude, obj.longitude)))
+        # We cannot do this because the addres has already been changed to pretty form
+        # if (obj.latitude is None):
+        #     # Get lat long
+        #     l["latitude"], l["longitude"] = getLatLong(l["address"] + ", Columbus, OH")
+        #     print(f'{l["latitude"]} {l["longitude"]}')
+        # else:
+        #     obj.miles_from_campus = round(distance(obj.latitude, obj.longitude), 2)
+        #     print("\t\tDistance: "+str(distance(obj.latitude, obj.longitude)))
 
         for key, value in l.items():
             setattr(obj, key, value)
-        obj.save()
+
+        if l["price"] != None and int(l["price"]) > 0:
+            obj.save()
     except Listing.DoesNotExist:
         print("inserting: "+l["address"])
 
         # Get lat long
         l["latitude"], l["longitude"] = getLatLong(l["address"])
-        print(f'{l["latitude"]} {l["longitude"]}')
+
+        l["pretty_address"] = format_address(l["address"])
 
         if l["latitude"] is not None:
             l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)
+            l['campus_area'] = get_region(l['latitude'], l["longitude"])
             print("\t\tDistance: "+str(distance(l["latitude"], l["longitude"])))
+            print("\t\tRegion: "+l['campus_area'])
+
 
         obj = Listing(**l)
 
@@ -50,7 +61,8 @@ def insert_listing_from_dict(l):
         obj.date_created = datetime.datetime.now().date()
         obj.date_updated = obj.date_created
 
-        obj.save()
+        if l["price"] != None and int(l["price"]) > 0:
+            obj.save()
 
     except Listing.MultipleObjectsReturned:
         print("multiple returned for: "+l["address"])
