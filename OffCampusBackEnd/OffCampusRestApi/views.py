@@ -62,8 +62,14 @@ def isSignedIn(request):
     return HttpResponse(serializers.serialize('json', response), content_type="application/json")
 
 def signOut(request):
+    response = {}
     if request.session['offcampus.us_auth'] != None:
         request.session.flush()
+        response["signedOut"] = True
+    else:
+        response["signedOut"] = False
+    return HttpResponse(serializers.serialize('json', response), content_type="application/json")
+
 
 def authorizeUser(request):
 
