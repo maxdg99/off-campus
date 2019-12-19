@@ -6,9 +6,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core import serializers
 
 from OffCampusRestApi.models import Listing
+from OffCampusRestApi.models import User
 from OffCampusRestApi.compute_averages import compute_averages
-
+from apiclient import discovery
+import httplib2
+from oauth2client import client
 import json
+
+averages = None
 
 def getSearchListingsPage(request):
     listingsPage = __getPaginatedListings(request)
@@ -48,6 +53,50 @@ def __getPaginatedListings(request):
 
     return {"page_count": paginator.num_pages, "listings": listingsPage}
 
+def isSignedIn(request):
+    response = {}
+    if 'offcampus.us_auth' in request and Users.id.find(id=request.session['offcampus.us_auth']).exists():
+        response["signedIn"] = True
+    else:
+        response["signedIn"] = False
+    return HttpResponse(serializers.serialize('json', response), content_type="application/json")
+
+def signOut(request):
+    if request.session['offcampus.us_auth'] != None:
+        request.session.flush()
+
+def authorizeUser(request):
+
+    if not request.headers.get('X-Requested-With'):
+        abort(403)
+
+    CLIENT_SECRET_FILE = './client_secret.json'
+
+    # Exchange auth code for access token, refresh token, and ID token
+    credentials = client.credentials_from_clientsecrets_and_code(
+        CLIENT_SECRET_FILE,
+        ['profile', 'email'],
+        auth_code)
+
+    # Call Google API
+    http_auth = credentials.authorize(httplib2.Http())
+    drive_service = discovery.build('drive', 'v3', http=http_auth)
+    appfolder = drive_service.files().get(fileId='appfolder').execute()
+
+    # Get profile info from ID token
+    user_id = credentials.id_token['sub']
+
+    if not User.google_id.filter(google_id=user_id).exists():
+        # Save the user's info in database
+        new_user = User(google_id=user_id)
+        new_user.save()
+
+    user = User.google_id.filter(google_id=user_id)
+
+    response = HttpResponse('Success')
+    request.session['offcampus.us_auth'] = user.id
+
+    return response
 
 def getAllListings(request):
     listings = Listing.listings.all()
