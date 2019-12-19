@@ -20,8 +20,7 @@
             uk-navbar-toggle-icon
           ></a>
           <form class="uk-visible@s">
-            <!-- TODO: implement login with Google -->
-            <button class="uk-button uk-button-default" disabled>Log In</button>
+            <button id="sign-in-button" class="uk-button uk-button-default">{{userSignedIn ? "Sign Out" : "Sign In"}}</button>
           </form>
         </div>
       </div>
