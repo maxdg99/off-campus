@@ -20,6 +20,22 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+    <meta name="google-signin-scope" content="maxdg99@gmail.com">
+    <meta name="google-signin-client_id" content="958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com.apps.googleusercontent.com">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+    <script>
+        function start() {
+        gapi.load('auth2', function() {
+            auth2 = gapi.auth2.init({
+            client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+            // Scopes to request in addition to 'profile' and 'email'
+            //scope: 'additional_scope'
+            });
+        });
+        }
+    </script>
 </head>
 
 <body onload="restoreFilters()">
@@ -29,6 +45,7 @@
             <ul id="nav-mobile" class="right">
                 <li><a href="#" onclick="toggleBigMap()">Toggle Large Map</a></li>
             </ul>
+            <button id="signinButton">Sign in with Google</button>
         </div>
     </nav>
 
