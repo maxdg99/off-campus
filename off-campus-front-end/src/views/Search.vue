@@ -136,7 +136,8 @@ export default {
       searchResults: [],
       filters: {},
       pageCount: 1,
-      filtersHaveChanged: false
+      filtersHaveChanged: false,
+      initialPage: 0
     };
   },
   mounted: function() {
@@ -144,6 +145,7 @@ export default {
     form.addEventListener("input", this.onFilterInput);
     this.updateFiltersFromQueryString(this.$route.query);
     this.updateListingsToMatchFilters();
+    this.initialPage = this.filters.page;
   },
   methods: {
     updateFiltersFromQueryString: function(query) {
@@ -202,12 +204,18 @@ export default {
     updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
-      if (this.filtersHaveChanged) {
-        this.filters.page = 1;
-        this.filtersHaveChanged = false;
-      }
+      if (this.filtersHaveChanged || this.initialPage !== this.filters.page) {
+        if (this.filtersHaveChanged) {
+          this.filters.page = 1;
+          this.filtersHaveChanged = false;
+        }
 
-      this.$router.push({ query: this.filters });
+        if (this.initialPage !== this.filters.page) {
+          this.initialPage = this.filters.page;
+        }
+
+        this.$router.push({ query: this.filters });
+      }
     }
   },
   watch: {
