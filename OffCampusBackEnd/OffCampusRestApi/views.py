@@ -13,7 +13,7 @@ import httplib2
 from oauth2client import client
 import json
 
-averages = compute_averages()
+averages = None
 
 def getSearchListingsPage(request):
     listingsPage = __getPaginatedListings(request)
@@ -75,7 +75,7 @@ def authorizeUser(request):
     # Exchange auth code for access token, refresh token, and ID token
     credentials = client.credentials_from_clientsecrets_and_code(
         CLIENT_SECRET_FILE,
-        ['https://www.googleapis.com/auth/drive.appdata', 'profile', 'email'],
+        ['profile', 'email'],
         auth_code)
 
     # Call Google API

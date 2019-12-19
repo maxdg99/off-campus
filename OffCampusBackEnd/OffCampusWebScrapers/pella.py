@@ -75,7 +75,7 @@ class PellaScraper(Scraper):
                     avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
                     avail_mode = "Month"
                     isAvailable = True
-                d = {"scraper": cls.__name__, "image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": None, "availability_date": datetime.datetime.now().date(), "active": True}
+                d = {"scraper": cls.__name__, "image_url": image, "url": url, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": "", "availability_date": datetime.datetime.now().date(), "active": True}
                 print(d)
                 callback(d)
             

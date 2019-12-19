@@ -65,7 +65,7 @@ class HometeamScraper(Scraper):
                         city = "Mansfield"
                     else:
                         city = "Columbus"
-                    listing = {"image_url": ht["image_url"], "url": ht["url"], "price": af["price"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "num_bedrooms": ht["num_bedrooms"], "num_bathrooms": ht["num_bathrooms"], "availability_date": af["availability_date"], "availability_mode": 'Date', "active": True, "description": None, "unit": data["unit"], "scraper": ht["scraper"]}
+                    listing = {"image_url": ht["image_url"], "url": ht["url"], "price": af["price"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "num_bedrooms": ht["num_bedrooms"], "num_bathrooms": ht["num_bathrooms"], "availability_date": af["availability_date"], "availability_mode": 'Date', "active": True, "description": "", "unit": data["unit"], "scraper": ht["scraper"]}
                     print(listing)
                     callback(listing)
 
