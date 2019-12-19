@@ -15,7 +15,7 @@ class Listing(models.Model):
     miles_from_campus = models.FloatField(null=True)
     url = models.CharField(max_length=1000)
     availability_date = models.DateField(null=True)
-    availability_mode = models.CharField(max_length=10, choices=AVAILABILITY_MODE)
+    availability_mode = models.CharField(max_length=2, choices=AVAILABILITY_MODE)
     date_found = models.DateField()
     date_updated = models.DateField()
     active = models.BooleanField()
