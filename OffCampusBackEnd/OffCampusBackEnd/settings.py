@@ -165,3 +165,9 @@ if os.getenv('STATIC_DISK_LOCATION'):
     STATIC_DISK_LOCATION = os.getenv('STATIC_DISK_LOCATION')
 else:
     STATIC_DISK_LOCATION = '/you/dunce/you/need/to/set/STATIC_DISK_LOCATION/in/.env/and/rescrape'
+
+#SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = None
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'Strict'

@@ -7,14 +7,16 @@ from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import *
 from OffCampusWebScrapers.pella import PellaScraper
+from OffCampusWebScrapers.eventide import EventideScraper
 from OffCampusWebScrapers.hometeam import HometeamScraper
 from OffCampusWebScrapers.peak import PeakScraper
 from OffCampusWebScrapers.osu_properties import OSUPropertiesScraper
 from OffCampusWebScrapers.krg import KRGScraper
-from OffCampusBackEnd.utility import getLatLong, distance, standardize_address
+from OffCampusBackEnd.utility import getLatLong, distance, standardize_address, get_region
 import os, sys
 from PIL import Image
 from OffCampusBackEnd.settings import STATIC_BASE, STATIC_DISK_LOCATION
+from urllib.parse import urlparse
 options = [cls for cls in Scraper.__subclasses__()]
 
 print("Available classnames: "+str(options))
@@ -45,7 +47,10 @@ def insert_listing_from_dict(l):
 
         if l["latitude"] is not None:
             l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)
+            l['campus_area'] = get_region(l['latitude'], l["longitude"])
             print("\t\tDistance: "+str(distance(l["latitude"], l["longitude"])))
+            print("\t\tRegion: "+l['campus_area'])
+
 
         l["address"] = string_address
         for attr, value in tokenized_address.items():
@@ -57,31 +62,40 @@ def insert_listing_from_dict(l):
         obj.date_created = datetime.datetime.now().date()
         obj.date_updated = obj.date_created
 
+        # Update image path to use HTTPS
+        parsed_image_url = urlparse(obj.image)._replace(scheme="https")
+        obj.image = parsed_image_url.geturl()
+
         if l["price"] != None and int(l["price"]) > 0:
             obj.save()
 
-        image_path = os.path.join(STATIC_DISK_LOCATION, f"images/{obj.id}.png")
-        image_url = os.path.join(STATIC_BASE, f"images/{obj.id}.png")
+        if len(parsed_image_url.netloc) > 0:
+            # Download the image to get a sense of the size
+            image_path = os.path.join(STATIC_DISK_LOCATION, f"images/{obj.id}.png")
+            image_url = os.path.join(STATIC_BASE, f"images/{obj.id}.png")
 
-        response = requests.get(obj.image)
-        file = open(image_path, "wb")
-        file.write(response.content)
+            headers = requests.head(obj.image)
+            if int(headers.headers["content-length"]) > 1000000:
+                # Create a thumbnail version of the image
+                response = requests.get(obj.image)
+                file = open(image_path, "wb")
+                file.write(response.content)
 
-        # Get the size in MB of the file without resizing
-        file_size = os.stat(image_path).st_size / 1000000
+                # Get the size in MB of the file without resizing
+                file_size = os.stat(image_path).st_size / 1000000
 
-        file.close()
+                file.close()
 
-        # If the file is bigger than 1 MB, we should resize it and store it.
-        if file_size > 1:
-            obj.image = image_url
-            obj.save()
+                # If the file is bigger than 1 MB, we should resize it and store it.
+                if file_size > 1:
+                    obj.image = image_url
+                    obj.save()
 
-            image = Image.open(image_path)
-            image.thumbnail((300, 300))
-            image.save(image_path)
-        else:
-            os.remove(image_path)
+                    image = Image.open(image_path)
+                    image.thumbnail((300, 300))
+                    image.save(image_path)
+                else:
+                    os.remove(image_path)
 
     except Listing.MultipleObjectsReturned:
         print("multiple returned for: "+l["address"])

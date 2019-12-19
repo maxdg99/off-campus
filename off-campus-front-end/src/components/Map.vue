@@ -1,7 +1,15 @@
 <template>
 <div id="bigmap">
     <div id="popup">
-        <Listing :id="selectedListing.pk" :listing="selectedListing.fields" v-if="selectedListing !== null" :canFlip=false />
+        <Listing
+            v-if="selectedListing !== null" 
+            :canFlip=false
+            :key="selectedListing.pk"
+            :id="selectedListing.pk"
+            :listing="selectedListing.fields"
+            v-bind:isLiked="$root.isSignedIn && likedListings.includes(selectedListing.pk)" 
+            v-on:update-isLiked="$emit('update-isLiked', true)"
+          />
     </div>
 </div>
 </template>
@@ -44,10 +52,19 @@ const selectedStyle = new ol.style.Style({
     })
 });
 
+axios.defaults.withCredentials = true;
+
 export default {
-  components: {
-    Listing,
-  },
+    props: {
+        showOnlyLiked: String,
+        likedListings: {
+            type: Array,
+            required: true
+        }
+    },
+    components: {
+        Listing,
+    },
     data: function () {
         return {
             filters: null,
@@ -78,7 +95,9 @@ export default {
                 minDistance: this.filters.minDistance,
                 maxDistance: this.filters.maxDistance,
                 showNoPrice: this.filters.showWithoutPrice,
-                order: this.filters.sortBy
+                campus_area: this.filters.campus_area,
+                order: this.filters.sortBy,
+                showOnlyLiked: this.showOnlyLiked
                 }
             }).then(
                 result => {
@@ -112,8 +131,8 @@ export default {
                     this.features.push(iconFeature)
                     this.featureForListingID[listing.pk] = iconFeature
                 }
-                this.vectorSource.refresh()
             }
+            this.vectorSource.refresh()
         },
         makeBigMap: function () {
             //var instances = M.Tooltip.init(document.getElementById("popup"), {});
