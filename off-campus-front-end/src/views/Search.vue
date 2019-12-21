@@ -2,9 +2,9 @@
   <div class="search">
     <div class="uk-container">
       <form
-        class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m search-filters"
-        uk-grid
+        class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m uk-visible@m search-filters"
         onsubmit="return false;"
+        uk-grid
       >
         <div>
           <label for="bedrooms">Bedrooms</label>
@@ -59,6 +59,7 @@
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
             <select class="uk-select" id="sortBy" v-model="filters.sortBy">
+              <!-- TODO: turn this into a v-for -->
               <option value="distance_increasing" selected>Distance Increasing</option>
               <option value="distance_decreasing">Distance Decreasing</option>
               <option value="price_increasing">Price Increasing</option>
@@ -69,7 +70,31 @@
 
         <div>
           <button
-            class="uk-button uk-button-primary"
+            class="uk-button uk-button-primary uk-width-expand"
+            v-on:click="updateRouteToMatchFilters"
+            v-bind:disabled="searching"
+          >Search</button>
+        </div>
+      </form>
+
+      <form
+        class="uk-grid-small uk-child-width-1-2 uk-child-width-1-3@s uk-hidden@m search-filters"
+        onsubmit="return false;"
+        uk-grid
+      >
+        <div>
+          <button
+            class="uk-button uk-button-default uk-width-expand"
+          >Filter By</button>
+        </div>
+        <div>
+          <button
+            class="uk-button uk-button-default uk-width-expand"
+          >Sort By</button>
+        </div>
+        <div>
+          <button
+            class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
           >Search</button>
