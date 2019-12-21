@@ -1,39 +1,18 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import { LoaderPlugin } from 'vue-google-login';
+
+Vue.use(LoaderPlugin, {
+  client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
+});
 
 Vue.config.productionTip = false
 
 var vue = new Vue({
-  data: {
-    userSignedIn: false
-  },
   router,
   render: h => h(App)
 }).$mount('#app')
-
-$(document).ready(function () {
-  $.ajax({
-    type: 'Get',
-    url: 'http://localhost:8000/isSignedIn',
-    success: function (result) {
-      vue.userSignedIn = result.signedIn;
-    }
-  });
-});
-
-$('#sign-in-button').click(function () {
-  if(vue.userSignedIn) {
-    $.ajax({
-      type: 'GET',
-      url: 'http://localhost:8000/signOut'
-    });
-  }
-  else {
-    auth2.grantOfflineAccess().then(signInCallback);
-  }
-  vue.userSignedIn = !vue.userSignedIn;
-});
 
 function signInCallback(authResult) {
   if (authResult['code']) {
@@ -54,3 +33,5 @@ function signInCallback(authResult) {
 
   }
 }
+
+

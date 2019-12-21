@@ -19,9 +19,8 @@
             uk-toggle="target: #mobile-sidebar"
             uk-navbar-toggle-icon
           ></a>
-          <form class="uk-visible@s">
-            <button id="sign-in-button" class="uk-button uk-button-default">{{userSignedIn ? "Sign Out" : "Sign In"}}</button>
-          </form>
+          <GoogleLogin v-show="!userSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+          <button v-show="userSignedIn" class="uk-button uk-button-default" v-on:click="logOut">Sign Out</button>
         </div>
       </div>
     </nav>
@@ -62,8 +61,60 @@
 <script>
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
+import GoogleLogin from 'vue-google-login';
+import Vue from 'vue'
+import { LoaderPlugin } from 'vue-google-login';
+
+Vue.use(LoaderPlugin, {
+  client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
+});
+
 UIkit.use(Icons);
+
 export default {
-  name: "App"
+  name: "App",
+  data() {
+    return {
+      params: {
+          client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
+      },
+      renderParams: {
+          width: 200,
+          height: 40,
+          longtitle: true
+      },
+      userSignedIn: false
+    }
+  },
+  components: {
+      GoogleLogin
+  },
+  methods:{
+    onSuccess: function(googleUser) {
+      console.log("User successfully signed in.")
+    },
+    onFailure: function(error){
+      console.log(error)
+    },
+    logOut: function(){
+      Vue.GoogleAuth.then(auth2 => {
+        auth2.signOut()
+        console.log("User sucessfully signed out.")
+      })
+    }
+  },
+  mounted: function() {
+    Vue.GoogleAuth.then(auth2 => {
+      this.userSignedIn = auth2.isSignedIn.get()
+      console.log(this.userSignedIn)
+      auth2.isSignedIn.listen(val => {
+        console.log(val)
+        this.userSignedIn = val
+      });
+    })
+  }
 };
+
 </script>
+
+

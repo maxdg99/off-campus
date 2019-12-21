@@ -16,6 +16,7 @@ import json
 averages = None
 
 def getSearchListingsPage(request):
+    global averages # This is necessary
     listingsPage = __getPaginatedListings(request)
     if not averages:
         averages = compute_averages()
@@ -54,22 +55,25 @@ def __getPaginatedListings(request):
     return {"page_count": paginator.num_pages, "listings": listingsPage}
 
 def isSignedIn(request):
-    response = {}
+    data = {}
     if 'offcampus.us_auth' in request and Users.id.find(id=request.session['offcampus.us_auth']).exists():
-        response["signedIn"] = True
+        data["signedIn"] = True
     else:
-        response["signedIn"] = False
-    return HttpResponse(serializers.serialize('json', response), content_type="application/json")
+        data["signedIn"] = False
+    response = JsonResponse(data)
+    __allowCors(response)
+    return response
 
 def signOut(request):
-    response = {}
+    data = {}
     if request.session['offcampus.us_auth'] != None:
         request.session.flush()
-        response["signedOut"] = True
+        data["signedOut"] = True
     else:
-        response["signedOut"] = False
-    return HttpResponse(serializers.serialize('json', response), content_type="application/json")
-
+        data["signedOut"] = False
+    response = JsonResponse(data)
+    __allowCors(response)
+    return response
 
 def authorizeUser(request):
 
@@ -111,10 +115,10 @@ def getAllListings(request):
     return response
 
 def __allowCors(response):
-    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Origin"] = "http://localhost:8080" #must be the url of the website
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    response["Access-Control-Allow-Headers"] = "x-requested-with, Content-Type"
 
 
 def __getFilteredListings(request):
