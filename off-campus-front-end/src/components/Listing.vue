@@ -107,11 +107,11 @@ export default {
               id_token: idToken,
               property_id: propertyId
             },
-            success: function (data) {
+            success: (data) => {
               this.isLiked = data.isLiked
               console.log("this.isLiked: " + this.isLiked)
             },
-            failure: function() {
+            failure: () => {
               console.log("Error toggling property liked status.")
             }
           });
