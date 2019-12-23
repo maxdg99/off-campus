@@ -14,6 +14,10 @@
         <div class="listing-info">{{ listing.num_bedrooms }} beds</div>
         <div class="listing-info">{{ listing.num_bathrooms }} baths</div>
       </div>
+      <div class="listing-info-row">
+        <a :class="{ liked: isLiked }" uk-icon="icon: heart" @click="toggleLikedProperty()"></a>
+        <p>{{isLiked}}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -21,6 +25,10 @@
 <style scoped>
 :root {
   --card-section-margin: 10px;
+}
+
+.liked {
+  color: rgb(247, 93, 177)
 }
 
 .listing-address-parent {
@@ -66,14 +74,82 @@
 </style>
 
 <script>
+import GoogleLogin from 'vue-google-login';
+import Vue from 'vue'
+import { LoaderPlugin } from 'vue-google-login';
+
+Vue.use(LoaderPlugin, {
+  client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
+});
+
 export default {
   name: "Listing",
   props: {
     id: Number,
     listing: Object
   },
-  mounted: function() {
+  data() {
+    return{
+      isLiked: false
+    }
+  },
+  methods:{
+    toggleLikedProperty: function () {
+      Vue.GoogleAuth.then(auth2 => {
+        if(auth2.isSignedIn.get()) {
+          var user = auth2.currentUser.get();
+          var idToken = user.getAuthResponse().id_token;
+          var propertyId = this.id;
+          $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8000/toggleLikedProperty',
+            data: {
+              id_token: idToken,
+              property_id: propertyId
+            },
+            success: function (data) {
+              this.isLiked = data.isLiked
+              console.log("this.isLiked: " + this.isLiked)
+            },
+            failure: function() {
+              console.log("Error toggling property liked status.")
+            }
+          });
+        }
+        else {
+          alert("There is no signed in user. Please sign in with google.")
+        }
+      })
+    },
+    checkForLikes: function() {
+      Vue.GoogleAuth.then(auth2 => {
+        if(auth2.isSignedIn.get()) {
+          var user = auth2.currentUser.get();
+          var idToken = user.getAuthResponse().id_token;
+          var propertyId = this.id;
 
+          $.ajax({
+            type: 'GET',
+            url: `http://localhost:8000/isLikedProperty?property_id=${propertyId}&id_token=${idToken}`,
+            success: function (result) {
+              this.isLiked = result.isLiked;
+              console.log(this.isLiked)
+            }
+          });
+        }
+        else {
+          this.isLiked = false;
+        }
+      });
+    }
+  },
+  mounted: function() {
+    this.checkForLikes();
+    Vue.GoogleAuth.then(auth2 => {
+      auth2.isSignedIn.listen(val => {
+        this.checkForLikes();
+      });
+    });
   }
 };
 </script>

@@ -14,7 +14,7 @@ class PellaScraper(Scraper):
         isNextPage = True
         while isNextPage:
             firstTime = False
-            request = requests.get(url=baseURL+str(pageNumber))
+            request = requests.get(url=PellaScraper.baseURL+str(pageNumber))
             pageNumber += 1
 
             html = request.text

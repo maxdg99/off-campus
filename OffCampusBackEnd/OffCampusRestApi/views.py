@@ -4,6 +4,7 @@ from django.template import loader
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 
 from OffCampusRestApi.models import Listing
 from OffCampusRestApi.models import User
@@ -11,6 +12,8 @@ from OffCampusRestApi.compute_averages import compute_averages
 from apiclient import discovery
 import httplib2
 from oauth2client import client
+from google.oauth2 import id_token
+from google.auth.transport import requests
 import json
 
 averages = None
@@ -53,59 +56,74 @@ def __getPaginatedListings(request):
         listingsPage = paginator.page(paginator.num_pages)
 
     return {"page_count": paginator.num_pages, "listings": listingsPage}
+# Should this be GET or POST. Is POST more secure when dealing with id tokens?
+def isLikedProperty(request):
+    print(request.GET)
+    request_data = request.GET
+    token = request_data['id_token']
+    property_id = request_data['property_id']
+    user_id = None
 
-def isSignedIn(request):
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+        user_id = idinfo['sub']
+    except ValueError:
+        pass
+
     data = {}
-    if 'offcampus.us_auth' in request and Users.id.find(id=request.session['offcampus.us_auth']).exists():
-        data["signedIn"] = True
+    if user_id:
+        if User.objects.filter(google_id=user_id).exists() and Listing.listings.get(id=property_id) in User.objects.get(google_id=user_id).favorites.all():
+            data["isLiked"] = True
+        else:
+            data["isLiked"] = False
     else:
-        data["signedIn"] = False
+        data["isLiked"] = False
     response = JsonResponse(data)
     __allowCors(response)
     return response
 
-def signOut(request):
+@csrf_exempt 
+def toggleLikedProperty(request):
+    request_data = request.POST
+    token = request_data['id_token']
+    property_id = request_data['property_id']
+    user_id = None
+    response = HttpResponse(status=201)
     data = {}
-    if request.session['offcampus.us_auth'] != None:
-        request.session.flush()
-        data["signedOut"] = True
+
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+        user_id = idinfo['sub']
+    except ValueError:
+        pass
+
+    if user_id:
+        if not User.objects.filter(google_id=user_id).exists():
+            user = User(google_id=user_id)
+            user.save()
+        else:
+            user = User.objects.get(google_id=user_id)
+
+        favorites = user.favorites.all()
+
+        if Listing.listings.filter(id=property_id).exists():
+            listing = Listing.listings.get(id=property_id)
+            if listing in favorites:
+                user.favorites.remove(listing)
+                data["isLiked"] = False
+            else:
+                user.favorites.add(listing)
+                data["isLiked"] = True
+            response = JsonResponse(data)
+        else:
+            response = HttpResponse(status=404)    
     else:
-        data["signedOut"] = False
-    response = JsonResponse(data)
+        response = HttpResponse(status=404)
     __allowCors(response)
-    return response
-
-def authorizeUser(request):
-
-    if not request.headers.get('X-Requested-With'):
-        abort(403)
-
-    CLIENT_SECRET_FILE = './client_secret.json'
-
-    # Exchange auth code for access token, refresh token, and ID token
-    credentials = client.credentials_from_clientsecrets_and_code(
-        CLIENT_SECRET_FILE,
-        ['profile', 'email'],
-        auth_code)
-
-    # Call Google API
-    http_auth = credentials.authorize(httplib2.Http())
-    drive_service = discovery.build('drive', 'v3', http=http_auth)
-    appfolder = drive_service.files().get(fileId='appfolder').execute()
-
-    # Get profile info from ID token
-    user_id = credentials.id_token['sub']
-
-    if not User.google_id.filter(google_id=user_id).exists():
-        # Save the user's info in database
-        new_user = User(google_id=user_id)
-        new_user.save()
-
-    user = User.google_id.filter(google_id=user_id)
-
-    response = HttpResponse('Success')
-    request.session['offcampus.us_auth'] = user.id
-
     return response
 
 def getAllListings(request):

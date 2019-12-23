@@ -5,8 +5,9 @@ import json, sys
 from urllib.parse import urljoin
 from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
-from OffCampusWebScrapers.appfolio import * # this imports all of the appfolio scrapers idk why
+from OffCampusWebScrapers.appfolio import *
 from OffCampusWebScrapers.pella import PellaScraper
+from OffCampusWebScraper.osu_properties import OsuPropertiesScraper
 
 from OffCampusBackEnd.utility import getLatLong, distance
 

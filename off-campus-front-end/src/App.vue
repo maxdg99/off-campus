@@ -106,9 +106,7 @@ export default {
   mounted: function() {
     Vue.GoogleAuth.then(auth2 => {
       this.userSignedIn = auth2.isSignedIn.get()
-      console.log(this.userSignedIn)
       auth2.isSignedIn.listen(val => {
-        console.log(val)
         this.userSignedIn = val
       });
     })
