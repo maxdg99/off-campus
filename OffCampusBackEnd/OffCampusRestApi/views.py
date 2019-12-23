@@ -174,14 +174,32 @@ def __getFilteredListings(request):
     if "maxDistance" in queryParams and queryParams["maxDistance"].isnumeric():
         listingsFilter = listingsFilter & Q(miles_from_campus__lte=queryParams["maxDistance"])
 
+    listings = Listing.listings.all()
+
+     # Parses showing only liked properties
+    if "idToken" in queryParams and queryParmas["idToken"] != "null" and "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true":
+        id_token = queryParmas["idToken"]
+        user_id = None
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
+            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                raise ValueError('Wrong issuer.')
+            user_id = idinfo['sub']
+        except ValueError:
+            pass
+
+        if user_id:
+            listings = Users.objects.filter(google_id=user_id).favorites.all()
+            print(listings)
+
     # Parses ordering of listings
     if "order" in queryParams:
         if queryParams["order"] == "price_increasing":
-            return Listing.listings.filter(listingsFilter).order_by('price')
+            return listings.filter(listingsFilter).order_by('price')
         elif queryParams["order"] == "price_decreasing":
-            return Listing.listings.filter(listingsFilter).order_by('-price')
+            return listings.filter(listingsFilter).order_by('-price')
         elif queryParams["order"] == "distance_decreasing":
-            return Listing.listings.filter(listingsFilter).order_by('-miles_from_campus')
-    
+            return listings.filter(listingsFilter).order_by('-miles_from_campus')
+
     # Default order is miles from campus, increasing
-    return Listing.listings.filter(listingsFilter).order_by('miles_from_campus')
+    return listings.filter(listingsFilter).order_by('miles_from_campus')

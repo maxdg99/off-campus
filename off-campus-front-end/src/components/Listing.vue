@@ -15,8 +15,7 @@
         <div class="listing-info">{{ listing.num_bathrooms }} baths</div>
       </div>
       <div class="listing-info-row">
-        <a :class="{ liked: isLiked }" uk-icon="icon: heart" @click="toggleLikedProperty()"></a>
-        <p>{{isLiked}}</p>
+        <a :class="{liked: isLiked}" uk-icon="icon: heart; ratio: 2" @click="toggleLikedProperty()"></a>
       </div>
     </div>
   </div>
@@ -95,6 +94,7 @@ export default {
   },
   methods:{
     toggleLikedProperty: function () {
+      console.log("hey")
       Vue.GoogleAuth.then(auth2 => {
         if(auth2.isSignedIn.get()) {
           var user = auth2.currentUser.get();
@@ -107,9 +107,8 @@ export default {
               id_token: idToken,
               property_id: propertyId
             },
-            success: function (data) {
+            success: data => {
               this.isLiked = data.isLiked
-              console.log("this.isLiked: " + this.isLiked)
             },
             failure: function() {
               console.log("Error toggling property liked status.")
@@ -119,7 +118,7 @@ export default {
         else {
           alert("There is no signed in user. Please sign in with google.")
         }
-      })
+      });
     },
     checkForLikes: function() {
       Vue.GoogleAuth.then(auth2 => {
@@ -131,9 +130,8 @@ export default {
           $.ajax({
             type: 'GET',
             url: `http://localhost:8000/isLikedProperty?property_id=${propertyId}&id_token=${idToken}`,
-            success: function (result) {
+            success: result => {
               this.isLiked = result.isLiked;
-              console.log(this.isLiked)
             }
           });
         }
@@ -148,7 +146,7 @@ export default {
     Vue.GoogleAuth.then(auth2 => {
       auth2.isSignedIn.listen(val => {
         this.checkForLikes();
-      });
+      })
     });
   }
 };

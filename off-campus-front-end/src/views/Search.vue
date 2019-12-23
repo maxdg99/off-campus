@@ -55,6 +55,13 @@
           </label>
         </div>
 
+        <div class="uk-margin search-filter-checkbox" v-show="isSignedIn">
+          <label>
+            <input class="uk-checkbox" type="checkbox" v-model="filters.showOnlyLiked" />
+            Show only liked properties
+          </label>
+        </div>
+
         <div>
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
@@ -86,7 +93,7 @@
           class="uk-width-1-2@s uk-width-1-3@m"
           v-bind:key="listing.pk"
         >
-          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" />
+          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields"/>
         </div>
       </div>
     </div>
@@ -123,6 +130,12 @@
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
 import Paginate from "vuejs-paginate";
+import Vue from 'vue'
+import { LoaderPlugin } from 'vue-google-login';
+
+Vue.use(LoaderPlugin, {
+  client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
+});
 
 export default {
   name: "search",
@@ -136,7 +149,8 @@ export default {
       searchResults: [],
       filters: {},
       pageCount: 1,
-      filtersHaveChanged: false
+      filtersHaveChanged: false,
+      isSignedIn: false
     };
   },
   mounted: function() {
@@ -144,6 +158,13 @@ export default {
     form.addEventListener("input", this.onFilterInput);
     this.updateFiltersFromQueryString(this.$route.query);
     this.updateListingsToMatchFilters();
+
+    Vue.GoogleAuth.then(auth2 => {
+      auth2.isSignedIn.listen(val => {
+        this.isSignedIn = val
+      })
+      this.isSignedIn = auth2.isSignedIn.get()
+    })
   },
   methods: {
     updateFiltersFromQueryString: function(query) {
@@ -172,7 +193,14 @@ export default {
       this.filtersHaveChanged = true;
     },
     updateListingsToMatchFilters: function() {
-      this.searching = true;
+      this.searching = true
+      var idToken = null;
+      Vue.GoogleAuth.then(auth2 => {
+        if(auth2.isSignedIn.get()) {
+          var user = auth2.currentUser.get()
+          idToken = user.getAuthResponse().id_token
+        }
+      })
       axios({
         method: "GET",
         url: "http://localhost:8000/paginatedListings",
@@ -185,7 +213,9 @@ export default {
           minDistance: this.filters.minDistance,
           maxDistance: this.filters.maxDistance,
           showNoPrice: this.filters.showWithoutPrice,
-          order: this.filters.sortBy
+          showOnlyLiked: this.filters.showOnlyLiked,
+          order: this.filters.sortBy,
+          idToken: idToken
         }
       }).then(
         result => {
