@@ -151,7 +151,8 @@ export default {
       filters: {},
       pageCount: 1,
       filtersHaveChanged: false,
-      likedListings: []
+      likedListings: [],
+      initialPage: 0
     };
   },
   mounted: function() {
@@ -160,6 +161,7 @@ export default {
     this.updateFiltersFromQueryString(this.$route.query);
     this.updateListingsToMatchFilters();
     this.getLikedListings()
+    this.initialPage = this.filters.page;
   },
   methods: {
     getLikedListings: function() {
@@ -236,11 +238,18 @@ export default {
     updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
-      if (this.filtersHaveChanged) {
-        this.filters.page = 1;
-        this.filtersHaveChanged = false;
+      if (this.filtersHaveChanged || this.initialPage !== this.filters.page) {
+        if (this.filtersHaveChanged) {
+          this.filters.page = 1;
+          this.filtersHaveChanged = false;
+        }
+
+        if (this.initialPage !== this.filters.page) {
+          this.initialPage = this.filters.page;
+        }
+
+        this.$router.push({ query: this.filters });
       }
-      this.$router.push({ query: this.filters });
     }
   },
   watch: {
