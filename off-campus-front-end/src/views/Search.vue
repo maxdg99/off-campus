@@ -93,7 +93,7 @@
           class="uk-width-1-2@s uk-width-1-3@m"
           v-bind:key="listing.pk"
         >
-          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields"/>
+          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" v-bind:isSignedIn="isSignedIn" v-bind:isLiked="likedListings.includes(listing)" v-on:update-isSignedIn="emitIsSignedIn"/>
         </div>
       </div>
     </div>
@@ -143,6 +143,9 @@ export default {
     Listing,
     Paginate
   },
+  props: {
+    isSignedIn: Boolean
+  },
   data: function() {
     return {
       searching: false,
@@ -150,7 +153,7 @@ export default {
       filters: {},
       pageCount: 1,
       filtersHaveChanged: false,
-      isSignedIn: false
+      likedListings: []
     };
   },
   mounted: function() {
@@ -158,15 +161,24 @@ export default {
     form.addEventListener("input", this.onFilterInput);
     this.updateFiltersFromQueryString(this.$route.query);
     this.updateListingsToMatchFilters();
-
-    Vue.GoogleAuth.then(auth2 => {
-      auth2.isSignedIn.listen(val => {
-        this.isSignedIn = val
-      })
-      this.isSignedIn = auth2.isSignedIn.get()
-    })
   },
   methods: {
+    emitIsSignedIn: function(val) {
+      $emit('update-isSignedIn', val)
+    },
+    getLikedListings: function() {
+      if(isSignedIn) {
+        $.ajax({
+          type: 'GET',
+          url: 'http://offcampus.us/getLikedListings',
+          success: response => {
+            this.likedListings = response.data.listings
+          },
+          failure: response => {
+            this.$emit('update-isSignedIn', false)          }
+        })
+      }
+    },
     updateFiltersFromQueryString: function(query) {
       var filters = {
         bedrooms: "",
@@ -185,6 +197,7 @@ export default {
       }
 
       filters["showWithoutPrice"] = query["showWithoutPrice"] != false;
+      filters["showOnlyLiked"] = false;
       filters["page"] = parseInt(query["page"]) || 1;
 
       this.filters = filters;
@@ -194,13 +207,6 @@ export default {
     },
     updateListingsToMatchFilters: function() {
       this.searching = true
-      var idToken = null;
-      Vue.GoogleAuth.then(auth2 => {
-        if(auth2.isSignedIn.get()) {
-          var user = auth2.currentUser.get()
-          idToken = user.getAuthResponse().id_token
-        }
-      })
       axios({
         method: "GET",
         url: "http://localhost:8000/paginatedListings",
@@ -214,8 +220,7 @@ export default {
           maxDistance: this.filters.maxDistance,
           showNoPrice: this.filters.showWithoutPrice,
           showOnlyLiked: this.filters.showOnlyLiked,
-          order: this.filters.sortBy,
-          idToken: idToken
+          order: this.filters.sortBy
         }
       }).then(
         result => {

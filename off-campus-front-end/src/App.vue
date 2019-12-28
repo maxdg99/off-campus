@@ -35,7 +35,7 @@
             <router-link to="/" uk-toggle="target: #mobile-sidebar">Home</router-link>
           </li>
           <li>
-            <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
+            <router-link to="/search" v-bind:userSignedIn="userSignedIn" v-on:update-isSignedIn="isSignedIn=val" uk-toggle="target: #mobile-sidebar">Search</router-link>
           </li>
           <li>
             <!-- TODO: implement login with Google -->
@@ -91,25 +91,55 @@ export default {
   },
   methods:{
     onSuccess: function(googleUser) {
-      console.log("User successfully signed in.")
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost:8000/login',
+        data:{
+          id_token: googleUser.getAuthResponse().id_token
+        },
+        xhrFields: {
+          withCredentials: true
+        },
+        crossDomain: true,
+        success: response => {
+          console.log('User successfully signed in.')
+          Vue.GoogleAuth.then(auth2 => {
+            auth2.signOut()
+          })
+          this.userSignedIn = true
+          this.isSignedIn()
+        },
+        failure: () => {
+          console.log('Failure logging in.')
+        }
+      })
     },
     onFailure: function(error){
       console.log(error)
     },
     logOut: function(){
-      Vue.GoogleAuth.then(auth2 => {
-        auth2.signOut()
-        console.log("User sucessfully signed out.")
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8000/logout',
+        success: response => {
+          console.log('User successfully signed out.')
+          this.userSignedIn = false       
+        }
+      })
+    },
+    isSignedIn: function(){
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8000/isSignedIn',
+        success: response => {
+          console.log(response)
+          this.userSignedIn = response.isSignedIn       
+        }
       })
     }
   },
-  mounted: function() {
-    Vue.GoogleAuth.then(auth2 => {
-      this.userSignedIn = auth2.isSignedIn.get()
-      auth2.isSignedIn.listen(val => {
-        this.userSignedIn = val
-      });
-    })
+  mounted: function (){
+    this.isSignedIn()
   }
 };
 

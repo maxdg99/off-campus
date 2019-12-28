@@ -33,14 +33,12 @@ def getSearchListingsPage(request):
     context = { 'listings': listingsPage, 'averages': averages}
     return render(request, 'index.html', context)
 
-
 def getPaginatedListings(request):
     queryResult = __getPaginatedListings(request)
     queryResult["listings"] = json.loads(serializers.serialize('json', queryResult["listings"])) # this is dumb-af but it's what i gotta do
     response = JsonResponse(queryResult)
     __allowCors(response)
     return response
-
 
 # TODO: change page to pageNumber and add pageSize query parameter
 def __getPaginatedListings(request):
@@ -56,60 +54,16 @@ def __getPaginatedListings(request):
         listingsPage = paginator.page(paginator.num_pages)
 
     return {"page_count": paginator.num_pages, "listings": listingsPage}
-# Should this be GET or POST. Is POST more secure when dealing with id tokens?
-def isLikedProperty(request):
-    print(request.GET)
-    request_data = request.GET
-    token = request_data['id_token']
-    property_id = request_data['property_id']
-    user_id = None
 
-    try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-        user_id = idinfo['sub']
-    except ValueError:
-        pass
-
-    data = {}
-    if user_id:
-        if User.objects.filter(google_id=user_id).exists() and Listing.listings.get(id=property_id) in User.objects.get(google_id=user_id).favorites.all():
-            data["isLiked"] = True
-        else:
-            data["isLiked"] = False
-    else:
-        data["isLiked"] = False
-    response = JsonResponse(data)
-    __allowCors(response)
-    return response
-
-@csrf_exempt 
 def toggleLikedProperty(request):
-    request_data = request.POST
-    token = request_data['id_token']
+    request_data = request.GET
     property_id = request_data['property_id']
-    user_id = None
-    response = HttpResponse(status=201)
+    row = request.session.get('offcampus.us_auth')
     data = {}
 
-    try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-        user_id = idinfo['sub']
-    except ValueError:
-        pass
-
-    if user_id:
-        if not User.objects.filter(google_id=user_id).exists():
-            user = User(google_id=user_id)
-            user.save()
-        else:
-            user = User.objects.get(google_id=user_id)
-
+    if row:
+        user = User.objects.get(pk=row)
         favorites = user.favorites.all()
-
         if Listing.listings.filter(id=property_id).exists():
             listing = Listing.listings.get(id=property_id)
             if listing in favorites:
@@ -118,11 +72,13 @@ def toggleLikedProperty(request):
             else:
                 user.favorites.add(listing)
                 data["isLiked"] = True
-            response = JsonResponse(data)
+            response = JsonResponse(status=200, data=data)
         else:
+            # Fail because this means the property does not exist
             response = HttpResponse(status=404)    
     else:
-        response = HttpResponse(status=404)
+        # This means the user is not logged in
+        response = HttpResponse(status=401)
     __allowCors(response)
     return response
 
@@ -132,12 +88,62 @@ def getAllListings(request):
     __allowCors(response)
     return response
 
+def getLikedListings(request):
+    row = request.session.get('offcampus.us_auth')
+    if 'offcampus.us_auth' in request.session:
+        listings = Users.objects.filter(pk=row).favorites.all()
+        response = HttpResponse(serializers.serialize('json', listings), content_type="application/json", status=200)
+        __allowCors(response)
+        return response
+    else:
+        response = HttpResponse(status=401)
+        return response
+
+@csrf_exempt
+def login(request):
+    token = request.POST.get('id_token')
+    user_id = None
+    response = HttpResponse(status=404)
+    if token:
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
+            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                raise ValueError('Wrong issuer.')
+            user_id = idinfo['sub']
+        except ValueError:
+            pass
+
+        if user_id:
+            if not User.objects.filter(google_id=user_id).exists():
+                user = User(google_id=user_id)
+                user.save()
+            request.session['offcampus.us_auth'] = User.objects.get(google_id=user_id).pk
+            response = HttpResponse(status=201)
+            print('here', request.session.keys())
+    __allowCors(response)
+    request.session.modified = True
+    return response
+
+def isSignedIn(request):
+    data = {}
+    data["isSignedIn"] = request.session.has_key('offcampus.us_auth')
+    print('here2', request.session.keys())
+    response = JsonResponse(data)
+    __allowCors(response)
+    return response
+    
+def logout(request):
+    request.session.flush()
+    response = HttpResponse(status=201)
+    __allowCors(response)
+    return response
+
 def __allowCors(response):
     response["Access-Control-Allow-Origin"] = "http://localhost:8080" #must be the url of the website
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "x-requested-with, Content-Type"
-
+    response["Access-Control-Allow-Credentials"] = "true"
 
 def __getFilteredListings(request):
     queryParams = request.GET
@@ -174,24 +180,6 @@ def __getFilteredListings(request):
     if "maxDistance" in queryParams and queryParams["maxDistance"].isnumeric():
         listingsFilter = listingsFilter & Q(miles_from_campus__lte=queryParams["maxDistance"])
 
-    listings = Listing.listings.all()
-
-     # Parses showing only liked properties
-    if "idToken" in queryParams and queryParmas["idToken"] != "null" and "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true":
-        id_token = queryParmas["idToken"]
-        user_id = None
-        try:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
-            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-                raise ValueError('Wrong issuer.')
-            user_id = idinfo['sub']
-        except ValueError:
-            pass
-
-        if user_id:
-            listings = Users.objects.filter(google_id=user_id).favorites.all()
-            print(listings)
-
     # Parses ordering of listings
     if "order" in queryParams:
         if queryParams["order"] == "price_increasing":
@@ -200,6 +188,13 @@ def __getFilteredListings(request):
             return listings.filter(listingsFilter).order_by('-price')
         elif queryParams["order"] == "distance_decreasing":
             return listings.filter(listingsFilter).order_by('-miles_from_campus')
+
+    listings = Listing.listings.all()
+
+    if "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true":
+        row = request.session.get('offcampus.us_auth')
+        if row:
+            listings = Users.objects.filter(pk=row).favorites.allI()
 
     # Default order is miles from campus, increasing
     return listings.filter(listingsFilter).order_by('miles_from_campus')

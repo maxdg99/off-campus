@@ -85,69 +85,38 @@ export default {
   name: "Listing",
   props: {
     id: Number,
-    listing: Object
-  },
-  data() {
-    return{
-      isLiked: false
-    }
+    listing: Object,
+    isSignedIn: Boolean,
+    isLiked: Boolean
   },
   methods:{
     toggleLikedProperty: function () {
-      console.log("hey")
-      Vue.GoogleAuth.then(auth2 => {
-        if(auth2.isSignedIn.get()) {
-          var user = auth2.currentUser.get();
-          var idToken = user.getAuthResponse().id_token;
-          var propertyId = this.id;
-          $.ajax({
-            type: 'POST',
-            url: 'http://localhost:8000/toggleLikedProperty',
-            data: {
-              id_token: idToken,
-              property_id: propertyId
-            },
-            success: (data) => {
-              this.isLiked = data.isLiked
-            },
-            failure: () => {
-              console.log("Error toggling property liked status.")
+      if(this.isSignedIn) {
+        $.ajax({
+          type: 'GET',
+          url: 'http://localhost:8000/toggleLikedProperty',
+          data: {
+            property_id: propertyId
+          },
+          success: (data) => {
+            this.isLiked = data.isLiked
+            console.log("Listing successfully toggled.")
+          },
+          failure: (response) => {
+            if(response.status == 401){
+              console.log("Error: User is not signed in")
+              this.$emit("update-isSignedIn", false)
             }
-          });
-        }
-        else {
-          alert("There is no signed in user. Please sign in with google.")
-        }
-      });
-    },
-    checkForLikes: function() {
-      Vue.GoogleAuth.then(auth2 => {
-        if(auth2.isSignedIn.get()) {
-          var user = auth2.currentUser.get();
-          var idToken = user.getAuthResponse().id_token;
-          var propertyId = this.id;
-
-          $.ajax({
-            type: 'GET',
-            url: `http://localhost:8000/isLikedProperty?property_id=${propertyId}&id_token=${idToken}`,
-            success: result => {
-              this.isLiked = result.isLiked;
+            else if(response.status == 404) {
+              console.log("Error: Property does not exists.")
             }
-          });
-        }
-        else {
-          this.isLiked = false;
-        }
-      });
+          }
+        });
+      }
+      else {
+        alert("There is no signed in user. Please sign in with google.")
+      }
     }
-  },
-  mounted: function() {
-    this.checkForLikes();
-    Vue.GoogleAuth.then(auth2 => {
-      auth2.isSignedIn.listen(val => {
-        this.checkForLikes();
-      })
-    });
   }
 };
 </script>
