@@ -8,7 +8,7 @@
             <router-link to="/">Home</router-link>
           </li>
           <li>
-            <router-link to="/search">Search</router-link>
+            <router-link to="/search" >Search</router-link>
           </li>
         </ul>
       </div>
@@ -19,8 +19,8 @@
             uk-toggle="target: #mobile-sidebar"
             uk-navbar-toggle-icon
           ></a>
-          <GoogleLogin v-show="!userSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
-          <button v-show="userSignedIn" class="uk-button uk-button-default" v-on:click="logOut">Sign Out</button>
+          <GoogleLogin v-show="!$root.isSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+          <button v-show="$root.isSignedIn" class="uk-button uk-button-default" v-on:click="logOut">Sign Out</button>
         </div>
       </div>
     </nav>
@@ -35,7 +35,7 @@
             <router-link to="/" uk-toggle="target: #mobile-sidebar">Home</router-link>
           </li>
           <li>
-            <router-link to="/search" v-bind:userSignedIn="userSignedIn" v-on:update-isSignedIn="isSignedIn=val" uk-toggle="target: #mobile-sidebar">Search</router-link>
+            <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
           </li>
           <li>
             <!-- TODO: implement login with Google -->
@@ -82,9 +82,7 @@ export default {
           width: 200,
           height: 40,
           longtitle: true
-      },
-      userSignedIn: false
-    }
+      }    }
   },
   components: {
       GoogleLogin
@@ -98,7 +96,7 @@ export default {
           id_token: googleUser.getAuthResponse().id_token
         },
         xhrFields: {
-          withCredentials: true
+            withCredentials: true
         },
         crossDomain: true,
         success: response => {
@@ -106,8 +104,7 @@ export default {
           Vue.GoogleAuth.then(auth2 => {
             auth2.signOut()
           })
-          this.userSignedIn = true
-          this.isSignedIn()
+          this.$root.isSignedIn = true
         },
         failure: () => {
           console.log('Failure logging in.')
@@ -121,9 +118,12 @@ export default {
       $.ajax({
         type: 'GET',
         url: 'http://localhost:8000/logout',
+        xhrFields: {
+          withCredentials: true
+        },
         success: response => {
           console.log('User successfully signed out.')
-          this.userSignedIn = false       
+          this.$root.isSignedIn = false      
         }
       })
     },
@@ -131,9 +131,12 @@ export default {
       $.ajax({
         type: 'GET',
         url: 'http://localhost:8000/isSignedIn',
+        xhrFields: {
+          withCredentials: true
+        },
         success: response => {
           console.log(response)
-          this.userSignedIn = response.isSignedIn       
+          this.$root.isSignedIn = response.isSignedIn      
         }
       })
     }

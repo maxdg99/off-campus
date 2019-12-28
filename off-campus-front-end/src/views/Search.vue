@@ -51,14 +51,14 @@
         <div class="uk-margin search-filter-checkbox">
           <label>
             <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
-            Show properties without a price
+            Show listings without a price
           </label>
         </div>
 
-        <div class="uk-margin search-filter-checkbox" v-show="isSignedIn">
+        <div class="uk-margin search-filter-checkbox" v-show="$root.isSignedIn">
           <label>
             <input class="uk-checkbox" type="checkbox" v-model="filters.showOnlyLiked" />
-            Show only liked properties
+            Show only liked likedListings
           </label>
         </div>
 
@@ -93,7 +93,7 @@
           class="uk-width-1-2@s uk-width-1-3@m"
           v-bind:key="listing.pk"
         >
-          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" v-bind:isSignedIn="isSignedIn" v-bind:isLiked="likedListings.includes(listing)" v-on:update-isSignedIn="emitIsSignedIn"/>
+          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" v-on:update-isLiked="getLikedListings"/>
         </div>
       </div>
     </div>
@@ -143,9 +143,6 @@ export default {
     Listing,
     Paginate
   },
-  props: {
-    isSignedIn: Boolean
-  },
   data: function() {
     return {
       searching: false,
@@ -161,23 +158,22 @@ export default {
     form.addEventListener("input", this.onFilterInput);
     this.updateFiltersFromQueryString(this.$route.query);
     this.updateListingsToMatchFilters();
+    this.getLikedListings()
   },
   methods: {
-    emitIsSignedIn: function(val) {
-      $emit('update-isSignedIn', val)
-    },
     getLikedListings: function() {
-      if(isSignedIn) {
-        $.ajax({
-          type: 'GET',
-          url: 'http://offcampus.us/getLikedListings',
-          success: response => {
-            this.likedListings = response.data.listings
-          },
-          failure: response => {
-            this.$emit('update-isSignedIn', false)          }
-        })
-      }
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8000/getLikedListings',
+        xhrFields: {
+          withCredentials: true
+        },
+        success: response => {
+          this.likedListings = response
+        },
+        failure: response => {
+          this.$root.isSignedIn = false          }
+      })
     },
     updateFiltersFromQueryString: function(query) {
       var filters = {
@@ -196,8 +192,8 @@ export default {
         }
       }
 
+      filters["showOnlyLiked"] = query["showOnlyLiked"]
       filters["showWithoutPrice"] = query["showWithoutPrice"] != false;
-      filters["showOnlyLiked"] = false;
       filters["page"] = parseInt(query["page"]) || 1;
 
       this.filters = filters;
@@ -210,6 +206,7 @@ export default {
       axios({
         method: "GET",
         url: "http://localhost:8000/paginatedListings",
+        withCredentials: true,
         params: {
           page: this.filters.page,
           beds: this.filters.bedrooms,
@@ -241,7 +238,6 @@ export default {
         this.filters.page = 1;
         this.filtersHaveChanged = false;
       }
-
       this.$router.push({ query: this.filters });
     }
   },

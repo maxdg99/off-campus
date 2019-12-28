@@ -86,29 +86,31 @@ export default {
   props: {
     id: Number,
     listing: Object,
-    isSignedIn: Boolean,
     isLiked: Boolean
   },
   methods:{
     toggleLikedProperty: function () {
-      if(this.isSignedIn) {
+      if(this.$root.isSignedIn) {
         $.ajax({
           type: 'GET',
           url: 'http://localhost:8000/toggleLikedProperty',
           data: {
-            property_id: propertyId
+            property_id: this.id
+          },
+          xhrFields: {
+            withCredentials: true
           },
           success: (data) => {
-            this.isLiked = data.isLiked
-            console.log("Listing successfully toggled.")
+            this.$emit('update-isLiked', data.isLiked)
+            console.log("Listing successfully toggled to " + data.isLiked)
           },
           failure: (response) => {
             if(response.status == 401){
               console.log("Error: User is not signed in")
-              this.$emit("update-isSignedIn", false)
+              this.$root.isSignedIn = false
             }
             else if(response.status == 404) {
-              console.log("Error: Property does not exists.")
+              console.log("Error: Listing does not exists.")
             }
           }
         });

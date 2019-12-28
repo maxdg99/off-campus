@@ -56,12 +56,11 @@ def __getPaginatedListings(request):
     return {"page_count": paginator.num_pages, "listings": listingsPage}
 
 def toggleLikedProperty(request):
-    request_data = request.GET
-    property_id = request_data['property_id']
-    row = request.session.get('offcampus.us_auth')
+    property_id = request.GET['property_id']
     data = {}
 
-    if row:
+    if request.session.has_key('offcampus.us_auth'):
+        row = request.session.get('offcampus.us_auth')
         user = User.objects.get(pk=row)
         favorites = user.favorites.all()
         if Listing.listings.filter(id=property_id).exists():
@@ -74,7 +73,7 @@ def toggleLikedProperty(request):
                 data["isLiked"] = True
             response = JsonResponse(status=200, data=data)
         else:
-            # Fail because this means the property does not exist
+            # Fail because this means the listing does not exist
             response = HttpResponse(status=404)    
     else:
         # This means the user is not logged in
@@ -91,8 +90,9 @@ def getAllListings(request):
 def getLikedListings(request):
     row = request.session.get('offcampus.us_auth')
     if 'offcampus.us_auth' in request.session:
-        listings = Users.objects.filter(pk=row).favorites.all()
-        response = HttpResponse(serializers.serialize('json', listings), content_type="application/json", status=200)
+        listings = User.objects.get(pk=row).favorites.values_list('pk', flat=True)
+        data =  list(listings)
+        response = JsonResponse(data=data, content_type="application/json", status=200, safe=False)
         __allowCors(response)
         return response
     else:
@@ -119,7 +119,6 @@ def login(request):
                 user.save()
             request.session['offcampus.us_auth'] = User.objects.get(google_id=user_id).pk
             response = HttpResponse(status=201)
-            print('here', request.session.keys())
     __allowCors(response)
     request.session.modified = True
     return response
@@ -127,7 +126,6 @@ def login(request):
 def isSignedIn(request):
     data = {}
     data["isSignedIn"] = request.session.has_key('offcampus.us_auth')
-    print('here2', request.session.keys())
     response = JsonResponse(data)
     __allowCors(response)
     return response
@@ -143,7 +141,7 @@ def __allowCors(response):
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "x-requested-with, Content-Type"
-    response["Access-Control-Allow-Credentials"] = "true"
+    response["Access-Control-Allow-Credentials"] = 'true'
 
 def __getFilteredListings(request):
     queryParams = request.GET
@@ -191,10 +189,9 @@ def __getFilteredListings(request):
 
     listings = Listing.listings.all()
 
-    if "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true":
+    if "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true" and request.session.has_key('offcampus.us_auth'):
         row = request.session.get('offcampus.us_auth')
-        if row:
-            listings = Users.objects.filter(pk=row).favorites.allI()
+        listings = User.objects.get(pk=row).favorites.all()
 
     # Default order is miles from campus, increasing
     return listings.filter(listingsFilter).order_by('miles_from_campus')
