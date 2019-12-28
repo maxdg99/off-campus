@@ -48,18 +48,19 @@
           />
         </div>
 
-        <div class="uk-margin search-filter-checkbox">
-          <label>
-            <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
-            Show listings without a price
-          </label>
-        </div>
-
-        <div class="uk-margin search-filter-checkbox" v-show="$root.isSignedIn">
-          <label>
-            <input class="uk-checkbox" type="checkbox" v-model="filters.showOnlyLiked" />
-            Show only liked likedListings
-          </label>
+        <div class="uk-grid-collapse uk-grid-match" uk-grid>
+          <div class="search-filter-checkbox">
+            <label>
+              <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
+              Show listings without a price
+            </label>
+          </div>
+          <div class="search-filter-checkbox" v-show="$root.isSignedIn">
+            <label>
+              <input class="uk-checkbox" type="checkbox" v-model="filters.showOnlyLiked" />
+              Show only liked likedListings
+            </label>
+          </div>
         </div>
 
         <div>
@@ -174,6 +175,7 @@ export default {
         failure: response => {
           this.$root.isSignedIn = false          }
       })
+      this.updateListingsToMatchFilters();
     },
     updateFiltersFromQueryString: function(query) {
       var filters = {
