@@ -178,6 +178,8 @@ def __getFilteredListings(request):
     if "maxDistance" in queryParams and queryParams["maxDistance"].isnumeric():
         listingsFilter = listingsFilter & Q(miles_from_campus__lte=queryParams["maxDistance"])
 
+    listings = Listing.listings.all()
+
     # Parses ordering of listings
     if "order" in queryParams:
         if queryParams["order"] == "price_increasing":
@@ -186,8 +188,6 @@ def __getFilteredListings(request):
             return listings.filter(listingsFilter).order_by('-price')
         elif queryParams["order"] == "distance_decreasing":
             return listings.filter(listingsFilter).order_by('-miles_from_campus')
-
-    listings = Listing.listings.all()
 
     if "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true" and request.session.has_key('offcampus.us_auth'):
         row = request.session.get('offcampus.us_auth')

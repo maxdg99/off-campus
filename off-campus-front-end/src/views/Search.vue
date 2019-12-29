@@ -1,88 +1,91 @@
 <template>
   <div class="search">
-    <div class="uk-container">
-      <form
-        class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m search-filters"
-        uk-grid
-        onsubmit="return false;"
-      >
-        <div>
-          <label for="bedrooms">Bedrooms</label>
-          <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
-        </div>
-
-        <div>
-          <label for="bathrooms">Bathrooms</label>
-          <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
-        </div>
-
-        <div>
-          <label for="min-price">Minimum Price</label>
-          <input class="uk-input" id="min-price" type="number" min="0" v-model="filters.minPrice" />
-        </div>
-
-        <div>
-          <label for="max-price">Maximum Price</label>
-          <input class="uk-input" id="max-price" type="number" min="0" v-model="filters.maxPrice" />
-        </div>
-
-        <div>
-          <label for="min-distance">Minimum Distance</label>
-          <input
-            class="uk-input"
-            id="min-distance"
-            type="number"
-            min="0"
-            v-model="filters.minDistance"
-          />
-        </div>
-
-        <div>
-          <label for="max-distance">Maximum Distance</label>
-          <input
-            class="uk-input"
-            id="max-distance"
-            type="number"
-            min="0"
-            v-model="filters.maxDistance"
-          />
-        </div>
-
-        <div class="uk-grid-collapse uk-grid-match" uk-grid>
-          <div class="search-filter-checkbox">
-            <label>
-              <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
-              Show listings without a price
-            </label>
+  <div uk-sticky>
+      <button type="button" class="uk-button uk-button-default" id="toggle-filters" uk-toggle="target: #filters; animation: uk-animation-slide-top-medium">Toggle Filters</button>
+      <div class="uk-container" id="filters">
+        <form
+          class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m search-filters"
+          uk-grid
+          onsubmit="return false;"
+        >
+          <div>
+            <label for="bedrooms">Bedrooms</label>
+            <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
           </div>
-          <div class="search-filter-checkbox" v-show="$root.isSignedIn">
-            <label>
-              <input class="uk-checkbox" type="checkbox" v-model="filters.showOnlyLiked" />
-              Show only liked likedListings
-            </label>
-          </div>
-        </div>
 
-        <div>
-          <label class="uk-form-label">Sort By</label>
-          <div class="uk-form-controls">
-            <select class="uk-select" id="sortBy" v-model="filters.sortBy">
-              <option value="distance_increasing" selected>Distance Increasing</option>
-              <option value="distance_decreasing">Distance Decreasing</option>
-              <option value="price_increasing">Price Increasing</option>
-              <option value="price_decreasing">Price Decreasing</option>
-            </select>
+          <div>
+            <label for="bathrooms">Bathrooms</label>
+            <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
           </div>
-        </div>
 
-        <div>
-          <button
-            class="uk-button uk-button-primary"
-            v-on:click="updateRouteToMatchFilters"
-            v-bind:disabled="searching"
-          >Search</button>
-        </div>
-      </form>
+          <div>
+            <label for="min-price">Minimum Price</label>
+            <input class="uk-input" id="min-price" type="number" min="0" v-model="filters.minPrice" />
+          </div>
+
+          <div>
+            <label for="max-price">Maximum Price</label>
+            <input class="uk-input" id="max-price" type="number" min="0" v-model="filters.maxPrice" />
+          </div>
+
+          <div>
+            <label for="min-distance">Minimum Distance</label>
+            <input
+              class="uk-input"
+              id="min-distance"
+              type="number"
+              min="0"
+              v-model="filters.minDistance"
+            />
+          </div>
+
+          <div>
+            <label for="max-distance">Maximum Distance</label>
+            <input
+              class="uk-input"
+              id="max-distance"
+              type="number"
+              min="0"
+              v-model="filters.maxDistance"
+            />
+          </div>
+
+          <div class="uk-grid-collapse uk-grid-match" uk-grid>
+            <div class="search-filter-checkbox">
+              <label>
+                <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
+                Show listings without a price
+              </label>
+            </div>
+            <div class="search-filter-checkbox" v-show="$root.isSignedIn">
+              <label>
+                <input class="uk-checkbox" type="checkbox" v-model="filters.showOnlyLiked" />
+                Show only liked likedListings
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="uk-form-label">Sort By</label>
+            <div class="uk-form-controls">
+              <select class="uk-select" id="sortBy" v-model="filters.sortBy">
+                <option value="distance_increasing" selected>Distance Increasing</option>
+                <option value="distance_decreasing">Distance Decreasing</option>
+                <option value="price_increasing">Price Increasing</option>
+                <option value="price_decreasing">Price Decreasing</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <button
+              class="uk-button uk-button-primary"
+              v-on:click="updateRouteToMatchFilters"
+              v-bind:disabled="searching"
+            >Search</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <br />
@@ -124,6 +127,14 @@
   .search-filter-checkbox {
     padding-top: 15px;
   }
+}
+#filters {
+  background-color:white;
+  width:100%;
+}
+#toggle-filters {
+  background-color:white;
+  width: 100%;
 }
 </style>
 

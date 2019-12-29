@@ -2,15 +2,7 @@
   <div id="app">
     <nav class="uk-navbar-container uk-margin" uk-navbar>
       <div class="uk-navbar-left">
-        <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
-        <ul class="uk-navbar-nav uk-visible@s">
-          <li>
-            <router-link to="/">Home</router-link>
-          </li>
-          <li>
-            <router-link to="/search" >Search</router-link>
-          </li>
-        </ul>
+        <router-link to="/" class="uk-navbar-item uk-logo uk-position-center"><img id="logo" src="./logo.png"/></router-link>
       </div>
       <div class="uk-navbar-right">
         <div class="uk-navbar-item">
@@ -56,6 +48,11 @@
 @import "../node_modules/uikit/src/less/uikit.theme.less";
 @offcanvas-bar-background: #fff;
 @offcanvas-bar-color-mode: dark;
+
+#logo{
+  width: 330px;
+  height: 66px;
+}
 </style>
 
 <script>
