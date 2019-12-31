@@ -94,7 +94,7 @@
           class="uk-width-1-2@s uk-width-1-3@m"
           v-bind:key="listing.pk"
         >
-          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" v-on:update-isLiked="getLikedListings"/>
+          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" v-on:update-isLiked="toggleLikedListing(listing.pk)"/>
         </div>
       </div>
     </div>
@@ -164,6 +164,15 @@ export default {
     this.initialPage = this.filters.page;
   },
   methods: {
+    toggleLikedListing: function(listingId) {
+      if(this.likedListings.includes(listingId)) {
+        var index = this.likedListings.indexOf(listingId)
+        this.likedListings.splice(index,1)
+      }
+      else {
+        this.likedListings.push(listingId)
+      }
+    },
     getLikedListings: function() {
       $.ajax({
         type: 'GET',

@@ -101,27 +101,30 @@ def getLikedListings(request):
 
 @csrf_exempt
 def login(request):
-    token = request.POST.get('id_token')
-    user_id = None
-    response = HttpResponse(status=404)
-    if token:
-        try:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
-            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-                raise ValueError('Wrong issuer.')
-            user_id = idinfo['sub']
-        except ValueError:
-            pass
+    if request.POST:
+        token = request.POST.get('id_token')
+        user_id = None
+        response = HttpResponse(status=404)
+        if token:
+            try:
+                idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
+                if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                    raise ValueError('Wrong issuer.')
+                user_id = idinfo['sub']
+            except ValueError:
+                pass
 
-        if user_id:
-            if not User.objects.filter(google_id=user_id).exists():
-                user = User(google_id=user_id)
-                user.save()
-            request.session['offcampus.us_auth'] = User.objects.get(google_id=user_id).pk
-            response = HttpResponse(status=201)
-    __allowCors(response)
-    request.session.modified = True
-    return response
+            if user_id:
+                if not User.objects.filter(google_id=user_id).exists():
+                    user = User(google_id=user_id)
+                    user.save()
+                request.session['offcampus.us_auth'] = User.objects.get(google_id=user_id).pk
+                response = HttpResponse(status=201)
+        __allowCors(response)
+        request.session.modified = True
+        return response
+    else:
+        return HttpResponse(status=400)
 
 def isSignedIn(request):
     data = {}
@@ -180,6 +183,10 @@ def __getFilteredListings(request):
 
     listings = Listing.listings.all()
 
+    if "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true" and request.session.has_key('offcampus.us_auth'):
+        row = request.session.get('offcampus.us_auth')
+        listings = User.objects.get(pk=row).favorites.all()
+
     # Parses ordering of listings
     if "order" in queryParams:
         if queryParams["order"] == "price_increasing":
@@ -188,10 +195,6 @@ def __getFilteredListings(request):
             return listings.filter(listingsFilter).order_by('-price')
         elif queryParams["order"] == "distance_decreasing":
             return listings.filter(listingsFilter).order_by('-miles_from_campus')
-
-    if "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true" and request.session.has_key('offcampus.us_auth'):
-        row = request.session.get('offcampus.us_auth')
-        listings = User.objects.get(pk=row).favorites.all()
 
     # Default order is miles from campus, increasing
     return listings.filter(listingsFilter).order_by('miles_from_campus')
