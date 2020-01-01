@@ -78,26 +78,85 @@
       </form>
 
       <form
-        class="uk-grid-small uk-child-width-1-2 uk-child-width-1-3@s uk-hidden@m search-filters"
+        class="uk-grid-small uk-child-width-1-2 uk-hidden@m search-filters"
         onsubmit="return false;"
         uk-grid
       >
         <div>
           <button
             class="uk-button uk-button-default uk-width-expand"
-          >Filter By</button>
+            v-on:click="showMobileFilters = !showMobileFilters;"
+          >Filter & Sort</button>
         </div>
-        <div>
-          <button
-            class="uk-button uk-button-default uk-width-expand"
-          >Sort By</button>
-        </div>
+
         <div>
           <button
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
           >Search</button>
+        </div>
+
+        <div v-if="showMobileFilters">
+          <label for="bedrooms">Bedrooms</label>
+          <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
+        </div>
+
+        <div  v-if="showMobileFilters">
+          <label for="bathrooms">Bathrooms</label>
+          <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
+        </div>
+
+        <div v-if="showMobileFilters">
+          <label for="min-price">Minimum Price</label>
+          <input class="uk-input" id="min-price" type="number" min="0" v-model="filters.minPrice" />
+        </div>
+
+        <div v-if="showMobileFilters">
+          <label for="max-price">Maximum Price</label>
+          <input class="uk-input" id="max-price" type="number" min="0" v-model="filters.maxPrice" />
+        </div>
+
+        <div v-if="showMobileFilters">
+          <label for="min-distance">Minimum Distance</label>
+          <input
+            class="uk-input"
+            id="min-distance"
+            type="number"
+            min="0"
+            v-model="filters.minDistance"
+          />
+        </div>
+
+        <div v-if="showMobileFilters">
+          <label for="max-distance">Maximum Distance</label>
+          <input
+            class="uk-input"
+            id="max-distance"
+            type="number"
+            min="0"
+            v-model="filters.maxDistance"
+          />
+        </div>
+
+        <div v-if="showMobileFilters" class="uk-margin search-filter-checkbox">
+          <label>
+            <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
+            Show properties without a price
+          </label>
+        </div>
+
+        <div v-if="showMobileFilters">
+          <label class="uk-form-label">Sort By</label>
+          <div class="uk-form-controls">
+            <select class="uk-select" id="sortBy" v-model="filters.sortBy">
+              <!-- TODO: turn this into a v-for -->
+              <option value="distance_increasing" selected>Distance Increasing</option>
+              <option value="distance_decreasing">Distance Decreasing</option>
+              <option value="price_increasing">Price Increasing</option>
+              <option value="price_decreasing">Price Decreasing</option>
+            </select>
+          </div>
         </div>
       </form>
     </div>
@@ -162,7 +221,8 @@ export default {
       filters: {},
       pageCount: 1,
       filtersHaveChanged: false,
-      initialPage: 0
+      initialPage: 0,
+      showMobileFilters: false
     };
   },
   mounted: function() {
