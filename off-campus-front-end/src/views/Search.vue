@@ -2,7 +2,7 @@
   <div class="search">
     <div class="uk-container">
       <form
-        class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m uk-visible@m search-filters"
+        class="uk-grid-small uk-child-width-1-4 uk-visible@m search-filters"
         onsubmit="return false;"
         uk-grid
       >
