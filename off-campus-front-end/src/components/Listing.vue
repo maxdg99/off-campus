@@ -7,7 +7,7 @@
     <div class="listing-info-container">
       <div class="listing-info-row">
         <div v-if="listing.price" class="listing-info listing-price">${{ listing.price }}</div>
-        <div v-if="!listing.price" class="listing-info">N/A</div>
+        <div v-else class="listing-info">N/A</div>
         <div class="listing-info">{{ listing.miles_from_campus }} mi</div>
       </div>
       <div class="listing-info-row">
