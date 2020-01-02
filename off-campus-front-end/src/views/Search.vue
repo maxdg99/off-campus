@@ -278,6 +278,7 @@ export default {
   },
   methods: {
     onSuccess: function(googleUser) {
+      console.log("hey")
       $.ajax({
         type: "POST",
         url: "http://localhost:8000/login",
