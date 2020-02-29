@@ -86,7 +86,7 @@
           <button
             class="uk-button uk-button-default uk-width-expand"
             v-on:click="showMobileFilters = !showMobileFilters;"
-          >Filter & Sort</button>
+          >Filter &amp; Sort</button>
         </div>
 
         <div>
