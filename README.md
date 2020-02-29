@@ -9,13 +9,9 @@ This started as Max Gruber, Andrew Haberlandt, and Adam Lis's Hack OHI/O 2019 pr
 1. Install Vue.js
     1. Install the dependencies in off-campus-front-end/package.json
 1. Run the back end
+    1. Navigate to the OffCampusBackEnd directory
+    1. Copy sample-db.sqlite3 and rename it to db.sqlite3
+    1. Run the Django app with this command: `python manage.py runserver`
 1. Run the front end
-
-# Running the back end
-1. Navigate to the OffCampusBackEnd directory
-1. Copy sample-db.sqlite3 and rename it to db.sqlite3
-1. Run the Django app (command: python manage.py runserver)
-
-# Running the front end
-1. Navigate to the off-campus-front-end directory
-1. Run the Vue app (command: npm run serve)
+    1. Navigate to the off-campus-front-end directory
+    1. Run the Vue app with this command: `npm run serve`
