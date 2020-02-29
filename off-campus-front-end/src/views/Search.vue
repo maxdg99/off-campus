@@ -1,11 +1,22 @@
 <template>
   <div class="search">
     <div class="uk-container">
-      <form
-        class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m search-filters"
-        uk-grid
-        onsubmit="return false;"
-      >
+      <form class="search-filters" onsubmit="return false;">
+        <div class="mobile-search">
+          <button
+            class="uk-button uk-button-default"
+            v-on:click="toggleMobileFilters()"
+          >Filter &amp; Sort</button>
+        </div>
+
+        <div class="mobile-search">
+          <button
+            class="uk-button uk-button-primary"
+            v-on:click="updateRouteToMatchFilters"
+            v-bind:disabled="searching"
+          >Search</button>
+        </div>
+
         <div>
           <label for="bedrooms">Bedrooms</label>
           <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
@@ -48,7 +59,7 @@
           />
         </div>
 
-        <div class="uk-margin search-filter-checkbox">
+        <div class="search-filter-checkbox">
           <label>
             <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
             Show properties without a price
@@ -67,7 +78,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="desktop-search">
           <button
             class="uk-button uk-button-primary"
             v-on:click="updateRouteToMatchFilters"
@@ -107,14 +118,43 @@
 </template>
 
 <style scoped>
-@media (max-width: 639px) {
+.search-filters {
+  display: grid;
+}
+
+.search-filters div,
+.search-filters button {
+  width: 100%;
+}
+
+@media (max-width: 799px) {
+  .search-filters {
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+  }
   .search-filter-checkbox {
+    margin-top: 20px;
     margin-bottom: 0;
   }
+  .desktop-search {
+    display: none;
+  }
 }
-@media (min-width: 640px) {
+
+@media (min-width: 800px) {
+  .search-filters {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-row-gap: 15px;
+    grid-column-gap: 15px;
+  }
   .search-filter-checkbox {
-    padding-top: 15px;
+    padding-top: 0;
+    margin-top: 15px;
+    margin-bottom: auto;
+  }
+  .mobile-search {
+    display: none;
   }
 }
 </style>
@@ -148,6 +188,18 @@ export default {
     this.initialPage = this.filters.page;
   },
   methods: {
+    toggleMobileFilters: function() {
+      let mobileFilters = document.querySelectorAll(
+        "form.search-filters > div:not(.desktop-search):not(.mobile-search)"
+      );
+      mobileFilters.forEach(filter => {
+        if (filter.style.display === "none") {
+          filter.style.display = "block";
+        } else {
+          filter.style.display = "none";
+        }
+      });
+    },
     updateFiltersFromQueryString: function(query) {
       var filters = {
         bedrooms: "",
