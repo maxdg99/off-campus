@@ -6,7 +6,7 @@ from OffCampusWebScrapers.scraper import Scraper
 import datetime
 import re
 
-class PellaScraper(Scraper):
+class OSUProperties(Scraper):
 
     def _create_dictionaries(js):
         js = js[js.find("properties['"):js.find("// | Garages")]
