@@ -229,6 +229,14 @@ export default {
     const forms = document.querySelectorAll("form.search-filters");
     forms.forEach(form => {
       form.addEventListener("input", this.onFilterInput);
+
+      // Ensures that pressing enter on the filters form clicks "Search", not "Filter & Sort"
+      form.addEventListener("keypress", event => {
+        if (event.keyCode == 13) {
+          event.preventDefault();
+          document.querySelector("button.uk-button-primary").click();
+        }
+      });
     });
 
     this.updateFiltersFromQueryString(this.$route.query);
