@@ -8,7 +8,6 @@ import datetime
 
 
 class EventideScraper(Scraper):
-    @classmethod
     def _remove_special_chars(string):
         chars = ['"', '$', ' ', '<br>', 'Bedrooms:', 'Bathrooms:', '\\']
         for char in chars:
@@ -62,7 +61,7 @@ class EventideScraper(Scraper):
             description = description_object.find('p').text
             description = description.replace('"', '')
 
-            d = {"image_url": image_link, "url": link_to_listing, "price": int(price), "address": address, "num_bedrooms": int(bed), "num_bathrooms": float(bath), "availability_date": availability, "availability_mode": 'Date', "listed": True, "description": description}
+            d = {"image_url": image_link, "url": link_to_listing, "price": int(price), "address": address, "num_bedrooms": int(bed), "num_bathrooms": float(bath), "availability_date": availability, "availability_mode": 'Date', "active": True, "description": description}
 
             print(d)
             callback(d)

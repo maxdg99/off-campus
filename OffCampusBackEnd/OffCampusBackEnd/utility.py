@@ -5,11 +5,11 @@ import re
 import math
 
 def getLatLong(address):
-    to_find = re.compile("St|Ave")
+    to_find = re.compile("Street|St|Avenue|Ave|Road|Rd")
     match = to_find.search(address)
     if match:
         idx = address.find(",")
-        if idx != match.end():
+        if idx != match.end() and ',' in address:
             print("before: "+address)
             address = address[0:match.end()] + address[idx:]
             print("after "+address)
@@ -19,8 +19,8 @@ def getLatLong(address):
     # print(urllib.parse.urlencode(query))
     r = requests.get('https://api.opencagedata.com/geocode/v1/json', params=query)
     o = r.json()
-    latLongParent = o["results"][0]["geometry"]
     #print(json.dumps(o))
+    latLongParent = o["results"][0]["geometry"]
     if latLongParent and "lat" in latLongParent:
         latitude = latLongParent["lat"]
         longitude = latLongParent["lng"]
