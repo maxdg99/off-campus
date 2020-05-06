@@ -97,27 +97,27 @@
           >Search</button>
         </div>
 
-        <div v-if="showMobileFilters">
+        <div v-show="showMobileFilters">
           <label for="bedrooms">Bedrooms</label>
           <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
         </div>
 
-        <div  v-if="showMobileFilters">
+        <div v-show="showMobileFilters">
           <label for="bathrooms">Bathrooms</label>
           <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
         </div>
 
-        <div v-if="showMobileFilters">
+        <div v-show="showMobileFilters">
           <label for="min-price">Minimum Price</label>
           <input class="uk-input" id="min-price" type="number" min="0" v-model="filters.minPrice" />
         </div>
 
-        <div v-if="showMobileFilters">
+        <div v-show="showMobileFilters">
           <label for="max-price">Maximum Price</label>
           <input class="uk-input" id="max-price" type="number" min="0" v-model="filters.maxPrice" />
         </div>
 
-        <div v-if="showMobileFilters">
+        <div v-show="showMobileFilters">
           <label for="min-distance">Minimum Distance</label>
           <input
             class="uk-input"
@@ -128,7 +128,7 @@
           />
         </div>
 
-        <div v-if="showMobileFilters">
+        <div v-show="showMobileFilters">
           <label for="max-distance">Maximum Distance</label>
           <input
             class="uk-input"
@@ -139,14 +139,14 @@
           />
         </div>
 
-        <div v-if="showMobileFilters" class="uk-margin search-filter-checkbox">
+        <div v-show="showMobileFilters" class="uk-margin search-filter-checkbox">
           <label>
             <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
             Show properties without a price
           </label>
         </div>
 
-        <div v-if="showMobileFilters">
+        <div v-show="showMobileFilters">
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
             <select class="uk-select" id="sortBy" v-model="filters.sortBy">
@@ -226,8 +226,19 @@ export default {
     };
   },
   mounted: function() {
-    const form = document.querySelector("form.search-filters");
-    form.addEventListener("input", this.onFilterInput);
+    const forms = document.querySelectorAll("form.search-filters");
+    forms.forEach(form => {
+      form.addEventListener("input", this.onFilterInput);
+
+      // Ensures that pressing enter on the filters form clicks "Search", not "Filter & Sort"
+      form.addEventListener("keypress", event => {
+        if (event.keyCode == 13) {
+          event.preventDefault();
+          document.querySelector("button.uk-button-primary").click();
+        }
+      });
+    });
+
     this.updateFiltersFromQueryString(this.$route.query);
     this.updateListingsToMatchFilters();
     this.initialPage = this.filters.page;
