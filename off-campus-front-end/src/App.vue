@@ -47,8 +47,6 @@
     </div>
 
     <router-view />
-
-    <footer class="uk-text-center">&copy; 2019 Max Gruber, Andrew Haberlandt, Adam Lis</footer>
   </div>
 </template>
 
@@ -57,6 +55,21 @@
 @import "../node_modules/uikit/src/less/uikit.theme.less";
 @offcanvas-bar-background: #fff;
 @offcanvas-bar-color-mode: dark;
+
+/* Sticky footer */
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+footer {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  padding-bottom: 0.5rem;
+}
 </style>
 
 <script>
