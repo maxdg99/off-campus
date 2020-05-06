@@ -219,6 +219,7 @@ export default {
       searching: false,
       searchResults: [],
       filters: {},
+      originalFilters: {},
       pageCount: 1,
       filtersHaveChanged: false,
       initialPage: 0,
@@ -240,6 +241,7 @@ export default {
     });
 
     this.updateFiltersFromQueryString(this.$route.query);
+    this.setOriginalFilters();
     this.updateListingsToMatchFilters();
     this.initialPage = this.filters.page;
   },
@@ -266,8 +268,12 @@ export default {
 
       this.filters = filters;
     },
+    setOriginalFilters: function() {
+      this.originalFilters = Object.assign({}, this.filters);
+    },
     onFilterInput: function() {
-      this.filtersHaveChanged = true;
+      this.filtersHaveChanged =
+        JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
     },
     updateListingsToMatchFilters: function() {
       this.searching = true;
@@ -319,6 +325,7 @@ export default {
     $route(to, from) {
       this.updateFiltersFromQueryString(to.query);
       this.updateListingsToMatchFilters();
+      this.setOriginalFilters();
     }
   }
 };
