@@ -58,12 +58,13 @@
         <div>
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
-            <select class="uk-select" id="sortBy" v-model="filters.sortBy">
-              <!-- TODO: turn this into a v-for -->
-              <option value="distance_increasing" selected>Distance Increasing</option>
-              <option value="distance_decreasing">Distance Decreasing</option>
-              <option value="price_increasing">Price Increasing</option>
-              <option value="price_decreasing">Price Decreasing</option>
+            <select class="uk-select" v-model="filters.sortBy">
+              <option
+                v-for="(option, index) in sortOptions"
+                v-bind:key="option.id"
+                v-bind:value="option.id"
+                v-bind:selected="index === 0"
+              >{{ option.text }}</option>
             </select>
           </div>
         </div>
@@ -149,12 +150,13 @@
         <div v-show="showMobileFilters">
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
-            <select class="uk-select" id="sortBy" v-model="filters.sortBy">
-              <!-- TODO: turn this into a v-for -->
-              <option value="distance_increasing" selected>Distance Increasing</option>
-              <option value="distance_decreasing">Distance Decreasing</option>
-              <option value="price_increasing">Price Increasing</option>
-              <option value="price_decreasing">Price Decreasing</option>
+            <select class="uk-select" v-model="filters.sortBy">
+              <option
+                v-for="(option, index) in sortOptions"
+                v-bind:key="option.id"
+                v-bind:value="option.id"
+                v-bind:selected="index === 0"
+              >{{ option.text }}</option>
             </select>
           </div>
         </div>
@@ -218,6 +220,7 @@ export default {
     return {
       searching: false,
       searchResults: [],
+      sortOptions: [],
       filters: {},
       originalFilters: {},
       pageCount: 1,
@@ -240,12 +243,26 @@ export default {
       });
     });
 
+    this.setSortOptions();
     this.updateFiltersFromQueryString(this.$route.query);
     this.setOriginalFilters();
     this.updateListingsToMatchFilters();
     this.initialPage = this.filters.page;
   },
   methods: {
+    setSortOptions: function() {
+      axios({
+        method: "GET",
+        url: "http://localhost:8000/orderOptions"
+      }).then(
+        result => {
+          this.sortOptions = result.data;
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    },
     updateFiltersFromQueryString: function(query) {
       var filters = {
         bedrooms: "",
@@ -254,7 +271,7 @@ export default {
         maxPrice: "",
         minDistance: "",
         maxDistance: "",
-        sortBy: "distance_increasing"
+        sortBy: "1"
       };
 
       for (var key in filters) {

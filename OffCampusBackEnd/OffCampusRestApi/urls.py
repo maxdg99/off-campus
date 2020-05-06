@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.getSearchListingsPage, name='index'),
     path('paginatedListings', views.getPaginatedListings, name='paginatedListings'),
     path('allListings', views.getAllListings, name='allListings'),
+    path('orderOptions', views.getOrderOptions, name='orderOptions')
 ]
