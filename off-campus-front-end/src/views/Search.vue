@@ -180,7 +180,7 @@
       v-model="filters.page"
       :page-count="pageCount"
       :page-range="3"
-      :margin-pages="2"
+      :margin-pages="1"
       :click-handler="updateRouteToMatchFilters"
       :container-class="'uk-pagination uk-flex-center'"
       :page-class="''"
