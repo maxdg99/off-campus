@@ -1,6 +1,7 @@
 <template>
   <div class="search">
     <div class="uk-container">
+      <!-- Desktop search filters -->
       <form
         class="uk-grid-small uk-child-width-1-4 uk-visible@m search-filters"
         onsubmit="return false;"
@@ -60,10 +61,9 @@
           <div class="uk-form-controls">
             <select class="uk-select" v-model="filters.sortBy">
               <option
-                v-for="(option, index) in sortOptions"
-                v-bind:key="option.id"
-                v-bind:value="option.id"
-                v-bind:selected="index === 0"
+                v-for="option in sortOptions"
+                :key="option.id"
+                :value="option.id"
               >{{ option.text }}</option>
             </select>
           </div>
@@ -78,6 +78,7 @@
         </div>
       </form>
 
+      <!-- Mobile search filters -->
       <form
         class="uk-grid-small uk-child-width-1-2 uk-hidden@m search-filters"
         onsubmit="return false;"
@@ -152,10 +153,9 @@
           <div class="uk-form-controls">
             <select class="uk-select" v-model="filters.sortBy">
               <option
-                v-for="(option, index) in sortOptions"
-                v-bind:key="option.id"
-                v-bind:value="option.id"
-                v-bind:selected="index === 0"
+                v-for="option in sortOptions"
+                :key="option.id"
+                :value="option.id"
               >{{ option.text }}</option>
             </select>
           </div>
@@ -172,7 +172,7 @@
           class="uk-width-1-2@s uk-width-1-3@m"
           v-bind:key="listing.pk"
         >
-          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" />
+          <Listing :id="listing.pk" :listing="listing.fields" />
         </div>
       </div>
     </div>
@@ -188,7 +188,7 @@
       :disabled-class="'uk-disabled'"
       :prev-text="'<span uk-pagination-previous></span>'"
       :next-text="'<span uk-pagination-next></span>'"
-    ></Paginate>
+    />
   </div>
 </template>
 
