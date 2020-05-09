@@ -224,7 +224,6 @@ export default {
       filters: {},
       originalFilters: {},
       pageCount: 1,
-      filtersHaveChanged: false,
       initialPage: 0,
       showMobileFilters: false
     };
@@ -288,10 +287,6 @@ export default {
     setOriginalFilters: function() {
       this.originalFilters = Object.assign({}, this.filters);
     },
-    onFilterInput: function() {
-      this.filtersHaveChanged =
-        JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
-    },
     updateListingsToMatchFilters: function() {
       this.searching = true;
       axios({
@@ -323,10 +318,11 @@ export default {
     updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
-      if (this.filtersHaveChanged || this.initialPage !== this.filters.page) {
-        if (this.filtersHaveChanged) {
+      let filtersHaveChanged = JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
+
+      if (filtersHaveChanged || this.initialPage !== this.filters.page) {
+        if (filtersHaveChanged) {
           this.filters.page = 1;
-          this.filtersHaveChanged = false;
         }
 
         if (this.initialPage !== this.filters.page) {
