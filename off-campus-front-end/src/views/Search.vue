@@ -224,7 +224,6 @@ export default {
       filters: {},
       originalFilters: {},
       pageCount: 1,
-      initialPage: 0,
       showMobileFilters: false
     };
   },
@@ -246,7 +245,6 @@ export default {
     this.updateFiltersFromQueryString(this.$route.query);
     this.setOriginalFilters();
     this.updateListingsToMatchFilters();
-    this.initialPage = this.filters.page;
   },
   methods: {
     setSortOptions: function() {
@@ -319,14 +317,13 @@ export default {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
       let filtersHaveChanged = JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
+      let pageHasChanged = this.originalFilters.page !== this.filters.page;
 
-      if (filtersHaveChanged || this.initialPage !== this.filters.page) {
-        if (filtersHaveChanged) {
-          this.filters.page = 1;
-        }
-
-        if (this.initialPage !== this.filters.page) {
+      if (filtersHaveChanged) {
+        if (pageHasChanged) {
           this.initialPage = this.filters.page;
+        } else {
+          this.filters.page = 1;
         }
 
         this.$router.push({ query: this.filters });
