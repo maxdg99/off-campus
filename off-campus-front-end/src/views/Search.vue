@@ -16,34 +16,44 @@
           <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
         </div>
 
-        <div>
-          <label for="min-price">Minimum Price</label>
-          <input class="uk-input" id="min-price" type="number" min="0" v-model="filters.minPrice" />
+        <div class="range">
+          <label for="min-price">Price</label>
+          <input
+            class="uk-input"
+            id="min-price"
+            type="number"
+            min="0"
+            placeholder="Min"
+            v-model="filters.minPrice"
+          />
+          <span>&ndash;</span>
+          <input
+            class="uk-input"
+            id="max-price"
+            type="number"
+            min="0"
+            placeholder="Max"
+            v-model="filters.maxPrice"
+          />
         </div>
 
-        <div>
-          <label for="max-price">Maximum Price</label>
-          <input class="uk-input" id="max-price" type="number" min="0" v-model="filters.maxPrice" />
-        </div>
-
-        <div>
-          <label for="min-distance">Minimum Distance</label>
+        <div class="range">
+          <label for="min-distance">Distance</label>
           <input
             class="uk-input"
             id="min-distance"
             type="number"
             min="0"
+            placeholder="Min"
             v-model="filters.minDistance"
           />
-        </div>
-
-        <div>
-          <label for="max-distance">Maximum Distance</label>
+          <span>&ndash;</span>
           <input
             class="uk-input"
             id="max-distance"
             type="number"
             min="0"
+            placeholder="Max"
             v-model="filters.maxDistance"
           />
         </div>
@@ -51,7 +61,7 @@
         <div class="uk-margin search-filter-checkbox">
           <label>
             <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
-            Show properties without a price
+            <span>&nbsp;Show properties without a price</span>
           </label>
         </div>
 
@@ -68,7 +78,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="search-button">
           <button
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
@@ -107,34 +117,44 @@
           <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
         </div>
 
-        <div v-show="showMobileFilters">
-          <label for="min-price">Minimum Price</label>
-          <input class="uk-input" id="min-price" type="number" min="0" v-model="filters.minPrice" />
+        <div v-show="showMobileFilters" class="range">
+          <label for="min-price">Price</label>
+          <input
+            class="uk-input"
+            id="min-price"
+            type="number"
+            min="0"
+            placeholder="Min"
+            v-model="filters.minPrice"
+          />
+          <span>&ndash;</span>
+          <input
+            class="uk-input"
+            id="max-price"
+            type="number"
+            min="0"
+            placeholder="Max"
+            v-model="filters.maxPrice"
+          />
         </div>
 
-        <div v-show="showMobileFilters">
-          <label for="max-price">Maximum Price</label>
-          <input class="uk-input" id="max-price" type="number" min="0" v-model="filters.maxPrice" />
-        </div>
-
-        <div v-show="showMobileFilters">
-          <label for="min-distance">Minimum Distance</label>
+        <div v-show="showMobileFilters" class="range">
+          <label for="min-distance">Distance</label>
           <input
             class="uk-input"
             id="min-distance"
             type="number"
             min="0"
+            placeholder="Min"
             v-model="filters.minDistance"
           />
-        </div>
-
-        <div v-show="showMobileFilters">
-          <label for="max-distance">Maximum Distance</label>
+          <span>&ndash;</span>
           <input
             class="uk-input"
             id="max-distance"
             type="number"
             min="0"
+            placeholder="Max"
             v-model="filters.maxDistance"
           />
         </div>
@@ -190,16 +210,36 @@
   </div>
 </template>
 
-<style scoped>
-@media (max-width: 639px) {
-  .search-filter-checkbox {
-    margin-bottom: 0;
-  }
-}
-@media (min-width: 640px) {
-  .search-filter-checkbox {
+<style lang="scss" scoped>
+.search-filter-checkbox {
+  margin-bottom: 0;
+
+  @media (min-width: 536px) and (max-width: 959px) {
     padding-top: 15px;
   }
+
+  @media (min-width: 960px) {
+    padding-top: 10px;
+  }
+}
+
+.range {
+  label {
+    display: block;
+  }
+  
+  span {
+    padding: 0 0.25rem;
+  }
+
+  input {
+    /* Width of span containing dash is 1rem */
+    width: calc((100% - 1rem) / 2);
+  }
+}
+
+.search-button {
+  margin-top: 39px;
 }
 </style>
 
