@@ -2,18 +2,25 @@
   <div class="search">
     <div class="uk-container">
       <form
-        class="uk-grid-small uk-child-width-1-4 uk-visible@m search-filters"
+        class="uk-grid-small uk-child-width-1-5 uk-visible@m search-filters"
         onsubmit="return false;"
         uk-grid
       >
-        <div>
-          <label for="bedrooms">Bedrooms</label>
-          <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
-        </div>
-
-        <div>
-          <label for="bathrooms">Bathrooms</label>
-          <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
+        <div class="beds-and-baths">
+          <div>
+            <label for="bedrooms">Bedrooms</label>
+            <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
+          </div>
+          <div>
+            <label for="bathrooms">Bathrooms</label>
+            <input
+              class="uk-input"
+              id="bathrooms"
+              type="number"
+              min="0"
+              v-model="filters.bathrooms"
+            />
+          </div>
         </div>
 
         <div class="range">
@@ -56,13 +63,6 @@
             placeholder="Max"
             v-model="filters.maxDistance"
           />
-        </div>
-
-        <div class="uk-margin search-filter-checkbox">
-          <label>
-            <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
-            <span>&nbsp;Show properties without a price</span>
-          </label>
         </div>
 
         <div>
@@ -107,14 +107,21 @@
           >Search</button>
         </div>
 
-        <div v-show="showMobileFilters">
-          <label for="bedrooms">Bedrooms</label>
-          <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
-        </div>
-
-        <div v-show="showMobileFilters">
-          <label for="bathrooms">Bathrooms</label>
-          <input class="uk-input" id="bathrooms" type="number" min="0" v-model="filters.bathrooms" />
+        <div v-show="showMobileFilters" class="beds-and-baths">
+          <div>
+            <label for="bedrooms">Bedrooms</label>
+            <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
+          </div>
+          <div>
+            <label for="bathrooms">Bathrooms</label>
+            <input
+              class="uk-input"
+              id="bathrooms"
+              type="number"
+              min="0"
+              v-model="filters.bathrooms"
+            />
+          </div>
         </div>
 
         <div v-show="showMobileFilters" class="range">
@@ -157,13 +164,6 @@
             placeholder="Max"
             v-model="filters.maxDistance"
           />
-        </div>
-
-        <div v-show="showMobileFilters" class="uk-margin search-filter-checkbox">
-          <label>
-            <input class="uk-checkbox" type="checkbox" v-model="filters.showWithoutPrice" />
-            Show properties without a price
-          </label>
         </div>
 
         <div v-show="showMobileFilters">
@@ -211,15 +211,14 @@
 </template>
 
 <style lang="scss" scoped>
-.search-filter-checkbox {
-  margin-bottom: 0;
-
-  @media (min-width: 536px) and (max-width: 959px) {
-    padding-top: 15px;
+.beds-and-baths {
+  & > div {
+    display: inline-block;
+    width: 48%;
   }
 
-  @media (min-width: 960px) {
-    padding-top: 10px;
+  & > div:nth-of-type(1) {
+    margin-right: 4%;
   }
 }
 
@@ -227,7 +226,7 @@
   label {
     display: block;
   }
-  
+
   span {
     padding: 0 0.25rem;
   }
@@ -239,7 +238,7 @@
 }
 
 .search-button {
-  margin-top: 39px;
+  margin-top: 24px;
 }
 </style>
 
