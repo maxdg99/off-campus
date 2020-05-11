@@ -86,6 +86,13 @@
             v-bind:disabled="searching"
           >Search</button>
         </div>
+        <div>
+          <button
+            class="uk-button uk-button-primary uk-width-expand"
+            v-on:click="toggleMap"
+            v-bind:disabled="searching"
+          >Toggle map</button>
+        </div>
       </form>
 
       <!-- Mobile search filters -->
@@ -101,13 +108,13 @@
           >Filter &amp; Sort</button>
         </div>
 
-        <div>
-          <button
-            class="uk-button uk-button-primary uk-width-expand"
-            v-on:click="updateRouteToMatchFilters"
-            v-bind:disabled="searching"
-          >Search</button>
-        </div>
+          <div>
+            <button
+              class="uk-button uk-button-primary uk-width-expand"
+              v-on:click="updateRouteToMatchFilters"
+              v-bind:disabled="searching"
+            >Search</button>
+          </div>
 
         <div v-show="showMobileFilters" class="beds-and-baths">
           <div>
@@ -185,14 +192,17 @@
 
     <br />
 
-    <div class="uk-container">
-      <div class="uk-grid-medium uk-grid-match" uk-grid>
-        <div
-          v-for="listing in searchResults"
-          class="uk-width-1-2@s uk-width-1-3@m"
-          v-bind:key="listing.pk"
-        >
-          <Listing :id="listing.pk" :listing="listing.fields" />
+    <div v-bind:class="['uk-grid', 'uk-grid-stack', 'uk-grid-small']" uk-grid>
+      <Map ref="map" class="uk-width-1-2"></Map>
+      <div class="uk-container uk-container-center uk-width-1-2" style="margin-left: auto; margin-right: auto">
+        <div class="uk-grid-medium uk-grid-match" uk-grid>
+          <div
+            v-for="listing in searchResults"
+            class="uk-width-1-2@s uk-width-1-3@m"
+            v-bind:key="listing.pk"
+          >
+            <Listing :id="listing.pk" :listing="listing.fields" />
+          </div>
         </div>
       </div>
     </div>
@@ -247,13 +257,15 @@
 <script>
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
+import Map from "@/components/Map.vue";
 import Paginate from "vuejs-paginate";
 
 export default {
   name: "search",
   components: {
     Listing,
-    Paginate
+    Paginate,
+    Map
   },
   data: function() {
     return {
@@ -263,7 +275,8 @@ export default {
       filters: {},
       originalFilters: {},
       pageCount: 1,
-      showMobileFilters: false
+      showMobileFilters: false,
+      mapLoaded: false,
     };
   },
   mounted: function() {
@@ -365,6 +378,11 @@ export default {
 
         this.$router.push({ query: this.filters });
       }
+    },
+
+    toggleMap: function() {
+      this.$refs.map.filters = this.filters
+      this.$refs.map.toggleMap()
     }
   },
   watch: {
