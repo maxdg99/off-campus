@@ -302,7 +302,6 @@ export default {
         }
       }
 
-      filters["showWithoutPrice"] = query["showWithoutPrice"] != false;
       filters["page"] = parseInt(query["page"]) || 1;
 
       this.filters = filters;
@@ -327,7 +326,6 @@ export default {
           maxPrice: this.filters.maxPrice,
           minDistance: this.filters.minDistance,
           maxDistance: this.filters.maxDistance,
-          showNoPrice: this.filters.showWithoutPrice,
           order: this.filters.sortBy
         }
       }).then(
