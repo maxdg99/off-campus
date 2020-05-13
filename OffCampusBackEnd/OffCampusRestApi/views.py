@@ -10,6 +10,9 @@ from OffCampusRestApi.models import User
 from OffCampusRestApi.compute_averages import compute_averages
 import json
 
+orderOptions = [{'id': '1', 'text': 'Price Increasing'}, {'id': '2', 'text': 'Price Decreasing'}, {'id': '3', 'text': 'Distance Increasing'}, {'id': '4', 'text': 'Distance Decreasing'}]
+orderQueries = {'1': 'price', '2': '-price', '3': 'miles_from_campus', '4': '-miles_from_campus'}
+
 averages = None
 
 def getSearchListingsPage(request):
@@ -53,6 +56,11 @@ def __getPaginatedListings(request):
 def getAllListings(request):
     listings = Listing.listings.all()
     response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    __allowCors(response)
+    return response
+
+def getOrderOptions(request):
+    response = JsonResponse(orderOptions, safe=False)
     __allowCors(response)
     return response
 
@@ -100,12 +108,8 @@ def __getFilteredListings(request):
 
     # Parses ordering of listings
     if "order" in queryParams:
-        if queryParams["order"] == "price_increasing":
-            return Listing.listings.filter(listingsFilter).order_by('price')
-        elif queryParams["order"] == "price_decreasing":
-            return Listing.listings.filter(listingsFilter).order_by('-price')
-        elif queryParams["order"] == "distance_decreasing":
-            return Listing.listings.filter(listingsFilter).order_by('-miles_from_campus')
-    
-    # Default order is miles from campus, increasing
-    return Listing.listings.filter(listingsFilter).order_by('miles_from_campus')
+        if queryParams["order"] in orderQueries:
+            return Listing.listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]])
+        else:
+            # Default order is miles from campus, increasing
+            return Listing.listings.filter(listingsFilter).order_by(orderQueries['3'])

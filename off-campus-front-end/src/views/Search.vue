@@ -1,6 +1,7 @@
 <template>
   <div class="search">
     <div class="uk-container">
+      <!-- Desktop search filters -->
       <form
         class="uk-grid-small uk-child-width-1-4 uk-visible@m search-filters"
         onsubmit="return false;"
@@ -58,12 +59,12 @@
         <div>
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
-            <select class="uk-select" id="sortBy" v-model="filters.sortBy">
-              <!-- TODO: turn this into a v-for -->
-              <option value="distance_increasing" selected>Distance Increasing</option>
-              <option value="distance_decreasing">Distance Decreasing</option>
-              <option value="price_increasing">Price Increasing</option>
-              <option value="price_decreasing">Price Decreasing</option>
+            <select class="uk-select" v-model="filters.sortBy">
+              <option
+                v-for="option in sortOptions"
+                :key="option.id"
+                :value="option.id"
+              >{{ option.text }}</option>
             </select>
           </div>
         </div>
@@ -77,6 +78,7 @@
         </div>
       </form>
 
+      <!-- Mobile search filters -->
       <form
         class="uk-grid-small uk-child-width-1-2 uk-hidden@m search-filters"
         onsubmit="return false;"
@@ -149,12 +151,12 @@
         <div v-show="showMobileFilters">
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
-            <select class="uk-select" id="sortBy" v-model="filters.sortBy">
-              <!-- TODO: turn this into a v-for -->
-              <option value="distance_increasing" selected>Distance Increasing</option>
-              <option value="distance_decreasing">Distance Decreasing</option>
-              <option value="price_increasing">Price Increasing</option>
-              <option value="price_decreasing">Price Decreasing</option>
+            <select class="uk-select" v-model="filters.sortBy">
+              <option
+                v-for="option in sortOptions"
+                :key="option.id"
+                :value="option.id"
+              >{{ option.text }}</option>
             </select>
           </div>
         </div>
@@ -170,7 +172,7 @@
           class="uk-width-1-2@s uk-width-1-3@m"
           v-bind:key="listing.pk"
         >
-          <Listing v-bind:id="listing.pk" v-bind:listing="listing.fields" />
+          <Listing :id="listing.pk" :listing="listing.fields" />
         </div>
       </div>
     </div>
@@ -178,7 +180,7 @@
       v-model="filters.page"
       :page-count="pageCount"
       :page-range="3"
-      :margin-pages="2"
+      :margin-pages="1"
       :click-handler="updateRouteToMatchFilters"
       :container-class="'uk-pagination uk-flex-center'"
       :page-class="''"
@@ -186,7 +188,7 @@
       :disabled-class="'uk-disabled'"
       :prev-text="'<span uk-pagination-previous></span>'"
       :next-text="'<span uk-pagination-next></span>'"
-    ></Paginate>
+    />
   </div>
 </template>
 
@@ -218,11 +220,10 @@ export default {
     return {
       searching: false,
       searchResults: [],
+      sortOptions: [],
       filters: {},
       originalFilters: {},
       pageCount: 1,
-      filtersHaveChanged: false,
-      initialPage: 0,
       showMobileFilters: false
     };
   },
@@ -240,12 +241,25 @@ export default {
       });
     });
 
+    this.setSortOptions();
     this.updateFiltersFromQueryString(this.$route.query);
     this.setOriginalFilters();
     this.updateListingsToMatchFilters();
-    this.initialPage = this.filters.page;
   },
   methods: {
+    setSortOptions: function() {
+      axios({
+        method: "GET",
+        url: "http://localhost:8000/orderOptions"
+      }).then(
+        result => {
+          this.sortOptions = result.data;
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    },
     updateFiltersFromQueryString: function(query) {
       var filters = {
         bedrooms: "",
@@ -254,7 +268,7 @@ export default {
         maxPrice: "",
         minDistance: "",
         maxDistance: "",
-        sortBy: "distance_increasing"
+        sortBy: "1"
       };
 
       for (var key in filters) {
@@ -270,10 +284,6 @@ export default {
     },
     setOriginalFilters: function() {
       this.originalFilters = Object.assign({}, this.filters);
-    },
-    onFilterInput: function() {
-      this.filtersHaveChanged =
-        JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
     },
     updateListingsToMatchFilters: function() {
       this.searching = true;
@@ -306,14 +316,14 @@ export default {
     updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
-      if (this.filtersHaveChanged || this.initialPage !== this.filters.page) {
-        if (this.filtersHaveChanged) {
-          this.filters.page = 1;
-          this.filtersHaveChanged = false;
-        }
+      let filtersHaveChanged = JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
+      let pageHasChanged = this.originalFilters.page !== this.filters.page;
 
-        if (this.initialPage !== this.filters.page) {
+      if (filtersHaveChanged) {
+        if (pageHasChanged) {
           this.initialPage = this.filters.page;
+        } else {
+          this.filters.page = 1;
         }
 
         this.$router.push({ query: this.filters });
