@@ -5,71 +5,71 @@ from urllib.parse import urljoin
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import AppfolioScraper
 
+
 class HometeamAppfolioScraper(Scraper):
     url = "https://ht.appfolio.com/listings"
-    
-    def process_listings(callback):
-        AppfolioScraper.process_listings(HometeamAppfolioScraper.url, callback)
-
-class HometeamScraper(Scraper):
-    hometeamURL = "https://www.hometeamproperties.net/osu-off-campus-housing"
-    htAppfolioListings = []
-
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
-
-    def add_ht_appfolio_listings(data):
-        htAppfolioListings.append(data)
-
-    @classmethod
-    def dict_from_listing(cls, listingDiv):
-        data = {}
-        data["image_url"] = listingDiv.find("img")["src"]
-        data["url"] = urljoin(HometeamScraper.hometeamURL, listingDiv.find("a")["href"])
-        address = listingDiv.find("h4").text
-        address = address[0:address.find(":")].strip()
-        data["address"] = address
-
-        campus = listingDiv.find_all("h4")[1]
-        data["campus"] = campus.text
-
-        bedbath = listingDiv.find("strong").text.split()
-        
-        data["num_bedrooms"] = bedbath[0]
-        data["num_bathrooms"] = bedbath[2]
-        data["scraper"] = cls.__name__
-
-        data["price"] = None
-        data["availability_date"] = None
-        data["availability_mode"] = 'None'
-        data["active"] = False
-
-        return data
 
     @classmethod
     def process_listings(cls, callback):
-        ht = requests.get(url=HometeamScraper.hometeamURL)
-        htHTML = ht.text
-        htSoup = BeautifulSoup(htHTML, 'html.parser')
-        htProperties = htSoup.find("div", {"class": "grid"})
-        htListings = []
-        for listingDiv in htProperties.findAll("div", recursive=False):
-            htListings.append(HometeamScraper.dict_from_listing(listingDiv))
+        AppfolioScraper.process_listings(HometeamAppfolioScraper.url, cls, callback)
 
-        for ht in htListings:
-            for af in htAppfolioListings:
-                match, data = addresses_are_equal(ht["address"], af["address"])
+class HometeamScraper(Scraper):
+
+    @classmethod
+    def process_listings(cls, callback):
+        req = requests.get(url="https://www.hometeamproperties.net/osu-off-campus-housing")
+        html = req.text
+        soup = BeautifulSoup(html, 'html.parser')
+        properties = soup.find("div", {"class": "grid"})
+        listings = []
+
+        for div in properties.findAll("div", recursive=False):
+            listings.append(HometeamScraper.__dict_from_listing(div))
+
+        appfolio_listings = []
+        HometeamAppfolioScraper.process_listings(lambda listing: appfolio_listings.append(listing))
+
+        for hometeam_listing in listings:
+            for appfolio_listing in appfolio_listings:
+                match, data = HometeamScraper.addresses_are_equal(hometeam_listing["address"], appfolio_listing["address"])
                 if match:
-                    if "bexely" in ht["campus"].lower():
+                    if "bexely" in soup["campus"].lower():
                         city = "Mansfield"
                     else:
                         city = "Columbus"
-                    listing = {"image_url": ht["image_url"], "url": ht["url"], "price": af["price"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "num_bedrooms": ht["num_bedrooms"], "num_bathrooms": ht["num_bathrooms"], "availability_date": af["availability_date"], "availability_mode": 'Date', "active": True, "description": "", "unit": data["unit"], "scraper": ht["scraper"]}
+                    listing = {"image": soup["image"], "url": soup["url"], "price": af["price"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "beds": soup["beds"],
+                        "baths": soup["baths"], "availability_date": af["availability_date"], "availability_mode": 'Date', "active": True, "description": "", "unit": data["unit"], "scraper": soup["scraper"]}
                     print(listing)
                     callback(listing)
 
-    def get_address_components(address):
+    @classmethod
+    def __dict_from_listing(cls, listingDiv):
+            data = {}
+            data["image_url"] = listingDiv.find("img")["src"]
+            data["url"] = urljoin(HometeamAppfolioScraper.url,
+                                listingDiv.find("a")["href"])
+            address = listingDiv.find("h4").text
+            address = address[0:address.find(":")].strip()
+            data["address"] = address
+
+            campus = listingDiv.find_all("h4")[1]
+            data["campus"] = campus.text
+
+            bedbath = listingDiv.find("strong").text.split()
+
+            data["num_bedrooms"] = bedbath[0]
+            data["num_bathrooms"] = bedbath[2]
+            data["scraper"] = cls.__name__
+
+            data["price"] = None
+            data["availability_date"] = None
+            data["availability_mode"] = 'None'
+            data["active"] = False
+
+            return data
+
+    @staticmethod
+    def __get_address_components(address):
         # Purpose: This function parses an address for the hometeam website and the hometeam appfolio website
 
         # Assumptions: This function makes the assumption that the first thing in the address is the street_number
@@ -83,7 +83,8 @@ class HometeamScraper(Scraper):
         # where one site has properties from multiple cities.
 
         # Define some dictionaries to help us in conversions
-        numeric_street_conversion = {"first": "1st", "second": "2nd", "third": "3rd", "fourth": "4th", "fifth": "5th", "sixth": "6th", "seventh": "7th", "eighth": "8th", "ninth": "9th", "tenth": "10th", "eleventh": "11th", "twelth": "12th", "thirteenth": "13th", "fourteenth": "14th", "fifteenth": "15th", "sixteenth": "16th", "seventeenth": "17th", "eighteenth": "18th", "ninteenth": "19th"}
+        numeric_street_conversion = {"first": "1st", "second": "2nd", "third": "3rd", "fourth": "4th", "fifth": "5th", "sixth": "6th", "seventh": "7th", "eighth": "8th", "ninth": "9th", "tenth": "10th",
+            "eleventh": "11th", "twelth": "12th", "thirteenth": "13th", "fourteenth": "14th", "fifteenth": "15th", "sixteenth": "16th", "seventeenth": "17th", "eighteenth": "18th", "ninteenth": "19th"}
 
         # For some reason, hometeam has bedrooms in address.  We must remove them
         # Get the reg exp matches
@@ -100,7 +101,8 @@ class HometeamScraper(Scraper):
             address = address.replace('Apt', '')
 
         # Look for cardinal directions to replace
-        direction_conversion = re.search('North|South|East|West|NORTH|SOUTH|EAST|WEST|north|south|east|west|[., ]N[., ]|[., ]S[., ]|[., ]E[., ]|[., ]W[., ]', address)
+        direction_conversion = re.search(
+            'North|South|East|West|NORTH|SOUTH|EAST|WEST|north|south|east|west|[., ]N[., ]|[., ]S[., ]|[., ]E[., ]|[., ]W[., ]', address)
         # If such a direcition exists replace it to lower case word format
         if direction_conversion != None:
             # Get the direction
@@ -126,13 +128,15 @@ class HometeamScraper(Scraper):
                 direction_conversion = 'west'
 
         # Look for road types and remove them if they exists.  They are relatively irrelevant
-        road_type = re.search('Avenue|Ave|Ave\.|Street|St|St\.|Road|Rd|Rd.', address, re.IGNORECASE)
+        road_type = re.search(
+            'Avenue|Ave|Ave\.|Street|St|St\.|Road|Rd|Rd.', address, re.IGNORECASE)
         if road_type != None:
             road_type = road_type[0]
             address = address.replace(road_type, '')
 
         # Now, we look for the street names.  A minimum of 2 characters should suffice
-        street_name = re.findall('[a-zA-Z]{2,}|\d+TH|\d+ND|\d+RD|\d+ST', address, re.IGNORECASE)
+        street_name = re.findall(
+            '[a-zA-Z]{2,}|\d+TH|\d+ND|\d+RD|\d+ST', address, re.IGNORECASE)
         if len(street_name) > 0:
             # Get rid of the street name from the address
             address = address.replace(street_name[0], '')
@@ -144,14 +148,15 @@ class HometeamScraper(Scraper):
             # If we have found a direction, add it back to the street name
             if direction_conversion != None:
                 street_name = direction_conversion + ' ' + street_name
-        
+
         # Here is where the fun starts!  Define a few regular expressions
         # Look for a range of address
         number_range = re.search('^\d+-\d+', address)
         # Get all numbers in the address
         numbers = re.findall('\d+', address)
         # Look if there is an address with an ampersand
-        address_ampersand = re.search('^\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
+        address_ampersand = re.search(
+            '^\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
         # Get the letters in the address
         letters = re.findall('[., ]\d*[a-zA-Z]\d*[., ]', address)
         # Set all of the data points we want to None
@@ -167,7 +172,8 @@ class HometeamScraper(Scraper):
             numbers.pop(0)
 
             # Look for an ampersand of units
-            unit_ampersand = re.search('\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
+            unit_ampersand = re.search(
+                '\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
 
             # If an ampersand exists in the unit, se
             if unit_ampersand != None:
@@ -175,7 +181,7 @@ class HometeamScraper(Scraper):
 
             # Look at each remaining number in the address and matche them to zipcodes, street numbers, or units
             for number in numbers:
-                if lower_range and upper_range and lower_range <= int(number) and int(number) <= upper_range and lower_range%2 == int(number)%2:
+                if lower_range and upper_range and lower_range <= int(number) and int(number) <= upper_range and lower_range %2 == int(number)%2:
                     lower_range = int(number)
                     upper_range = None
                 # This may not be enough to check for a zipcode.  We will see
@@ -190,10 +196,11 @@ class HometeamScraper(Scraper):
             address = address.replace(lower_range, '')
 
             # Calculate to see if there exists a unit ampersand after removing the first ampersand
-            unit_ampersand = re.search('\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
-            
+            unit_ampersand = re.search(
+                '\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
+
             # There are two numbers in our numbers array because there is an ampersand, remove them
-            numbers.pop(0) 
+            numbers.pop(0)
             numbers.pop(0)
 
             # If we have a unit ampersand set it
@@ -214,7 +221,8 @@ class HometeamScraper(Scraper):
             numbers.pop(0)
 
             # Look for an ampersand of units
-            unit_ampersand = re.search('\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
+            unit_ampersand = re.search(
+                '\d*[a-zA-Z]?\d* ?& ?\d*[a-zA-Z]?\d*', address)
 
             # Check if the unit has an ampersand
             if unit_ampersand != None:
@@ -242,18 +250,18 @@ class HometeamScraper(Scraper):
         return {"lower_range": lower_range, "upper_range": upper_range, "street_name": street_name, "unit": unit, "zipcode": zipcode}
 
     def addresses_are_equal(address1, address2):
-        # Purpose: Compares two addresses by using get_address_components(string). Returns true and 
+        # Purpose: Compares two addresses by using get_address_components(string). Returns true and
         # a dictionary containing street number, street name, and unit if the units match.  Returns false
         # and an empty dictionary otherwise
 
         # Assumptions: If lower_range and upper_range are not null, then there is a range of address to
-        # compare against.  An address matches in this range iff the given address is greater than the lower 
+        # compare against.  An address matches in this range iff the given address is greater than the lower
         # limit, less than the upper limit, and the eveness/oddness matches that of the lower_range.  We also
-        # assume that lower_range%2 =- upper_range%2.  
+        # assume that lower_range%2 =- upper_range%2.
 
         # Get the address components of each address
-        address1_components = get_address_components(address1)
-        address2_components = get_address_components(address2)
+        address1_components = HometeamScraper.__get_address_components(address1)
+        address2_components = HometeamScraper.__get_address_components(address2)
 
         # Declare some variables to use as opposed to have to reference the dictionary every time
         address1_lower = address1_components["lower_range"]
@@ -307,9 +315,9 @@ class HometeamScraper(Scraper):
             if address1_lower == address2_lower:
                 return True, {"street_number": address1_lower, "street_name": address1_street_name, "unit": unit, "zipcode": zipcode}
             # Check if each address is in the range of the other, if so true
-            elif address1_upper != None and address2_upper == None and address1_lower <= address2_lower and address2_lower <= address1_upper and address1_lower%2 == address2_lower%2:
+            elif address1_upper != None and address2_upper == None and address1_lower <= address2_lower and address2_lower <= address1_upper and address1_lower %2 == address2_lower%2:
                 return True, {"street_number": address2_lower, "street_name": address1_street_name, "unit": unit, "zipcode": zipcode}
-            elif address2_upper != None and address1_upper == None and address2_lower <= address1_lower and address1_lower <= address2_upper and address1_lower%2 == address2_lower%2:
+            elif address2_upper != None and address1_upper == None and address2_lower <= address1_lower and address1_lower <= address2_upper and address1_lower %2 == address2_lower%2:
                 return True, {"street_number": address1_lower, "street_name": address1_street_name, "unit": unit, "zipcode": zipcode}
             # Otherwise, false
             else:

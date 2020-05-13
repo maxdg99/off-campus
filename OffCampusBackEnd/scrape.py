@@ -7,10 +7,10 @@ from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import *
 from OffCampusWebScrapers.pella import PellaScraper
-from OffCampusWebScrapers.eventide import EventideScraper
+# from OffCampusWebScrapers.eventide import EventideScraper
 from OffCampusWebScrapers.hometeam import HometeamScraper
 from OffCampusWebScrapers.peak import PeakScraper
-#from OffCampusWebScrapers.cooper import CooperScraper
+# cfrom OffCampusWebScrapers.cooper import CooperScraper
 
 from OffCampusBackEnd.utility import getLatLong, distance
 

@@ -4,6 +4,7 @@ import re
 import json
 import datetime
 
+# WIP
 
 class CooperScraper(Scraper):
     @classmethod
@@ -51,5 +52,5 @@ class CooperScraper(Scraper):
                 html = req.text
                 soup = BeautifulSoup(html, 'html.parser')
 
-                d = {"image_url": image_link, "url": link_to_listing, "price": int(price), "address": address, "num_bedrooms": int(bed), "num_bathrooms": float(bath), "availability_date": availavility, "availability_mode": 'Date', "listed": True, "description": description}
+                d = {"image_url": image_link, "url": link_to_listing, "price": int(price), "address": address, "num_bedrooms": int(bed), "num_bathrooms": float(bath), "availability_date": availability, "availability_mode": 'Date', "listed": True, "description": description}
                 print(d)
