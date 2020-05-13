@@ -24,7 +24,7 @@ class HometeamScraper(Scraper):
         listings = []
 
         for div in properties.findAll("div", recursive=False):
-            listings.append(HometeamScraper.__dict_from_listing(div))
+            listings.append(HometeamScraper.__dict_from_listing(cls, div))
 
         appfolio_listings = []
         HometeamAppfolioScraper.process_listings(lambda listing: appfolio_listings.append(listing))
@@ -33,19 +33,22 @@ class HometeamScraper(Scraper):
             for appfolio_listing in appfolio_listings:
                 match, data = HometeamScraper.addresses_are_equal(hometeam_listing["address"], appfolio_listing["address"])
                 if match:
-                    if "bexely" in soup["campus"].lower():
+                    if "bexely" in hometeam_listing["campus"].lower():
                         city = "Mansfield"
                     else:
                         city = "Columbus"
-                    listing = {"image": soup["image"], "url": soup["url"], "price": af["price"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "beds": soup["beds"],
-                        "baths": soup["baths"], "availability_date": af["availability_date"], "availability_mode": 'Date', "active": True, "description": "", "unit": data["unit"], "scraper": soup["scraper"]}
-                    print(listing)
-                    callback(listing)
+                    d = {"scraper": hometeam_listing["scraper"], "url": hometeam_listing["url"], "image": hometeam_listing["image"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "beds": hometeam_listing["beds"],
+                        "baths": hometeam_listing["baths"], "price": appfolio_listing["price"], "availability_date": appfolio_listing["availability_date"], "availability_mode": 'Date', "active": True}
+                    
+                    if data["unit"]:
+                        d["unit"] = data["unit"]
+                        
+                    print(d)
+                    callback(d)
 
-    @classmethod
     def __dict_from_listing(cls, listingDiv):
             data = {}
-            data["image_url"] = listingDiv.find("img")["src"]
+            data["image"] = listingDiv.find("img")["src"]
             data["url"] = urljoin(HometeamAppfolioScraper.url,
                                 listingDiv.find("a")["href"])
             address = listingDiv.find("h4").text
@@ -57,8 +60,8 @@ class HometeamScraper(Scraper):
 
             bedbath = listingDiv.find("strong").text.split()
 
-            data["num_bedrooms"] = bedbath[0]
-            data["num_bathrooms"] = bedbath[2]
+            data["beds"] = bedbath[0]
+            data["baths"] = bedbath[2]
             data["scraper"] = cls.__name__
 
             data["price"] = None
@@ -68,7 +71,6 @@ class HometeamScraper(Scraper):
 
             return data
 
-    @staticmethod
     def __get_address_components(address):
         # Purpose: This function parses an address for the hometeam website and the hometeam appfolio website
 

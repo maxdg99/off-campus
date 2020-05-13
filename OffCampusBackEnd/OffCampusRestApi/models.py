@@ -10,8 +10,8 @@ class Listing(models.Model):
     address = models.CharField(max_length=100)
     unit = models.CharField(max_length=10, default="")
 
-    beds = models.PositiveIntegerField()
-    baths = models.FloatField()
+    beds = models.PositiveIntegerField(null=True)
+    baths = models.FloatField(null=True)
 
     description = models.CharField(max_length=1000, default="")
 

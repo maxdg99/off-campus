@@ -33,7 +33,7 @@ class AppfolioScraper():
 
             beds = 0
             if len(bed_and_bath) > 2 and bed_and_bath[1] == "bd":
-                bed = bed_and_bath[0]
+                beds = bed_and_bath[0]
                 int(beds)
 
             baths = 0
@@ -66,7 +66,7 @@ class AppfolioScraper():
             else:
                 description = ""
 
-            d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": bed, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
+            d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
             print(d)
             callback(d)
 

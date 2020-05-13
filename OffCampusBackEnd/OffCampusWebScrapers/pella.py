@@ -1,13 +1,11 @@
 from bs4 import BeautifulSoup
 import requests
-import base64
-import json
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
 
 class PellaScraper(Scraper):
 
-    def clean_date(date):
+    def __clean_date(date):
         date = date.replace('st', '')
         date = date.replace('nd', '')
         date = date.replace('rd', '')
@@ -39,7 +37,7 @@ class PellaScraper(Scraper):
 
             for prop in properties:
 
-                link = prop.find('a')['href']
+                url = prop.find('a')['href']
 
                 image = prop.find('img')["src"]
 
@@ -53,50 +51,54 @@ class PellaScraper(Scraper):
                 for child in prop.find("div", {'class': 'hover-details'}).findChildren("div", recursive=False):
                     if "$" in child.text:
                         price = child.text[1:child.text.find(".")]
+                        price = int(price)
 
-                bedrooms = prop.find("div", {'class': 'field-item even'}).getText()
-                if "Efficiency" in bedrooms:
-                    bedrooms = 1
-                elif "House" in bedrooms:
-                    bedrooms = 0 # What should we do with this?
+                beds = prop.find("div", {'class': 'field-item even'}).getText()
+                if "Efficiency" in beds:
+                    beds = 1
+                elif "House" in beds:
+                    beds = None # What should we do with this?
                 else:
-                    bedrooms = bedrooms[:bedrooms.find(" ")]
-                    bedrooms = bedrooms.replace('+', '')
+                    beds = beds[:beds.find(" ")]
+                    beds = beds.replace('+', '')
+                    beds = int(beds)
 
-                pageRequest = requests.get(url=link)
-                listingHTML = pageRequest.text
-                listingSoup = BeautifulSoup(listingHTML, 'html.parser')
+                listing_req = requests.get(url=url)
+                listing_html = listing_req.text
+                listing_soup = BeautifulSoup(listing_html, 'html.parser')
 
-                bath = listingSoup.find("div", {'class': 'field field-name-field-baths field-type-taxonomy-term-reference field-label-hidden'})
-                bath = bath.find("div", {'class': 'field-item even'}).getText()
-                bath = bath[0:bath.find(" ")]
+                baths = listing_soup.find("div", {'class': 'field field-name-field-baths field-type-taxonomy-term-reference field-label-hidden'})
+                baths = baths.find("div", {'class': 'field-item even'}).getText()
+                baths = baths[0:baths.find(" ")]
+                float(baths)
 
-                description = listingSoup.find("div", {'class': 'field field-name-body field-type-text-with-summary field-label-hidden'})
+                description = listing_soup.find("div", {'class': 'field field-name-body field-type-text-with-summary field-label-hidden'})
                 if(description):
                     description = description.find("p").getText()
                 else:
                     description = ""
 
-                avail_date = listingSoup.find("span", {'class': 'available-date'})
+                avail_date = listing_soup.find("span", {'class': 'available-date'})
                 
                 if avail_date:
                     avail_date = avail_date.getText()
                     avail_date = avail_date.split(' ')
                 
                     if len(avail_date) >= 4:
-                        avail_date = avail_date[1] + '/' + PellaScraper.clean_date(avail_date[2]) + '/' + avail_date[3]
+                        avail_date = avail_date[1] + '/' + PellaScraper.__clean_date(avail_date[2]) + '/' + avail_date[3]
                         avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
                         avail_mode = "Date"
-                        isAvailable = True
+                        is_avail = True
                     else:
                         avail_date = None
-                        isAvailable = False
+                        is_avail = False
                         avail_mode = "None"
                 else:
                     avail_date = None
                     avail_mode = "None"
+                    is_avail = False
 
-                d = {"scraper": cls.__name__, "image_url": image, "url": link, "price": int(price), "address": address, "num_bedrooms": bedrooms, "num_bathrooms": bath, "description": description, "availability_date": avail_date, "availability_mode": avail_mode, "active": isAvailable}
+                d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail}
                 print(d)
                 callback(d)
             

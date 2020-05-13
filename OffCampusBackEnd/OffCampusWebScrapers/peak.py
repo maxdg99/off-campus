@@ -1,22 +1,20 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-import base64
-import json
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
 
 class PeakScraper(Scraper):
     @classmethod
     def process_listings(cls, callback):
-        url = "https://peakpropertygroup.com/rental-search/?region=columbus"
-        req = requests.get(url=url)
+        req_url = "https://peakpropertygroup.com/rental-search/?region=columbus"
+        req = requests.get(url=req_url)
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')
         table_entries = soup.find_all('tr', {'class': 'property'})
         for entry in table_entries:
-            link = entry['data-permalink']
-            image_url = entry.find('img')['src']
+            url = entry['data-permalink']
+            image = entry.find('img')['src']
             address = entry['data-title']
             units = entry.find('table', {'class': 'units'})
             if units != None:
@@ -28,15 +26,18 @@ class PeakScraper(Scraper):
                     price = price.replace('$', '')
                     price = price.replace(',', '')
                     price = price[:-3]
+                    int(price)
 
                     bed_bath = u.find('td', {'class': 'type'}).text
                     bed_bath_re = re.findall('\d+', bed_bath)
                     if 'Studio' in bed_bath:
-                        bed = 1
-                        bath = bed_bath_re[0]
+                        beds = 1
+                        baths = bed_bath_re[0]
                     else:
-                        bed = bed_bath_re[0]
-                        bath = bed_bath_re[1]
+                        beds = bed_bath_re[0]
+                        baths = bed_bath_re[1]
+                    int(beds)
+                    float(baths)
 
                     availability = u.find('td', {'class': 'available'})
                     availability = availability.text
@@ -54,7 +55,7 @@ class PeakScraper(Scraper):
                         isAvailable = False
 
 
-                    d = {"scraper": cls.__name__, "image_url": image_url, "url": link, "price": int(price), "address": address, "num_bedrooms": int(bed), "num_bathrooms": int(bath), "availability_date": avail_date, "availability_mode": avail_mode, "active": isAvailable, "description": "", "unit": unit}
+                    d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
                     print(d)
                     callback(d)
                 

@@ -7,11 +7,9 @@ from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import *
 from OffCampusWebScrapers.pella import PellaScraper
-# from OffCampusWebScrapers.eventide import EventideScraper
 from OffCampusWebScrapers.hometeam import HometeamScraper
 from OffCampusWebScrapers.peak import PeakScraper
-# cfrom OffCampusWebScrapers.cooper import CooperScraper
-
+from OffCampusWebScrapers.osu_properties import OSUPropertiesScraper
 from OffCampusBackEnd.utility import getLatLong, distance
 
 options = [cls for cls in Scraper.__subclasses__()]
