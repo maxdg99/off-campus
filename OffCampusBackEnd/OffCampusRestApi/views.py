@@ -82,21 +82,15 @@ def __getFilteredListings(request):
         listingsFilter = listingsFilter & Q(num_bathrooms=queryParams["baths"])
 
     secondaryListingsFilter = Q()
-    price_constrained = False
 
     # Parses minimum and maximum price
     if "minPrice" in queryParams and queryParams["minPrice"].isnumeric():
         secondaryListingsFilter = secondaryListingsFilter & Q(price__gte=queryParams["minPrice"])
-        price_constrained = True
     if "maxPrice" in queryParams and queryParams["maxPrice"].isnumeric():
         secondaryListingsFilter = secondaryListingsFilter & Q(price__lte=queryParams["maxPrice"])
-        price_constrained = True
 
-    # Parses showing listings without prices
-    if "showNoPrice" in queryParams and queryParams["showNoPrice"] == "false":
-        secondaryListingsFilter = secondaryListingsFilter & Q(price__isnull=False)
-    elif price_constrained:
-        secondaryListingsFilter = secondaryListingsFilter | Q(price__isnull=True)
+    # Only show listings with prices
+    secondaryListingsFilter = secondaryListingsFilter & Q(price__isnull=False)
     
     listingsFilter = listingsFilter & secondaryListingsFilter
 
