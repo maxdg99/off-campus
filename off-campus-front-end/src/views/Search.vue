@@ -383,6 +383,7 @@ export default {
     toggleMap: function() {
       this.$refs.map.filters = this.filters
       this.$refs.map.toggleMap()
+      this.mapLoaded = !this.mapLoaded
     }
   },
   watch: {

@@ -1,7 +1,7 @@
 <template>
 <div id="bigmap" v-show="displayed">
     <div id="popup">
-        <div class="card" id="popup-content" style="display: none;">
+        <div class="uk-card uk-card-small uk-card-default uk-card-hover uk-card-body" id="popup-content" style="display: none;">
             <!-- Card Content -->
         </div>
     </div>
@@ -13,8 +13,7 @@
     height: 50%;
 } */
 #bigmap {
-    height: 200px;
-    width: 100%;
+    height: 400px;
 }
 </style>
 
@@ -31,7 +30,7 @@ export default {
     methods: {
         toggleMap: function() {
             this.loadMap();
-            this.displayed = true
+            this.displayed = !this.displayed
         },
         loadMap: function() {
             if (!this.mapLoaded) {
