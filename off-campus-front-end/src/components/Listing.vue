@@ -1,21 +1,10 @@
 <template>
   <div class="uk-card uk-card-small uk-card-default uk-card-hover">
-    <ul class="uk-subnav uk-subnav-pill switcher" uk-switcher>
-          <li><a href="#">Image</a></li>
-          <li><a href="#">Map</a></li>
-    </ul>
-      <ul class="uk-switcher switcher-container uk-margin">
-        <li>
-            <div class="uk-card-media-top">
-              <img v-bind:src="listing.image_url" class="listing-image" />
-            </div>
-        </li>
-        <li>
-          <div id="map">
-           
-          </div>
-        </li>
-      </ul>
+    
+    <div class="uk-card-media-top">
+      <img v-bind:src="listing.image_url" class="listing-image" />
+    </div>
+        
     <div class="uk-card-body listing-body">
       <div class="price-info-container">
         <div v-if="listing.price" class="listing-price">${{ listing.price }}</div>
