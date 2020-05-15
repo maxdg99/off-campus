@@ -30,7 +30,7 @@ class Listing(models.Model):
     
     miles_from_campus = models.FloatField(null=True)
     
-    scraper = models.CharField(max_length=100, default="")
+    scraper = models.CharField(max_length=100)
 
     percent_diff = None # populated at runtime
     diff_raw = 0

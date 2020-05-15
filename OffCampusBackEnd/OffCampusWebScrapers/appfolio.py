@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 
 class AppfolioScraper():
 
-    def process_listings(appfolioURL, cls, callback):
+    def process_listings(appfolioURL, className, callback):
         # Retrieves all information for webpage
         req = requests.get(url=appfolioURL, headers={"User-Agent": "Mozilla/5.0"})
         # Pulls out just the HTML Template
@@ -66,7 +66,7 @@ class AppfolioScraper():
             else:
                 description = ""
 
-            d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
+            d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
             print(d)
             callback(d)
 
@@ -76,14 +76,14 @@ class NorthsteppeScraper(Scraper):
     
     @classmethod
     def process_listings(cls, callback):
-        AppfolioScraper.process_listings(NorthsteppeScraper.url, cls, callback)
+        AppfolioScraper.process_listings(NorthsteppeScraper.url, cls.__name__, callback)
 
 class VeniceScraper(Scraper):
     url = "https://veniceprops.appfolio.com/listings/listings"
 
     @classmethod
     def process_listings(cls, callback):
-        AppfolioScraper.process_listings(VeniceScraper.url, cls, callback)
+        AppfolioScraper.process_listings(VeniceScraper.url, cls.__name__, callback)
 
 
 class BuckeyeScraper(Scraper):
@@ -91,4 +91,4 @@ class BuckeyeScraper(Scraper):
 
     @classmethod
     def process_listings(cls, callback):
-        AppfolioScraper.process_listings(BuckeyeScraper.url, cls, callback)
+        AppfolioScraper.process_listings(BuckeyeScraper.url, cls.__name__, callback)
