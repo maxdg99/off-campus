@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import base64
 import json
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
