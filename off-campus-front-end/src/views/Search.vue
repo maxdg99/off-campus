@@ -289,7 +289,7 @@ export default {
     setSortOptions: function() {
       axios({
         method: "GET",
-        url: "http://localhost:8000/orderOptions"
+        url: process.env.VUE_APP_API_URL + "/orderOptions"
       }).then(
         result => {
           this.sortOptions = result.data;
@@ -327,7 +327,7 @@ export default {
       this.searching = true;
       axios({
         method: "GET",
-        url: "http://localhost:8000/paginatedListings",
+        url: process.env.VUE_APP_API_URL + "/paginatedListings",
         params: {
           page: this.filters.page,
           beds: this.filters.bedrooms,

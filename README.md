@@ -8,6 +8,7 @@ This started as Max Gruber, Andrew Haberlandt, and Adam Lis's Hack OHI/O 2019 pr
     1. Install Django: `pip install django`
     1. Install Requests: `pip install requests`
     1. Install Beautiful Soup 4: `pip install bs4`
+    1. Install python-dotenv: `pip install python-dotenv`
 1. Vue.js
     1. Install npm
     1. Install Vue.js: `npm install vue`
