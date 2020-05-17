@@ -276,7 +276,6 @@ export default {
       originalFilters: {},
       pageCount: 1,
       showMobileFilters: false,
-      mapLoaded: false,
     };
   },
   mounted: function() {
@@ -362,6 +361,9 @@ export default {
           this.searching = false;
         }
       );
+
+      this.$refs.map.filters = this.filters
+      this.$refs.map.loadMap()
     },
     updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
@@ -381,9 +383,7 @@ export default {
     },
 
     toggleMap: function() {
-      this.$refs.map.filters = this.filters
       this.$refs.map.toggleMap()
-      this.mapLoaded = !this.mapLoaded
     }
   },
   watch: {

@@ -19,53 +19,61 @@
 
 <script>
 import axios from "axios";
+import Vue from "vue";
 
 export default {
     data: function () {
         return {
             filters: null,
-            displayed: false
+            displayed: false,
+            mapM: null,
+            vectorSource: null,
+            mapLoaded: false,
+            features: []
         }
     },
     methods: {
         toggleMap: function() {
-            this.loadMap();
             this.displayed = !this.displayed
+            
+            var thisThis = this
+            Vue.nextTick(function () {
+                if (!thisThis.mapLoaded) {
+                    thisThis.makeBigMap();
+                    thisThis.loadMap();
+                }
+            })
         },
         loadMap: function() {
-            if (!this.mapLoaded) {
-                this.mapLoaded = true;
-                axios({
-                    method: "GET",
-                    url: "http://localhost:8000/allListings",
-                    params: {
-                    beds: this.filters.bedrooms,
-                    baths: this.filters.bathrooms,
-                    minPrice: this.filters.minPrice,
-                    maxPrice: this.filters.maxPrice,
-                    minDistance: this.filters.minDistance,
-                    maxDistance: this.filters.maxDistance,
-                    showNoPrice: this.filters.showWithoutPrice,
-                    order: this.filters.sortBy
-                    }
-                }).then(
-                    result => {
-                        this.makeBigMap(result.data)
-                    },
-                    error => {
-                        console.error(error);
-                        this.searching = false;
-                    }
-                );
-            }
+            axios({
+                method: "GET",
+                url: "http://localhost:8000/allListings",
+                params: {
+                beds: this.filters.bedrooms,
+                baths: this.filters.bathrooms,
+                minPrice: this.filters.minPrice,
+                maxPrice: this.filters.maxPrice,
+                minDistance: this.filters.minDistance,
+                maxDistance: this.filters.maxDistance,
+                showNoPrice: this.filters.showWithoutPrice,
+                order: this.filters.sortBy
+                }
+            }).then(
+                result => {
+                    this.updateMapResults(result.data)
+                },
+                error => {
+                    console.error(error);
+                    this.searching = false;
+                }
+            );
         },
-        makeBigMap: function (results) {
-            this.mapLoaded = true
-            var features = []
-            //var instances = M.Tooltip.init(document.getElementById("popup"), {});
-
+        updateMapResults: function (results) {
+            if (!this.mapLoaded) {
+                return
+            }
             var iconStyle = new ol.style.Style({});
-
+            this.features = []
             for (let listing of results) {
                 var l = listing.fields
                 var latitude = l["latitude"]
@@ -90,16 +98,23 @@ export default {
                     });
                 
                     //iconFeature.setStyle(iconStyle);
-                    features.push(iconFeature)
+                    this.features.push(iconFeature)
                 }
+                this.vectorSource.refresh()
             }
+        },
+        makeBigMap: function () {
+            //var instances = M.Tooltip.init(document.getElementById("popup"), {});
+            
+            var thisThis = this;
+            this.vectorSource = new ol.source.Vector({loader: function (extent, resolution, projection) {
+                thisThis.vectorSource.clear()
+                thisThis.vectorSource.addFeatures(thisThis.features)
+            }});
 
-            var vectorSource = new ol.source.Vector({
-            features: features
-            });
 
             var vectorLayer = new ol.layer.Vector({
-            source: vectorSource
+                source: this.vectorSource
             });
 
             var popup = new ol.Overlay({
@@ -107,7 +122,7 @@ export default {
                 positioning: 'bottom-center',
                 stopEvent: true,
                 offset: [0, 0]
-                });
+            });
 
             var bigMap = new ol.Map({
                 target: document.getElementById("bigmap"),
@@ -151,6 +166,9 @@ export default {
                 var hit = bigMap.hasFeatureAtPixel(pixel);
                 bigMap.getTarget().style.cursor = hit ? 'pointer' : '';
             });
+
+            this.mapM = bigMap
+            this.mapLoaded = true
         }
     },
     shouldComponentUpdate: function() {

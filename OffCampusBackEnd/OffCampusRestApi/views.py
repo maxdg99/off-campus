@@ -54,7 +54,7 @@ def __getPaginatedListings(request):
     return {"page_count": paginator.num_pages, "listings": listingsPage}
 
 def getAllListings(request):
-    listings = Listing.listings.all()
+    listings = __getFilteredListings(request)
     response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
     __allowCors(response)
     return response
