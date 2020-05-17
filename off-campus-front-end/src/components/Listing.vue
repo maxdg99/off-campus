@@ -3,7 +3,7 @@
     <div class="listing-address-parent">
       <a v-bind:href="listing.url" target="_blank" class="listing-address">{{ listing.address }}</a>
     </div>
-    <img v-bind:src="listing.image_url" class="listing-image" />
+    <img v-bind:src="listing.image" class="listing-image" />
     <div class="listing-info-container">
       <div class="listing-info-row">
         <div v-if="listing.price" class="listing-info listing-price">${{ listing.price }}</div>
@@ -11,8 +11,8 @@
         <div class="listing-info">{{ listing.miles_from_campus }} mi</div>
       </div>
       <div class="listing-info-row">
-        <div class="listing-info">{{ listing.num_bedrooms }} beds</div>
-        <div class="listing-info">{{ listing.num_bathrooms }} baths</div>
+        <div class="listing-info">{{ listing.beds }} beds</div>
+        <div class="listing-info">{{ listing.baths }} baths</div>
       </div>
     </div>
   </div>
