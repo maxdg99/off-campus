@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 import datetime
 from OffCampusWebScrapers.scraper import Scraper
 import requests
+import re
 from urllib.parse import urljoin
+from OffCampusBackEnd.utility import format_address
 
 class AppfolioScraper():
 
@@ -49,7 +51,6 @@ class AppfolioScraper():
                     availability_mode = "Now"
                 else:
                     availability_date = datetime.datetime.strptime(availability, "%m/%d/%y")
-                    print("Date: " + str(availability_date))
                     availability_mode = "Date"
             else:
                 availability_date = None
@@ -65,6 +66,8 @@ class AppfolioScraper():
                 description = description.getText(strip=True)
             else:
                 description = ""
+
+            #address = format_address(address)
 
             d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
             print(d)

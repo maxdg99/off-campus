@@ -10,7 +10,7 @@ from OffCampusWebScrapers.pella import PellaScraper
 from OffCampusWebScrapers.hometeam import HometeamScraper
 from OffCampusWebScrapers.peak import PeakScraper
 from OffCampusWebScrapers.osu_properties import OSUPropertiesScraper
-from OffCampusBackEnd.utility import getLatLong, distance
+from OffCampusBackEnd.utility import getLatLong, distance, format_address
 
 options = [cls for cls in Scraper.__subclasses__()]
 
@@ -18,19 +18,20 @@ print("Available classnames: "+str(options))
 
 def insert_listing_from_dict(l):
     try:
-        obj = Listing.listings.get(address=l["address"])
+        obj = Listing.listings.get(url=l["address"])
         print("exists: "+l["address"])
 
         # Set updated date
         obj.date_updated = datetime.datetime.now().date()
         
-        if (obj.latitude is None):
-            # Get lat long
-            l["latitude"], l["longitude"] = getLatLong(l["address"])
-            print(f'{l["latitude"]} {l["longitude"]}')
-        else:
-            obj.miles_from_campus = round(distance(obj.latitude, obj.longitude), 2)
-            print("\t\tDistance: "+str(distance(obj.latitude, obj.longitude)))
+        # We cannot do this because the addres has already been changed to pretty form
+        # if (obj.latitude is None):
+        #     # Get lat long
+        #     l["latitude"], l["longitude"] = getLatLong(l["address"] + ", Columbus, OH")
+        #     print(f'{l["latitude"]} {l["longitude"]}')
+        # else:
+        #     obj.miles_from_campus = round(distance(obj.latitude, obj.longitude), 2)
+        #     print("\t\tDistance: "+str(distance(obj.latitude, obj.longitude)))
 
         for key, value in l.items():
             setattr(obj, key, value)
@@ -40,7 +41,8 @@ def insert_listing_from_dict(l):
 
         # Get lat long
         l["latitude"], l["longitude"] = getLatLong(l["address"])
-        print(f'{l["latitude"]} {l["longitude"]}')
+
+        l["address"] = format_address(l["address"])
 
         if l["latitude"] is not None:
             l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)

@@ -1,28 +1,26 @@
 <template>
   <div class="uk-card uk-card-small uk-card-default uk-card-hover">
-    
     <div class="uk-card-media-top">
-      <img v-bind:src="listing.image_url" class="listing-image" />
+      <img v-bind:src="listing.image" class="listing-image" uk-img/>
     </div>
-        
     <div class="uk-card-body listing-body">
       <div class="price-info-container">
         <div v-if="listing.price" class="listing-price">${{ listing.price }}</div>
         <div v-else>N/A</div>
         <span class="listing-info-container">
             <div class="listing-info">{{ listing.miles_from_campus }} mi</div> |
-            <div class="listing-info">{{ `${listing.num_bedrooms} ${listing.num_bedrooms==1 ? "bed" : "beds"}` }}</div> |
-            <div class="listing-info">{{ `${listing.num_bathrooms} ${listing.num_bathrooms==1 ? "bath" : "baths"}` }}</div>
+            <div class="listing-info">{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</div> |
+            <div class="listing-info">{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</div>
         </span>
       </div>
       <div class="listing-address-parent">
         <a v-bind:href="listing.url" target="_blank" class="listing-address">{{ listing.address }}</a>
       </div>
       <div class="listing-availability-parent">
-        <div class="listing-availability" v-if="listing.availability_mode=='S'">Available this {{getMonth(listing.availability_date.month)}}</div>
-        <div class="listing-availability" v-else-if="listing.availability_mode=='M'">Available in {{this.months[listing.availability_date.month - 1]}}</div>
-        <div class="listing-availability" v-else-if="listing.availability_mode=='N'">Available Now</div>
-        <div class="listing-availability" v-else-if="listing.availability_mode=='D'">Available on {{getDate(listing.availability_date)}}</div>
+        <div class="listing-availability" v-if="listing.availability_mode=='Season'">Available this {{getMonth(listing.availability_date.month)}}</div>
+        <div class="listing-availability" v-else-if="listing.availability_mode=='Month'">Available in {{this.months[listing.availability_date.month - 1]}}</div>
+        <div class="listing-availability" v-else-if="listing.availability_mode=='Now'">Available Now</div>
+        <div class="listing-availability" v-else-if="listing.availability_mode=='Date'">Available on {{getDate(listing.availability_date)}}</div>
       </div>
     </div>
   </div>
@@ -46,6 +44,7 @@
 
 .listing-image {
   height: 300px;
+  width: 100%;
 }
 
 .listing-address-parent {
@@ -93,12 +92,6 @@
 </style>
 
 <script>
-import Vue from 'vue'
-import VueLayers from 'vuelayers'
-import 'vuelayers/lib/style.css' // needs css-loader
-
-Vue.use(VueLayers)
-
 export default {
   name: "Listing",
   data: function () {
@@ -110,15 +103,10 @@ export default {
     id: Number,
     listing: Object
   },
-  created: function () {
-    var map = new OpenLayers.Map("map");
-    map.addLayer(new OpenLayers.Layer.OSM());
-    map.zoomToMaxExtent();
-  },
   methods: {
     getDate(date) {
       var split_date = date.split("-")
-      return `${split_date[1]}\\${split_date[2]}\\${split_date[0]}`
+      return `${split_date[1]}/${split_date[2]}/${split_date[0]}`
     },
     getMonth(date) {
       var split_date = date.split("-")
