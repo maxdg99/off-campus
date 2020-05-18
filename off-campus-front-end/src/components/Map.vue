@@ -47,7 +47,7 @@ export default {
         loadMap: function() {
             axios({
                 method: "GET",
-                url: "http://localhost:8000/allListings",
+                url: process.env.VUE_APP_API_URL + "/allListings",
                 params: {
                 beds: this.filters.bedrooms,
                 baths: this.filters.bathrooms,
@@ -81,9 +81,9 @@ export default {
                 var address = l["address"]
                 var overlayHTML = ""
                 overlayHTML += "<a href=\""+l["url"]+"\" target=\"_blank\"><strong>" + address + "</strong></a><div class=\"row\">";
-                overlayHTML += "<div class=\"col s6\"><p style=\"text-align: left;\">"+l["num_bedrooms"]+" bed, " + l["num_bathrooms"] + " bath</p></div>";
-                if (l["image_url"]) {
-                    overlayHTML += "<div class=\"col s6\"><img style=\"text-align: right;\" src=\""+l["image_url"]+"\" width=80px></img></div></div>"
+                overlayHTML += "<div class=\"col s6\"><p style=\"text-align: left;\">"+l["beds"]+" bed, " + l["baths"] + " bath</p></div>";
+                if (l["image"]) {
+                    overlayHTML += "<div class=\"col s6\"><img style=\"text-align: right;\" src=\""+l["image"]+"\" width=80px></img></div></div>"
                 }
                 //overlayHTML += "<div class=\"btn\" href=\""+l["url"]+"\">b</div>";
 
