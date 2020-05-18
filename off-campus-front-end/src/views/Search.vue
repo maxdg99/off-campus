@@ -3,7 +3,7 @@
     <div class="uk-container">
       <!-- Desktop search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-5 uk-visible@m search-filters"
+        class="uk-grid-small uk-child-width-1-5 uk-visible@m uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -90,7 +90,7 @@
 
       <!-- Mobile search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-2 uk-hidden@m search-filters"
+        class="uk-grid-small uk-child-width-1-2 uk-hidden@m uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -183,17 +183,18 @@
       </form>
     </div>
 
-    <br />
-
-    <div class="uk-container listings">
+    <div class="map-and-listings-container">
       <div class="result-count">{{this.resultCount}} results</div>
-      <div class="uk-grid-medium uk-grid-match" uk-grid>
-        <div
-          v-for="listing in searchResults"
-          class="uk-width-1-2@s uk-width-1-3@m"
-          v-bind:key="listing.pk"
-        >
-          <Listing :id="listing.pk" :listing="listing.fields" />
+      <Map ref="map" />
+      <div class="uk-container">
+        <div class="uk-grid-medium uk-grid-match" uk-grid>
+          <div
+            v-for="listing in searchResults"
+            class="uk-width-1-2@s"
+            v-bind:key="listing.pk"
+          >
+            <Listing :id="listing.pk" :listing="listing.fields" />
+          </div>
         </div>
       </div>
       <Paginate
@@ -254,18 +255,35 @@
   font-weight: 600;
   font-size: 1.125em;
 }
+
+.map-and-listings-container {
+  & > #bigmap {
+    display: none;
+  }
+
+  @media screen and (min-width: 960px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    & > #bigmap {
+      display: initial;
+    }
+  }
+}
 </style>
 
 <script>
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
+import Map from "@/components/Map.vue";
 import Paginate from "vuejs-paginate";
 
 export default {
   name: "search",
   components: {
     Listing,
-    Paginate
+    Paginate,
+    Map
   },
   data: function() {
     return {
@@ -301,7 +319,7 @@ export default {
     setSortOptions: function() {
       axios({
         method: "GET",
-        url: "http://localhost:8000/orderOptions"
+        url: process.env.VUE_APP_API_URL + "/orderOptions"
       }).then(
         result => {
           this.sortOptions = result.data;
@@ -339,7 +357,7 @@ export default {
       this.searching = true;
       axios({
         method: "GET",
-        url: "http://localhost:8000/paginatedListings",
+        url: process.env.VUE_APP_API_URL + "/paginatedListings",
         params: {
           page: this.filters.page,
           beds: this.filters.bedrooms,
@@ -362,11 +380,15 @@ export default {
           this.searching = false;
         }
       );
+
+      this.$refs.map.filters = this.filters;
+      this.$refs.map.loadMap();
     },
     updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
-      let filtersHaveChanged = JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
+      let filtersHaveChanged =
+        JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
       let pageHasChanged = this.originalFilters.page !== this.filters.page;
 
       if (filtersHaveChanged) {

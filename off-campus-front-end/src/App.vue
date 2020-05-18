@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="uk-navbar-container uk-margin" uk-navbar>
+    <nav class="uk-navbar-container uk-margin-bottom" uk-navbar>
       <div class="uk-navbar-left">
         <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
         <ul class="uk-navbar-nav uk-visible@s">
