@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.getcwd(), '.env.local'))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,13 +22,21 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^f)iru73nvws+!1#^3xf3wl2tu&y+$9yk=v^j@_tc+v7^d&a^f'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["3.86.212.249", "localhost", "127.0.0.1"]
+# Allow localhost
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+# Allow connections via host's IP address (for testing on mobile via LAN)
+if os.getenv('HOST_IP'):
+    ALLOWED_HOSTS.append(os.getenv('HOST_IP'))
+
+# Allow connections via host's URL (for production)
+if os.getenv('HOST_URL'):
+    ALLOWED_HOSTS.append(os.getenv('HOST_URL'))
 
 # Application definition
 

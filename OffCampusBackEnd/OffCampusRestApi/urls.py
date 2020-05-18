@@ -11,4 +11,5 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('isSignedIn', views.isSignedIn, name='isSignedIn'),
     path('logout', views.logout, name='logout')
+    path('orderOptions', views.getOrderOptions, name='orderOptions')
 ]

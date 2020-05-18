@@ -16,6 +16,9 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 import json
 
+orderOptions = [{'id': '1', 'text': 'Price Increasing'}, {'id': '2', 'text': 'Price Decreasing'}, {'id': '3', 'text': 'Distance Increasing'}, {'id': '4', 'text': 'Distance Decreasing'}]
+orderQueries = {'1': 'price', '2': '-price', '3': 'miles_from_campus', '4': '-miles_from_campus'}
+
 averages = None
 
 def getSearchListingsPage(request):
@@ -53,7 +56,7 @@ def __getPaginatedListings(request):
     except EmptyPage:
         listingsPage = paginator.page(paginator.num_pages)
 
-    return {"page_count": paginator.num_pages, "listings": listingsPage}
+    return {"page_count": paginator.num_pages, "listings": listingsPage, "result_count": len(listings)}
 
 def toggleLikedProperty(request):
     property_id = request.GET['property_id']
@@ -82,7 +85,7 @@ def toggleLikedProperty(request):
     return response
 
 def getAllListings(request):
-    listings = Listing.listings.all()
+    listings = __getFilteredListings(request)
     response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
     __allowCors(response)
     return response
@@ -136,6 +139,8 @@ def isSignedIn(request):
 def logout(request):
     request.session.flush()
     response = HttpResponse(status=201)
+def getOrderOptions(request):
+    response = JsonResponse(orderOptions, safe=False)
     __allowCors(response)
     return response
 
@@ -157,21 +162,15 @@ def __getFilteredListings(request):
         listingsFilter = listingsFilter & Q(num_bathrooms=queryParams["baths"])
 
     secondaryListingsFilter = Q()
-    price_constrained = False
 
     # Parses minimum and maximum price
     if "minPrice" in queryParams and queryParams["minPrice"].isnumeric():
         secondaryListingsFilter = secondaryListingsFilter & Q(price__gte=queryParams["minPrice"])
-        price_constrained = True
     if "maxPrice" in queryParams and queryParams["maxPrice"].isnumeric():
         secondaryListingsFilter = secondaryListingsFilter & Q(price__lte=queryParams["maxPrice"])
-        price_constrained = True
 
-    # Parses showing listings without prices
-    if "showNoPrice" in queryParams and queryParams["showNoPrice"] == "false":
-        secondaryListingsFilter = secondaryListingsFilter & Q(price__isnull=False)
-    elif price_constrained:
-        secondaryListingsFilter = secondaryListingsFilter | Q(price__isnull=True)
+    # Only show listings with prices
+    secondaryListingsFilter = secondaryListingsFilter & Q(price__isnull=False)
     
     listingsFilter = listingsFilter & secondaryListingsFilter
 
@@ -189,12 +188,8 @@ def __getFilteredListings(request):
 
     # Parses ordering of listings
     if "order" in queryParams:
-        if queryParams["order"] == "price_increasing":
-            return listings.filter(listingsFilter).order_by('price')
-        elif queryParams["order"] == "price_decreasing":
-            return listings.filter(listingsFilter).order_by('-price')
-        elif queryParams["order"] == "distance_decreasing":
-            return listings.filter(listingsFilter).order_by('-miles_from_campus')
-
-    # Default order is miles from campus, increasing
-    return listings.filter(listingsFilter).order_by('miles_from_campus')
+        if queryParams["order"] in orderQueries:
+            return Listing.listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]])
+        else:
+            # Default order is miles from campus, increasing
+            return Listing.listings.filter(listingsFilter).order_by(orderQueries['3'])

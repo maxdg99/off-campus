@@ -5,22 +5,22 @@ import re
 import math
 
 def getLatLong(address):
-    to_find = re.compile("St|Ave")
+    to_find = re.compile("Street|St|Avenue|Ave|Road|Rd")
     match = to_find.search(address)
     if match:
         idx = address.find(",")
-        if idx != match.end():
+        if idx != match.end() and ',' in address:
             print("before: "+address)
             address = address[0:match.end()] + address[idx:]
             print("after "+address)
 
 
     query = {"key": "7a42def0c4b84b58a6bef95d82a82bcb", "q": address}
-    # print(urllib.parse.urlencode(query))
     r = requests.get('https://api.opencagedata.com/geocode/v1/json', params=query)
     o = r.json()
+    print(o)
     latLongParent = o["results"][0]["geometry"]
-    #print(json.dumps(o))
+    address = address[:address.find(", United States of America")]
     if latLongParent and "lat" in latLongParent:
         latitude = latLongParent["lat"]
         longitude = latLongParent["lng"]
@@ -45,3 +45,33 @@ def distance(lat, lon):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     d = R * c
     return d * 0.000621371 # miles
+
+def format_address(address):
+    replacements = {
+        " North": " N. ",
+        " East": " E. ",
+        " South": " S. ",
+        " West": " W. ",
+        " Rd": " Road ",
+        " St": " Street ",
+        " Ave": " Avenue ",
+        " Columbus": "",
+        " Mansfield": "",
+        " OH": ""
+    }
+
+    modifiers = [".", ",", " "]
+
+    for key in replacements:
+        for mod in modifiers:
+            address_re = re.compile(re.escape(key+mod), re.IGNORECASE)
+            address = address_re.sub(replacements[key], address)
+            print(address)
+
+    zipcode = re.search("\d{5}", address)
+    if zipcode:
+        address = address.replace(zipcode[0], " ")
+
+    address = address.replace(",", "")
+
+    return address
