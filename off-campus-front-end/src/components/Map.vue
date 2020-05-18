@@ -34,7 +34,6 @@ export default {
             Vue.nextTick(function () {
                 if (!thisThis.mapLoaded) {
                     thisThis.makeBigMap();
-                    thisThis.loadMap();
                 }
             })
         },
