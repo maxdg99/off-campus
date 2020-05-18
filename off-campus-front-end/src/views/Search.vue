@@ -3,7 +3,7 @@
     <div class="uk-container">
       <!-- Desktop search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-5 uk-visible@m search-filters"
+        class="uk-grid-small uk-child-width-1-4 uk-visible@m search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <div class="search-button">
+        <div>
           <button
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
@@ -88,7 +88,7 @@
         </div>
         <div>
           <button
-            class="uk-button uk-button-primary uk-width-expand"
+            class="uk-button uk-button-secondary uk-width-expand"
             v-on:click="toggleMap"
             v-bind:disabled="searching"
           >Toggle map</button>
@@ -192,13 +192,14 @@
 
     <br />
 
-    <div v-bind:class="['uk-grid', 'uk-grid-stack', 'uk-grid-small']" uk-grid>
-      <Map ref="map" class="uk-width-1-2"></Map>
-      <div class="uk-container uk-container-center uk-width-1-2" style="margin-left: auto; margin-right: auto">
+    <div v-bind:class="{ 'map-and-listings-container': showBigMap }">
+      <Map ref="map" v-show="showBigMap" class="uk-visible@m" />
+      <div class="uk-container">
         <div class="uk-grid-medium uk-grid-match" uk-grid>
           <div
             v-for="listing in searchResults"
-            class="uk-width-1-2@s uk-width-1-3@m"
+            class="uk-width-1-2@s"
+            v-bind:class="{ 'uk-width-1-2@m': showBigMap, 'uk-width-1-3@m': !showBigMap }"
             v-bind:key="listing.pk"
           >
             <Listing :id="listing.pk" :listing="listing.fields" />
@@ -249,8 +250,9 @@
   }
 }
 
-.search-button {
-  margin-top: 24px;
+.map-and-listings-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 </style>
 
@@ -276,6 +278,7 @@ export default {
       originalFilters: {},
       pageCount: 1,
       showMobileFilters: false,
+      showBigMap: true,
     };
   },
   mounted: function() {
@@ -383,6 +386,7 @@ export default {
     },
 
     toggleMap: function() {
+      this.showBigMap = !this.showBigMap;
       this.$refs.map.toggleMap()
     }
   },

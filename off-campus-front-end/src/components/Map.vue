@@ -1,5 +1,5 @@
 <template>
-<div id="bigmap" v-show="displayed">
+<div id="bigmap">
     <div id="popup">
         <div class="uk-card uk-card-small uk-card-default uk-card-hover uk-card-body" id="popup-content" style="display: none;">
             <!-- Card Content -->
@@ -9,9 +9,6 @@
 </template>
 
 <style scoped>
-/* #bigmap {
-    height: 50%;
-} */
 #bigmap {
     height: 400px;
 }
@@ -25,8 +22,7 @@ export default {
     data: function () {
         return {
             filters: null,
-            displayed: false,
-            mapM: null,
+            map: null,
             vectorSource: null,
             mapLoaded: false,
             features: []
@@ -34,8 +30,6 @@ export default {
     },
     methods: {
         toggleMap: function() {
-            this.displayed = !this.displayed
-            
             var thisThis = this
             Vue.nextTick(function () {
                 if (!thisThis.mapLoaded) {
@@ -167,7 +161,7 @@ export default {
                 bigMap.getTarget().style.cursor = hit ? 'pointer' : '';
             });
 
-            this.mapM = bigMap
+            this.map = bigMap
             this.mapLoaded = true
         }
     },
