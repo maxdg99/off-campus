@@ -43,13 +43,12 @@ class HometeamScraper(Scraper):
 
                     #address = format_address(appfolio_listing["address"])
 
-                    d = {"scraper": hometeam_listing["scraper"], "url": hometeam_listing["url"], "image": hometeam_listing["image"], "address": address, "beds": hometeam_listing["beds"],
+                    d = {"scraper": hometeam_listing["scraper"], "url": hometeam_listing["url"], "image": hometeam_listing["image"], "address": appfolio_listing["address"], "beds": hometeam_listing["beds"],
                         "baths": hometeam_listing["baths"], "price": appfolio_listing["price"], "availability_date": appfolio_listing["availability_date"], "availability_mode": appfolio_listing["availability_mode"], "active": True}
                     
                     if data["unit"]:
                         d["unit"] = data["unit"]
                     
-                    #print(d)
                     callback(d)
 
     def __dict_from_listing(cls, listingDiv):

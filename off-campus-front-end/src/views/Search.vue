@@ -185,7 +185,8 @@
 
     <br />
 
-    <div class="uk-container">
+    <div class="uk-container listings">
+      <div class="result-count">{{this.resultCount}} results</div>
       <div class="uk-grid-medium uk-grid-match" uk-grid>
         <div
           v-for="listing in searchResults"
@@ -241,6 +242,15 @@
 
 .search-button {
   margin-top: 24px;
+}
+
+.listings {
+  overflow: hidden;
+}
+
+.result-count {
+  font-weight: 600;
+  font-size: 1.125em;
 }
 </style>
 
@@ -342,6 +352,7 @@ export default {
         result => {
           this.pageCount = result.data.page_count;
           this.searchResults = result.data.listings;
+          this.resultCount = result.data.result_count
           this.searching = false;
         },
         error => {

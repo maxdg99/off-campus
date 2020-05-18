@@ -35,14 +35,16 @@ def insert_listing_from_dict(l):
 
         for key, value in l.items():
             setattr(obj, key, value)
-        obj.save()
+
+        if l["price"] != None and int(l["price"]) > 0:
+            obj.save()
     except Listing.DoesNotExist:
         print("inserting: "+l["address"])
 
         # Get lat long
         l["latitude"], l["longitude"] = getLatLong(l["address"])
 
-        l["address"] = format_address(l["address"])
+        l["pretty_address"] = format_address(l["address"])
 
         if l["latitude"] is not None:
             l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)
@@ -54,7 +56,8 @@ def insert_listing_from_dict(l):
         obj.date_created = datetime.datetime.now().date()
         obj.date_updated = obj.date_created
 
-        obj.save()
+        if l["price"] != None and int(l["price"]) > 0:
+            obj.save()
 
     except Listing.MultipleObjectsReturned:
         print("multiple returned for: "+l["address"])

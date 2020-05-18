@@ -47,14 +47,15 @@ def distance(lat, lon):
 
 def format_address(address):
     replacements = {
-        " N": " North ",
-        " E": " East ",
-        " S": " South ",
-        " W": " West ",
+        " North": " N. ",
+        " East": " E. ",
+        " South": " S. ",
+        " West": " W. ",
         " Rd": " Road ",
         " St": " Street ",
         " Ave": " Avenue ",
         " Columbus": "",
+        " Mansfield": "",
         " OH": ""
     }
 
@@ -62,7 +63,9 @@ def format_address(address):
 
     for key in replacements:
         for mod in modifiers:
-            address = address.replace(key+mod, replacements[key])
+            address_re = re.compile(re.escape(mod), 're.IGNORECASE')
+            #address = address.replace(key+mod, replacements[key])
+            address = address_re.sub('', address)
 
     zipcode = re.search("\d{5}", address)
     if zipcode:
