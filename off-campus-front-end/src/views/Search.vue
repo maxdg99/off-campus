@@ -302,7 +302,6 @@ export default {
     this.updateFiltersFromQueryString(this.$route.query);
     this.setOriginalFilters();
     this.updateListingsToMatchFilters();
-    this.$refs.map.toggleMap(); // make the map show up
   },
   methods: {
     setSortOptions: function() {

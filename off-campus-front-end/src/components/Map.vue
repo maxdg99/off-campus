@@ -28,15 +28,12 @@ export default {
             features: []
         }
     },
+    mounted: function () {
+        if (!this.mapLoaded) {
+            this.makeBigMap();
+        }
+    },
     methods: {
-        toggleMap: function() {
-            var thisThis = this
-            Vue.nextTick(function () {
-                if (!thisThis.mapLoaded) {
-                    thisThis.makeBigMap();
-                }
-            })
-        },
         loadMap: function() {
             axios({
                 method: "GET",
