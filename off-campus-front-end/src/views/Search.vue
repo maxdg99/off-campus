@@ -3,7 +3,7 @@
     <div class="uk-container">
       <!-- Desktop search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-5 uk-visible@m search-filters"
+        class="uk-grid-small uk-child-width-1-5 uk-visible@m uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -90,7 +90,7 @@
 
       <!-- Mobile search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-2 uk-hidden@m search-filters"
+        class="uk-grid-small uk-child-width-1-2 uk-hidden@m uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -182,8 +182,6 @@
         </div>
       </form>
     </div>
-
-    <br />
 
     <div class="map-and-listings-container">
       <Map ref="map" />

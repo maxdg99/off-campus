@@ -10,7 +10,7 @@
 
 <style scoped>
 #bigmap {
-    height: 400px;
+    height: calc(100vh - 184px);
 }
 </style>
 
