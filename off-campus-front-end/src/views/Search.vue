@@ -108,13 +108,13 @@
           >Filter &amp; Sort</button>
         </div>
 
-          <div>
-            <button
-              class="uk-button uk-button-primary uk-width-expand"
-              v-on:click="updateRouteToMatchFilters"
-              v-bind:disabled="searching"
-            >Search</button>
-          </div>
+        <div>
+          <button
+            class="uk-button uk-button-primary uk-width-expand"
+            v-on:click="updateRouteToMatchFilters"
+            v-bind:disabled="searching"
+          >Search</button>
+        </div>
 
         <div v-show="showMobileFilters" class="beds-and-baths">
           <div>
@@ -251,8 +251,18 @@
 }
 
 .map-and-listings-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  & > #bigmap {
+    display: none;
+  }
+
+  @media screen and (min-width: 960px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    & > #bigmap {
+      display: initial;
+    }
+  }
 }
 </style>
 
@@ -278,7 +288,7 @@ export default {
       originalFilters: {},
       pageCount: 1,
       showMobileFilters: false,
-      showBigMap: true,
+      showBigMap: true
     };
   },
   mounted: function() {
@@ -299,7 +309,7 @@ export default {
     this.updateFiltersFromQueryString(this.$route.query);
     this.setOriginalFilters();
     this.updateListingsToMatchFilters();
-    this.$refs.map.toggleMap() // make the map show up
+    this.$refs.map.toggleMap(); // make the map show up
   },
   methods: {
     setSortOptions: function() {
@@ -366,13 +376,14 @@ export default {
         }
       );
 
-      this.$refs.map.filters = this.filters
-      this.$refs.map.loadMap()
+      this.$refs.map.filters = this.filters;
+      this.$refs.map.loadMap();
     },
     updateRouteToMatchFilters: function() {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
-      let filtersHaveChanged = JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
+      let filtersHaveChanged =
+        JSON.stringify(this.originalFilters) !== JSON.stringify(this.filters);
       let pageHasChanged = this.originalFilters.page !== this.filters.page;
 
       if (filtersHaveChanged) {
@@ -388,7 +399,7 @@ export default {
 
     toggleMap: function() {
       this.showBigMap = !this.showBigMap;
-      this.$refs.map.toggleMap()
+      this.$refs.map.toggleMap();
     }
   },
   watch: {
