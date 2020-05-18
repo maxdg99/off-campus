@@ -63,9 +63,9 @@ def format_address(address):
 
     for key in replacements:
         for mod in modifiers:
-            address_re = re.compile(re.escape(mod), 're.IGNORECASE')
-            #address = address.replace(key+mod, replacements[key])
-            address = address_re.sub('', address)
+            address_re = re.compile(re.escape(key+mod), re.IGNORECASE)
+            address = address_re.sub(replacements[key], address)
+            print(address)
 
     zipcode = re.search("\d{5}", address)
     if zipcode:

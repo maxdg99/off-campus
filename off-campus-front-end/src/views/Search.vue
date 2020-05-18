@@ -196,8 +196,7 @@
           <Listing :id="listing.pk" :listing="listing.fields" />
         </div>
       </div>
-    </div>
-    <Paginate
+      <Paginate
       v-model="filters.page"
       :page-count="pageCount"
       :page-range="3"
@@ -210,6 +209,7 @@
       :prev-text="'<span uk-pagination-previous></span>'"
       :next-text="'<span uk-pagination-next></span>'"
     />
+    </div>
   </div>
 </template>
 
@@ -245,7 +245,9 @@
 }
 
 .listings {
-  overflow: hidden;
+  max-height: 60%;
+  position: absolute;
+  overflow-y: scroll;
 }
 
 .result-count {

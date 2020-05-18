@@ -18,7 +18,7 @@ print("Available classnames: "+str(options))
 
 def insert_listing_from_dict(l):
     try:
-        obj = Listing.listings.get(url=l["address"])
+        obj = Listing.listings.get(address=l["address"])
         print("exists: "+l["address"])
 
         # Set updated date
