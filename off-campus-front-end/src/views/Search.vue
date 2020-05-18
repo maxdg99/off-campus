@@ -3,7 +3,7 @@
     <div class="uk-container">
       <!-- Desktop search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-4 uk-visible@m search-filters"
+        class="uk-grid-small uk-child-width-1-5 uk-visible@m search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -79,19 +79,12 @@
           </div>
         </div>
 
-        <div>
+        <div class="search-button">
           <button
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
           >Search</button>
-        </div>
-        <div>
-          <button
-            class="uk-button uk-button-secondary uk-width-expand"
-            v-on:click="toggleMap"
-            v-bind:disabled="searching"
-          >Toggle map</button>
         </div>
       </form>
 
@@ -192,14 +185,13 @@
 
     <br />
 
-    <div v-bind:class="{ 'map-and-listings-container': showBigMap }">
-      <Map ref="map" v-show="showBigMap" class="uk-visible@m" />
+    <div class="map-and-listings-container">
+      <Map ref="map" />
       <div class="uk-container">
         <div class="uk-grid-medium uk-grid-match" uk-grid>
           <div
             v-for="listing in searchResults"
             class="uk-width-1-2@s"
-            v-bind:class="{ 'uk-width-1-2@m': showBigMap, 'uk-width-1-3@m': !showBigMap }"
             v-bind:key="listing.pk"
           >
             <Listing :id="listing.pk" :listing="listing.fields" />
@@ -250,6 +242,10 @@
   }
 }
 
+.search-button {
+  margin-top: 24px;
+}
+
 .map-and-listings-container {
   & > #bigmap {
     display: none;
@@ -287,8 +283,7 @@ export default {
       filters: {},
       originalFilters: {},
       pageCount: 1,
-      showMobileFilters: false,
-      showBigMap: true
+      showMobileFilters: false
     };
   },
   mounted: function() {
@@ -395,11 +390,6 @@ export default {
 
         this.$router.push({ query: this.filters });
       }
-    },
-
-    toggleMap: function() {
-      this.showBigMap = !this.showBigMap;
-      this.$refs.map.toggleMap();
     }
   },
   watch: {
