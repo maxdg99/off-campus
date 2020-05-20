@@ -70,6 +70,11 @@ footer {
   grid-row-end: 4;
   padding: 0.5rem 0;
 }
+
+/* Smaller OpenStreetMap attribution */
+.ol-attribution {
+  font-size: 0.75rem;
+}
 </style>
 
 <script>
