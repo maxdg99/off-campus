@@ -40,7 +40,7 @@
           </li>
           <li>
             <!-- TODO: implement login with Google -->
-            <a>Log In</a>
+            <a>Sign In</a>
           </li>
         </ul>
       </div>
