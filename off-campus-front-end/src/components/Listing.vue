@@ -107,7 +107,7 @@ export default {
               new ol.layer.Vector({
                   source: new ol.source.Vector({
                       features: [new ol.Feature({
-                          geometry: new ol.geom.Point(ol.proj.fromLonLat([thisThis.listing.latitude, thisThis.listing.longitude])),
+                          geometry: new ol.geom.Point(ol.proj.fromLonLat([thisThis.listing.longitude, thisThis.listing.latitude])),
                           style: new ol.style.Style({})
                       })]
                   })
