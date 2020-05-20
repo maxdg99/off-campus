@@ -50,11 +50,12 @@
   </div>
 </template>
 
-<style lang="less">
-@import "../node_modules/uikit/src/less/uikit.less";
-@import "../node_modules/uikit/src/less/uikit.theme.less";
-@offcanvas-bar-background: #fff;
-@offcanvas-bar-color-mode: dark;
+<style lang="scss">
+$offcanvas-bar-background: #f8f8f8;
+$offcanvas-bar-color-mode: dark;
+@import "uikit/src/scss/variables-theme.scss";
+@import "uikit/src/scss/mixins-theme.scss";
+@import "uikit/src/scss/uikit-theme.scss";
 
 /* Sticky footer */
 html {
