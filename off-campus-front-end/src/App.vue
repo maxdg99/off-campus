@@ -68,7 +68,7 @@ body {
 footer {
   grid-row-start: 3;
   grid-row-end: 4;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem 0;
 }
 </style>
 
