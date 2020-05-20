@@ -63,11 +63,11 @@ html {
 body {
   min-height: 100%;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
 }
 footer {
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 4;
   padding-bottom: 0.5rem;
 }
 </style>
