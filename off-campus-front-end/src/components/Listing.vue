@@ -3,7 +3,8 @@
     <div class="listing-address-parent">
       <a v-bind:href="listing.url" target="_blank" class="listing-address">{{ listing.address }}</a>
     </div>
-    <img v-bind:src="listing.image" class="listing-image" />
+    <img v-bind:src="listing.image" class="listing-image" v-show="!showMap" />
+    <div class="listing-map" v-show="showMap" ref="smolMap" />
     <div class="listing-info-container">
       <div class="listing-info-row">
         <div v-if="listing.price" class="listing-info listing-price">${{ listing.price }}</div>
@@ -14,6 +15,9 @@
         <div class="listing-info">{{ listing.beds }} beds</div>
         <div class="listing-info">{{ listing.baths }} baths</div>
       </div>
+    </div>
+    <div class="map-icon">
+      <a uk-icon="location" v-on:click="toggleMap"></a>
     </div>
   </div>
 </template>
@@ -63,17 +67,66 @@
   font-weight: bold;
   color: green;
 }
+
+.map-icon {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+
+}
+.listing-map {
+  height: 200px;
+}
 </style>
 
 <script>
+import Vue from "vue";
+
 export default {
   name: "Listing",
   props: {
     id: Number,
     listing: Object
   },
+  data: function () {
+    return {showMap: false, mapReady: false}
+  },
   mounted: function() {
-
+    
+  },
+  methods: {
+    makeMap: function () {
+      var thisThis = this;
+      Vue.nextTick(function () {
+        var map = new ol.Map({
+          target: thisThis.$refs.smolMap,
+          layers: [
+              new ol.layer.Tile({
+                  source: new ol.source.OSM()
+              }),
+              new ol.layer.Vector({
+                  source: new ol.source.Vector({
+                      features: [new ol.Feature({
+                          geometry: new ol.geom.Point(ol.proj.fromLonLat([thisThis.listing.longitude, thisThis.listing.latitude])),
+                          style: new ol.style.Style({})
+                      })]
+                  })
+              })
+          ],
+          view: new ol.View({
+              center: ol.proj.fromLonLat([thisThis.listing.longitude, thisThis.listing.latitude]),
+              zoom: 15
+          })
+        });
+      })
+    },
+    toggleMap: function () {
+      this.showMap = !this.showMap
+      if (!this.mapReady) {
+        this.mapReady = true
+        this.makeMap()
+      }
+    }
   }
 };
 </script>
