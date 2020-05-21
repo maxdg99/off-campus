@@ -30,6 +30,8 @@ DEBUG = True
 # Allow localhost
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
+AUTH_USER_MODEL = 'OffCampusRestApi.User'
+
 # Allow connections via host's IP address (for testing on mobile via LAN)
 if os.getenv('HOST_IP'):
     ALLOWED_HOSTS.append(os.getenv('HOST_IP'))

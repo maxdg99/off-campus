@@ -19,8 +19,62 @@
             uk-toggle="target: #mobile-sidebar"
             uk-navbar-toggle-icon
           ></a>
-          <GoogleLogin v-show="!$root.isSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
-          <button v-show="$root.isSignedIn" class="uk-button uk-button-default" v-on:click="logOut">Sign Out</button>
+          <span v-show="!$root.isSignedIn"><button id="sign-up" uk-toggle="target: #sign-up-modal" class="uk-button uk-button-link">Sign Up</button> &nbsp; / &nbsp; <button id="sign-in" uk-toggle="target: #sign-in-modal" class="uk-button uk-button-link">Sign In</button></span>
+          <div id='sign-up-modal' uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+              <button class="uk-modal-close-default" type="button" uk-close></button>
+              <h2 class="uk-modal-title">Sign Up</h2>
+              <form class="uk-form-stacked">
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="email">Email</label>
+                  <input id="email" type="email" class="uk-input">
+                </div>
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="password">Password</label>
+                  <input id="password" type="password" class="uk-input">
+                </div>
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="verify-password">Re-Type Password</label>
+                  <input id="verify-password" type="password" class="uk-input">
+                </div>
+                <div class="google-sign-in-parent">
+                  <button type="button" class="uk-button uk-button-primary">Sign Up</button>
+                </div>
+              </form>
+              <div class="google-sign-in-parent uk-margin">
+                or
+              </div>
+              <div class="google-sign-in-parent">
+                <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+              </div>
+            </div>
+          </div>
+          <div id='sign-in-modal' uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+              <button class="uk-modal-close-default" type="button" uk-close></button>
+              <h2 class="uk-modal-title">Sign In</h2>
+              <form class="uk-form-stacked">
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="user-name">Email</label>
+                  <input id="user-name" type="email" class="uk-input">
+                </div>
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="password">Password</label>
+                  <input id="password" type="password" class="uk-input">
+                </div>
+                <div class="google-sign-in-parent">
+                  <button type="button" class="uk-button uk-button-primary">Sign In</button>
+                </div>
+              </form>
+              <div class="google-sign-in-parent uk-margin">
+                or
+              </div>
+              <div class="google-sign-in-parent">
+                <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+              </div>
+            </div>
+          </div>
+          <button v-show="$root.isSignedIn" class="uk-button uk-button-danger" v-on:click="logOut">Sign Out</button>
         </div>
       </div>
     </nav>
@@ -64,6 +118,11 @@ body {
   display: grid;
   grid-template-rows: 1fr auto;
 }
+.google-sign-in-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 footer {
   grid-row-start: 2;
   grid-row-end: 3;
@@ -104,7 +163,7 @@ export default {
     onSuccess: function(googleUser) {
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8000/login',
+        url: 'http://localhost:8000/signIn',
         data:{
           id_token: googleUser.getAuthResponse().id_token
         },
@@ -118,6 +177,8 @@ export default {
             auth2.signOut()
           })
           this.$root.isSignedIn = true
+          UIkit.modal("#sign-in-modal").hide()
+          UIkit.modal("#sign-up-modal").hide()
         },
         failure: () => {
           console.log('Failure logging in.')
@@ -130,7 +191,7 @@ export default {
     logOut: function(){
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:8000/logout',
+        url: 'http://localhost:8000/signOut',
         xhrFields: {
           withCredentials: true
         },
@@ -154,7 +215,7 @@ export default {
       })
     }
   },
-  mounted: function (){
+  mounted: function() {
     this.isSignedIn()
   }
 };

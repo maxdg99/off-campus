@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
+from django.core.validators import MaxValueValidator, MinValueValidator 
 
 class Listing(models.Model):
     AVAILABILITY_MODE = [('S', 'Season'), ('M', 'Month'), ('N', 'Now'), ('-', 'None'), ('D', 'Date')]
@@ -38,6 +40,15 @@ class Listing(models.Model):
 
     listings = models.Manager()
 
-class User(models.Model):
-    google_id = models.CharField(max_length=64, default="")
-    favorites = models.ManyToManyField(Listing)
+class User(AbstractBaseUser):
+    email = models.CharField(max_length=320, unique=True)
+    USERNAME_FIELD = 'email'
+    password = models.CharField(max_length=100)
+    social_account_id = models.CharField(max_length=64, default="")
+    favorites = models.ManyToManyField(Listing, through="Favorite")
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    note = models.CharField(max_length=1000)
+    rating = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])

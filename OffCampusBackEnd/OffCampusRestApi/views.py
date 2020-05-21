@@ -103,29 +103,16 @@ def getLikedListings(request):
         return response
 
 @csrf_exempt
-def login(request):
+def sign_up(request):
     if request.POST:
-        token = request.POST.get('id_token')
-        user_id = None
-        response = HttpResponse(status=404)
-        if token:
-            try:
-                idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
-                if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-                    raise ValueError('Wrong issuer.')
-                user_id = idinfo['sub']
-            except ValueError:
-                pass
+        if request.POST.get('google'):
+            pass
 
-            if user_id:
-                if not User.objects.filter(google_id=user_id).exists():
-                    user = User(google_id=user_id)
-                    user.save()
-                request.session['offcampus.us_auth'] = User.objects.get(google_id=user_id).pk
-                response = HttpResponse(status=201)
-        __allowCors(response)
-        request.session.modified = True
-        return response
+
+@csrf_exempt
+def sign_in(request):
+    if request.POST:
+        __google_sign_in(request)
     else:
         return HttpResponse(status=400)
 
@@ -136,13 +123,38 @@ def isSignedIn(request):
     __allowCors(response)
     return response
     
-def logout(request):
+def sign_out(request):
     request.session.flush()
     response = HttpResponse(status=201)
+    __allowCors(response)
+    return response
+
 def getOrderOptions(request):
     response = JsonResponse(orderOptions, safe=False)
     __allowCors(response)
     return response
+
+def __google_sign(request):
+    token = request.POST.get('id_token')
+    user_id = None
+    response = HttpResponse(status=404)
+    if token:
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com")
+            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                raise ValueError('Wrong issuer.')
+            user_id = idinfo['sub']
+        except ValueError:
+            pass
+        if user_id:
+            if not User.objects.filter(google_id=user_id).exists():
+                user = User(google_id=user_id)
+                user.save()
+            request.session['offcampus.us_auth'] = User.objects.get(google_id=user_id).pk
+            response = HttpResponse(status=201)
+        __allowCors(response)
+        request.session.modified = True
+        return response
 
 def __allowCors(response):
     response["Access-Control-Allow-Origin"] = "http://localhost:8080" #must be the url of the website
