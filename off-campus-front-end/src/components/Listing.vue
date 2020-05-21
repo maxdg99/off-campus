@@ -14,7 +14,7 @@
         </span>
       </div>
       <div class="listing-address-parent">
-        <a v-bind:href="listing.url" target="_blank" class="listing-address">{{ listing.pretty_address }}</a>
+        <a v-bind:href="listing.url" target="_blank" class="listing-address">{{ listing.address }}</a>
       </div>
       <div class="listing-availability-parent">
         <div class="listing-availability" v-if="listing.availability_mode=='Season'">Available this {{getMonth(listing.availability_date.month)}}</div>
