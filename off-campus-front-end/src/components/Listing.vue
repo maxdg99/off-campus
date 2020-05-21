@@ -2,6 +2,7 @@
   <div class="uk-card uk-card-small uk-card-default uk-card-hover">
     <div class="uk-card-media-top">
       <img v-bind:src="listing.image" class="listing-image" uk-img/>
+      <div class="listing-map" v-show="showMap" ref="smolMap" />
     </div>
     <div class="uk-card-body listing-body">
       <div class="price-info-container">
@@ -22,6 +23,9 @@
         <div class="listing-availability" v-else-if="listing.availability_mode=='Now'">Available Now</div>
         <div class="listing-availability" v-else-if="listing.availability_mode=='Date'">Available on {{getDate(listing.availability_date)}}</div>
       </div>
+    </div>
+    <div class="map-icon">
+      <a uk-icon="location" v-on:click="toggleMap"></a>
     </div>
   </div>
 </template>
@@ -89,9 +93,21 @@
   font-weight: 600;
   color: black;
 }
+
+.map-icon {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+
+}
+.listing-map {
+  height: 200px;
+}
 </style>
 
 <script>
+import Vue from "vue";
+
 export default {
   name: "Listing",
   data: function () {
@@ -119,7 +135,45 @@ export default {
       } else if(split_date[1] == 9) {
         return "Fall"
       }
+    },
+     makeMap: function () {
+      var thisThis = this;
+      Vue.nextTick(function () {
+        var map = new ol.Map({
+          target: thisThis.$refs.smolMap,
+          layers: [
+              new ol.layer.Tile({
+                  source: new ol.source.OSM()
+              }),
+              new ol.layer.Vector({
+                  source: new ol.source.Vector({
+                      features: [new ol.Feature({
+                          geometry: new ol.geom.Point(ol.proj.fromLonLat([thisThis.listing.longitude, thisThis.listing.latitude])),
+                          style: new ol.style.Style({})
+                      })]
+                  })
+              })
+          ],
+          view: new ol.View({
+              center: ol.proj.fromLonLat([thisThis.listing.longitude, thisThis.listing.latitude]),
+              zoom: 15
+          })
+        });
+      })
+    },
+    toggleMap: function () {
+      this.showMap = !this.showMap
+      if (!this.mapReady) {
+        this.mapReady = true
+        this.makeMap()
+      }
     }
+  },
+  data: function () {
+    return {showMap: false, mapReady: false}
+  },
+  mounted: function() {
+    
   }
 };
 </script>

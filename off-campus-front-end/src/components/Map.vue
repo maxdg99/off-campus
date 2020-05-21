@@ -8,12 +8,6 @@
 </div>
 </template>
 
-<style scoped>
-#bigmap {
-    height: calc(100vh - 184px);
-}
-</style>
-
 <script>
 import axios from "axios";
 import Vue from "vue";
