@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="uk-navbar-container uk-margin-bottom" uk-navbar>
+    <nav class="uk-navbar-container" uk-navbar>
       <div class="uk-navbar-left">
         <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
         <ul class="uk-navbar-nav uk-visible@s">
@@ -51,11 +51,22 @@
 </template>
 
 <style lang="scss">
+$primary-color: hsl(200, 100%, 38%);
+
+/* UIKit variable overrides */
 $offcanvas-bar-background: #f8f8f8;
 $offcanvas-bar-color-mode: dark;
+$button-primary-background: $primary-color;
+
+/* UIKit import */
 @import "uikit/src/scss/variables-theme.scss";
 @import "uikit/src/scss/mixins-theme.scss";
 @import "uikit/src/scss/uikit-theme.scss";
+
+nav {
+  border-bottom: $primary-color 0.125rem solid;
+  margin-bottom: 0.75rem;
+}
 
 /* Sticky footer */
 html {

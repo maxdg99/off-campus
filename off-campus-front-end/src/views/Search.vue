@@ -90,6 +90,7 @@
 
       <!-- Mobile search filters -->
       <form
+        id="mobile-search-filters"
         class="uk-grid-small uk-child-width-1-2 uk-hidden@m uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
@@ -210,6 +211,10 @@
 </template>
 
 <style lang="scss" scoped>
+#mobile-search-filters {
+  margin-top: 0.25rem;
+}
+
 .beds-and-baths {
   & > div {
     display: inline-block;
