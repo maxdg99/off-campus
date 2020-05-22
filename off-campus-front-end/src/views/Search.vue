@@ -184,8 +184,8 @@
       </form>
     </div>
 
+    <div class="result-count">{{this.resultCount}} results</div>
     <div class="map-and-listings-container">
-      <div class="result-count">{{this.resultCount}} results</div>
       <Map ref="map" />
       <div id="listings" class="uk-container">
         <div class="uk-grid-medium uk-grid-match" uk-grid>
@@ -253,6 +253,7 @@
 }
 
 .result-count {
+  margin-left: 20px;
   font-weight: 600;
   font-size: 1.125em;
 }
