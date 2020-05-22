@@ -1,7 +1,7 @@
 <template>
   <div class="uk-card uk-card-small uk-card-default uk-card-hover">
     <div class="uk-card-media-top">
-      <img v-bind:src="listing.image" class="listing-image" uk-img/>
+      <img v-bind:src="listing.image" class="listing-image" v-show="!showMap" uk-img/>
       <div class="listing-map" v-show="showMap" ref="smolMap" />
     </div>
     <div class="uk-card-body listing-body">
@@ -15,7 +15,7 @@
         </span>
       </div>
       <div class="listing-address-parent">
-        <a v-bind:href="listing.url" target="_blank" class="listing-address">{{ listing.address }}</a>
+        <a v-bind:href="listing.url" target="_blank" class="listing-address">{{ listing.pretty_address }}</a>
       </div>
       <div class="listing-availability-parent">
         <div class="listing-availability" v-if="listing.availability_mode=='Season'">Available this {{getMonth(listing.availability_date.month)}}</div>
@@ -101,7 +101,7 @@
 
 }
 .listing-map {
-  height: 200px;
+  height: 300px;
 }
 </style>
 

@@ -184,11 +184,10 @@
       </form>
     </div>
 
-    <div class="result-count">{{this.resultCount}} results</div>
     <div class="map-and-listings-container">
       <Map ref="map" />
-      <div id="listings" class="uk-container">
-        <div class="uk-grid-medium uk-grid-match" uk-grid>
+      <div id="listings" >
+        <div class="uk-grid-small uk-grid-match" uk-grid>
           <div v-for="listing in searchResults" class="uk-width-1-2@s" v-bind:key="listing.pk">
             <Listing :id="listing.pk" :listing="listing.fields" />
           </div>
@@ -244,12 +243,6 @@
 
 .search-button {
   margin-top: 24px;
-}
-
-.listings {
-  max-height: 60%;
-  position: absolute;
-  overflow-y: scroll;
 }
 
 .result-count {
