@@ -194,6 +194,7 @@
             :key="listing.pk"
             :id="listing.pk"
             :listing="listing.fields"
+            @mouseover.native="listingClicked(listing)"
           />
         </div>
         <Paginate
@@ -434,6 +435,9 @@ export default {
 
         this.$router.push({ query: this.filters });
       }
+    },
+    listingClicked: function(listing) {
+      this.$refs.map.highlightListing(listing.pk)
     }
   },
   watch: {
