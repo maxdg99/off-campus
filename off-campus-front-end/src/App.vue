@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="uk-navbar-container uk-margin-bottom" uk-navbar>
+    <nav class="uk-navbar-container" uk-navbar>
       <div class="uk-navbar-left">
         <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
         <ul class="uk-navbar-nav uk-visible@s">
@@ -40,7 +40,7 @@
           </li>
           <li>
             <!-- TODO: implement login with Google -->
-            <a>Log In</a>
+            <a>Sign In</a>
           </li>
         </ul>
       </div>
@@ -50,11 +50,23 @@
   </div>
 </template>
 
-<style lang="less">
-@import "../node_modules/uikit/src/less/uikit.less";
-@import "../node_modules/uikit/src/less/uikit.theme.less";
-@offcanvas-bar-background: #fff;
-@offcanvas-bar-color-mode: dark;
+<style lang="scss">
+$primary-color: hsl(200, 100%, 38%);
+
+/* UIKit variable overrides */
+$offcanvas-bar-background: #f8f8f8;
+$offcanvas-bar-color-mode: dark;
+$button-primary-background: $primary-color;
+
+/* UIKit import */
+@import "uikit/src/scss/variables-theme.scss";
+@import "uikit/src/scss/mixins-theme.scss";
+@import "uikit/src/scss/uikit-theme.scss";
+
+nav {
+  border-bottom: $primary-color 0.125rem solid;
+  margin-bottom: 0.75rem;
+}
 
 /* Sticky footer */
 html {
@@ -63,12 +75,17 @@ html {
 body {
   min-height: 100%;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
 }
 footer {
-  grid-row-start: 2;
-  grid-row-end: 3;
-  padding-bottom: 0.5rem;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  padding: 0.5rem 0;
+}
+
+/* Smaller OpenStreetMap attribution */
+.ol-attribution {
+  font-size: 0.75rem;
 }
 </style>
 

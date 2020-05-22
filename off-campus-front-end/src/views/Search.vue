@@ -90,6 +90,7 @@
 
       <!-- Mobile search filters -->
       <form
+        id="mobile-search-filters"
         class="uk-grid-small uk-child-width-1-2 uk-hidden@m uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
@@ -185,35 +186,35 @@
 
     <div class="map-and-listings-container">
       <Map ref="map" />
-      <div class="uk-container">
+      <div id="listings" class="uk-container">
         <div class="uk-grid-medium uk-grid-match" uk-grid>
-          <div
-            v-for="listing in searchResults"
-            class="uk-width-1-2@s"
-            v-bind:key="listing.pk"
-          >
+          <div v-for="listing in searchResults" class="uk-width-1-2@s" v-bind:key="listing.pk">
             <Listing :id="listing.pk" :listing="listing.fields" />
           </div>
         </div>
+        <Paginate
+          v-model="filters.page"
+          :page-count="pageCount"
+          :page-range="3"
+          :margin-pages="1"
+          :click-handler="updateRouteToMatchFilters"
+          :container-class="'uk-pagination uk-flex-center'"
+          :page-class="''"
+          :active-class="'uk-active'"
+          :disabled-class="'uk-disabled'"
+          :prev-text="'<span uk-pagination-previous></span>'"
+          :next-text="'<span uk-pagination-next></span>'"
+        />
       </div>
     </div>
-    <Paginate
-      v-model="filters.page"
-      :page-count="pageCount"
-      :page-range="3"
-      :margin-pages="1"
-      :click-handler="updateRouteToMatchFilters"
-      :container-class="'uk-pagination uk-flex-center'"
-      :page-class="''"
-      :active-class="'uk-active'"
-      :disabled-class="'uk-disabled'"
-      :prev-text="'<span uk-pagination-previous></span>'"
-      :next-text="'<span uk-pagination-next></span>'"
-    />
   </div>
 </template>
 
 <style lang="scss" scoped>
+#mobile-search-filters {
+  margin-top: 0.25rem;
+}
+
 .beds-and-baths {
   & > div {
     display: inline-block;
@@ -245,16 +246,22 @@
 }
 
 .map-and-listings-container {
-  & > #bigmap {
+  #bigmap {
     display: none;
   }
 
   @media screen and (min-width: 960px) {
+    height: calc(100vh - 224px);
     display: grid;
     grid-template-columns: 1fr 1fr;
 
-    & > #bigmap {
+    #bigmap {
       display: initial;
+    }
+
+    #listings {
+      /* Makes panel scrollable */
+      overflow: auto;
     }
   }
 }
