@@ -121,8 +121,10 @@ export default {
   },
   methods: {
     getDate(date) {
-      var split_date = date.split("-")
-      return `${split_date[1]}/${split_date[2]}/${split_date[0]}`
+      if(date) {
+        var split_date = date.split("-")
+        return `${split_date[1]}/${split_date[2]}/${split_date[0]}`
+      }
     },
     getMonth(date) {
       var split_date = date.split("-")

@@ -300,7 +300,8 @@ export default {
       filters: {},
       originalFilters: {},
       pageCount: 1,
-      showMobileFilters: false
+      showMobileFilters: false,
+      resultCount: 0
     };
   },
   mounted: function() {
