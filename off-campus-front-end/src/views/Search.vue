@@ -215,8 +215,7 @@
 </template>
 
 <style lang="scss" scoped>
-$min-tablet-screen-width: 720px;
-$min-desktop-screen-width: 1280px;
+@import "@/scss/_variables.scss";
 
 #desktop-search-filters {
   display: none;
