@@ -3,7 +3,8 @@
     <div class="uk-container">
       <!-- Desktop search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-5 uk-visible@m uk-margin-bottom search-filters"
+        id="desktop-search-filters"
+        class="uk-grid-small uk-child-width-1-5 uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -91,7 +92,7 @@
       <!-- Mobile search filters -->
       <form
         id="mobile-search-filters"
-        class="uk-grid-small uk-child-width-1-2 uk-hidden@m uk-margin-bottom search-filters"
+        class="uk-grid-small uk-child-width-1-2 uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -184,13 +185,16 @@
       </form>
     </div>
 
-    <div class="map-and-listings-container">
+    <div id="map-and-listings-container">
       <Map ref="map" />
-      <div id="listings" class="uk-container">
-        <div class="uk-grid-medium uk-grid-match" uk-grid>
-          <div v-for="listing in searchResults" class="uk-width-1-2@s" v-bind:key="listing.pk">
-            <Listing :id="listing.pk" :listing="listing.fields" />
-          </div>
+      <div id="listings">
+        <div id="listings-grid">
+          <Listing
+            v-for="listing in searchResults"
+            :key="listing.pk"
+            :id="listing.pk"
+            :listing="listing.fields"
+          />
         </div>
         <Paginate
           v-model="filters.page"
@@ -211,8 +215,24 @@
 </template>
 
 <style lang="scss" scoped>
+$min-tablet-screen-width: 720px;
+$min-desktop-screen-width: 1280px;
+
+#desktop-search-filters {
+  display: none;
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    display: flex;
+  }
+}
+
 #mobile-search-filters {
   margin-top: 0.25rem;
+  display: flex;
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    display: none;
+  }
 }
 
 .beds-and-baths {
@@ -245,15 +265,28 @@
   margin-top: 24px;
 }
 
-.map-and-listings-container {
+#map-and-listings-container {
+  margin: 0 auto;
+  max-width: 1600px;
+  @media screen and (max-width: $min-tablet-screen-width - 1) {
+    padding: 0 15px;
+  }
+  @media screen and (min-width: $min-tablet-screen-width) {
+    padding: 0 30px;
+  }
+  @media screen and (min-width: $min-desktop-screen-width) {
+    padding: 0;
+  }
+
   #bigmap {
     display: none;
   }
 
-  @media screen and (min-width: 960px) {
+  @media screen and (min-width: $min-desktop-screen-width) {
     height: calc(100vh - 224px);
     display: grid;
     grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
 
     #bigmap {
       display: initial;
@@ -263,6 +296,14 @@
       /* Makes panel scrollable */
       overflow: auto;
     }
+  }
+}
+
+#listings-grid {
+  display: grid;
+  gap: 1rem;
+  @media screen and (min-width: $min-tablet-screen-width) {
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>
