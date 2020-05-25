@@ -67,8 +67,6 @@ class AppfolioScraper():
             else:
                 description = ""
 
-            #address = format_address(address)
-
             d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
             print(d)
             callback(d)
