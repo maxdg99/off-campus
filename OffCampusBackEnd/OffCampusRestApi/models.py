@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.core.validators import MaxValueValidator, MinValueValidator 
+from django.utils.translation import gettext_lazy as _
 
 class Listing(models.Model):
     AVAILABILITY_MODE = [('S', 'Season'), ('M', 'Month'), ('N', 'Now'), ('-', 'None'), ('D', 'Date')]
@@ -41,10 +43,12 @@ class Listing(models.Model):
     listings = models.Manager()
 
 class User(AbstractBaseUser):
-    email = models.CharField(max_length=320, unique=True)
+    class SocialAccount(models.TextChoices):
+        Google = 'G', _('Google')
+    email = models.EmailField(unique=True)
     USERNAME_FIELD = 'email'
     password = models.CharField(max_length=100)
-    social_account_id = models.CharField(max_length=64, default="")
+    social_account_id = models.CharField(max_length=2, choices=SocialAccount.choices)
     favorites = models.ManyToManyField(Listing, through="Favorite")
 
 class Favorite(models.Model):
