@@ -22,7 +22,7 @@ def getSearchListingsPage(request):
 
     for listing in listingsPage["listings"]:
         if listing.price is not None:
-            avg = averages[(listing.num_bedrooms, listing.num_bathrooms)]
+            avg = averages[(listing.beds, listing.baths)]
             listing.diff_raw = listing.price - avg
             listing.percent_diff = f"{(listing.price - avg) / avg * 100:+.0f}"
 
@@ -77,9 +77,9 @@ def __getFilteredListings(request):
 
     # Parses beds and baths
     if "beds" in queryParams and queryParams["beds"].isnumeric():
-        listingsFilter = listingsFilter & Q(num_bedrooms=queryParams["beds"])
+        listingsFilter = listingsFilter & Q(beds=queryParams["beds"])
     if "baths" in queryParams and queryParams["baths"].isnumeric():
-        listingsFilter = listingsFilter & Q(num_bathrooms=queryParams["baths"])
+        listingsFilter = listingsFilter & Q(baths=queryParams["baths"])
 
     secondaryListingsFilter = Q()
 
