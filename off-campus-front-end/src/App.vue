@@ -51,7 +51,7 @@
 </template>
 
 <style lang="scss">
-$primary-color: hsl(200, 100%, 38%);
+@import "@/scss/_variables.scss";
 
 /* UIKit variable overrides */
 $offcanvas-bar-background: #f8f8f8;
