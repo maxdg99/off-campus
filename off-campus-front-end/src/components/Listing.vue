@@ -112,6 +112,8 @@ export default {
   name: "Listing",
   data: function () {
     return {
+      showMap: false,
+      mapReady: false,
       months: ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     }
   },
@@ -170,12 +172,6 @@ export default {
         this.makeMap()
       }
     }
-  },
-  data: function () {
-    return {showMap: false, mapReady: false}
-  },
-  mounted: function() {
-    
   }
 };
 </script>
