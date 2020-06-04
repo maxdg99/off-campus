@@ -1,10 +1,16 @@
 <template>
 <div id="bigmap">
     <div id="popup">
-        <Listing :id="selectedListing.pk" :listing="selectedListing.fields" v-if="selectedListing !== null" />
+        <Listing :id="selectedListing.pk" :listing="selectedListing.fields" v-if="selectedListing !== null" :canFlip=false />
     </div>
 </div>
 </template>
+
+<style scoped>
+#popup {
+    max-width: 200px;
+}
+</style>
 
 <script>
 import axios from "axios";
@@ -16,7 +22,15 @@ const iconStyle = new ol.style.Style({
     image: new ol.style.Circle({
         radius: 5,
         fill: new ol.style.Fill({color: 'rgba(0, 0, 0, 0.05)'}),
-        stroke: new ol.style.Stroke({color: '#0081c2', width: 1})
+        stroke: new ol.style.Stroke({color: '#607580', width: 1})
+    })
+});
+
+let selectedStyle = new ol.style.Style({
+    image: new ol.style.Circle({
+        radius: 7,
+        fill: new ol.style.Fill({color: '#0081C2'}),
+        //stroke: new ol.style.Stroke({color: '#FF0000', width: 1})
     })
 });
 
@@ -225,14 +239,7 @@ export default {
             // ID... because I took CSE 2331 I know I want a map!
             let feature = this.featureForListingID[listingID]
             if (feature) {
-                let specialStyle = new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 7,
-                        fill: new ol.style.Fill({color: 'rgba(100, 0, 0, 0.2)'}),
-                        stroke: new ol.style.Stroke({color: '#FF0000', width: 1})
-                    })
-                });
-                feature.setStyle(specialStyle)
+                feature.setStyle(selectedStyle)
             }
             this.highlightedFeature = feature
 
