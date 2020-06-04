@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="uk-navbar-container" uk-navbar>
       <div class="uk-navbar-left">
-        <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
+        <router-link to="/" id="logo" class="uk-navbar-item uk-logo">OFF CAMPUS</router-link>
         <ul class="uk-navbar-nav uk-visible@s">
           <li>
             <router-link to="/">Home</router-link>
@@ -10,9 +10,12 @@
           <li>
             <router-link to="/search">Search</router-link>
           </li>
+          <li>
+            <router-link to="/about-us">About Us</router-link>
+          </li>
         </ul>
       </div>
-      <div class="uk-navbar-right">
+      <!-- <div class="uk-navbar-right">
         <div class="uk-navbar-item">
           <a
             class="uk-navbar-toggle uk-hidden@s"
@@ -23,7 +26,7 @@
             <button id="sign-in-button" class="uk-button uk-button-default">Sign In</button>
           </form>
         </div>
-      </div>
+      </div> -->
     </nav>
 
     <div id="mobile-sidebar" uk-offcanvas="overlay: true; flip: true">
@@ -37,6 +40,9 @@
           </li>
           <li>
             <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
+          </li>
+          <li>
+            <router-link to="/about-us" uk-toggle="target: #mobile-sidebar">About Us</router-link>
           </li>
           <li>
             <!-- TODO: implement login with Google -->
@@ -63,9 +69,12 @@ $button-primary-background: $primary-color;
 @import "uikit/src/scss/mixins-theme.scss";
 @import "uikit/src/scss/uikit-theme.scss";
 
+#logo{
+  font-weight: 600;
+}
+
 nav {
   border-bottom: $primary-color 0.125rem solid;
-  margin-bottom: 0.75rem;
 }
 
 /* Sticky footer */

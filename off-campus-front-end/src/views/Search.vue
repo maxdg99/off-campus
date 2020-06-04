@@ -205,6 +205,7 @@
           :prev-text="'<span uk-pagination-previous></span>'"
           :next-text="'<span uk-pagination-next></span>'"
         />
+        <footer class="uk-text-center">&copy; {{new Date().getFullYear()}} Max Gruber, Andrew Haberlandt, Adam Lis</footer>
       </div>
     </div>
   </div>
@@ -257,7 +258,7 @@
   }
 
   @media screen and (min-width: 960px) {
-    height: calc(100vh - 224px);
+    height: calc(100vh - 170px);
     display: grid;
     grid-template-columns: 1fr 1fr;
 
