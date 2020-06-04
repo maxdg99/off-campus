@@ -90,7 +90,7 @@
 }
 
 #popup .listing-address,
-.listing-address:hover {
+#popup .listing-address:hover {
   font-size: 0.8em;
 }
 
