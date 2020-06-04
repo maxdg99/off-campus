@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="uk-navbar-container" uk-navbar>
       <div class="uk-navbar-left">
-        <router-link to="/" id="logo" class="uk-navbar-item uk-logo">OFF CAMPUS</router-link>
+        <router-link to="/" id="logo" class="uk-navbar-item uk-logo">Off Campus</router-link>
         <ul class="uk-navbar-nav uk-visible@s">
           <li>
             <router-link to="/">Home</router-link>
@@ -11,7 +11,7 @@
             <router-link to="/search">Search</router-link>
           </li>
           <li>
-            <router-link to="/about-us">About Us</router-link>
+            <router-link to="/about">About</router-link>
           </li>
         </ul>
       </div>

@@ -17,7 +17,7 @@ const routes = [
     component: Search
   },
   {
-    path: '/about-us',
+    path: '/about',
     component: About
   },
   {
