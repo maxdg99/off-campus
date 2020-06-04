@@ -26,11 +26,10 @@ const iconStyle = new ol.style.Style({
     })
 });
 
-let selectedStyle = new ol.style.Style({
+const selectedStyle = new ol.style.Style({
     image: new ol.style.Circle({
         radius: 7,
         fill: new ol.style.Fill({color: '#0081C2'}),
-        //stroke: new ol.style.Stroke({color: '#FF0000', width: 1})
     })
 });
 
