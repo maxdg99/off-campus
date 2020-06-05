@@ -47,8 +47,9 @@
 
 
 .listing-image {
-  height: 300px;
+  height: 200px;
   width: 100%;
+  object-fit: cover;
 }
 
 .listing-address-parent {

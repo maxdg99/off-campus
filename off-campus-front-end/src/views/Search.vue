@@ -287,10 +287,10 @@
     display: none;
   }
 
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $min-tablet-screen-width) {
     height: calc(100vh - 224px);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
     column-gap: 1rem;
 
     #bigmap {
@@ -302,13 +302,26 @@
       overflow: auto;
     }
   }
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    grid-template-columns: 1fr 2fr;
+  }
+
+
 }
 
 #listings-grid {
   display: grid;
   gap: 1rem;
-  @media screen and (min-width: $min-tablet-screen-width) {
+
+  @media screen and (max-width: $min-tablet-screen-width - 301) {
+    grid-template-columns: 1fr;
+  }
+  @media screen and (min-width: $min-tablet-screen-width - 300) {
     grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (min-width: $min-desktop-screen-width) {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
 </style>
