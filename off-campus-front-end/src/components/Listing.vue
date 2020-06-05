@@ -5,34 +5,33 @@
       <div class="listing-map" v-show="showMap" ref="smolMap" />
     </div>
     <div class="uk-card-body listing-body">
-      <div class="price-info-container">
+      <div class="listing-price-and-info-container">
         <div v-if="listing.price" class="listing-price">${{ listing.price }}</div>
         <div v-else>N/A</div>
-        <span class="listing-info-container">
-          <div class="listing-info">{{ listing.miles_from_campus }} mi</div>|
-          <div class="listing-info">{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</div>|
-          <div class="listing-info">{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</div>
+        <span class="listing-info">
+          <span>{{ listing.miles_from_campus }} mi</span>
+          <span>&nbsp;|&nbsp;</span>
+          <span>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</span>
+          <span>&nbsp;|&nbsp;</span>
+          <span>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</span>
         </span>
       </div>
-      <div class="listing-address-parent">
+      <div class="listing-address-container">
         <a
           v-bind:href="listing.url"
           target="_blank"
           class="listing-address"
         >{{ listing.pretty_address }}</a>
       </div>
-      <div class="listing-availability-parent">
+      <div>
         <div
-          class="listing-availability"
           v-if="listing.availability_mode=='Season'"
         >Available this {{getMonth(listing.availability_date.month)}}</div>
         <div
-          class="listing-availability"
           v-else-if="listing.availability_mode=='Month'"
         >Available in {{this.months[listing.availability_date.month - 1]}}</div>
-        <div class="listing-availability" v-else-if="listing.availability_mode=='Now'">Available Now</div>
+        <div v-else-if="listing.availability_mode=='Now'">Available Now</div>
         <div
-          class="listing-availability"
           v-else-if="listing.availability_mode=='Date'"
         >Available on {{getDate(listing.availability_date)}}</div>
       </div>
@@ -46,9 +45,8 @@
 <style lang="scss" scoped>
 @import "@/scss/_variables.scss";
 
-:root {
-  --card-section-margin: 10px;
-}
+$card-section-margin: 0;
+$listing-image-map-height: 300px;
 
 .switcher {
   position: absolute;
@@ -57,55 +55,43 @@
 }
 
 .listing-body {
-  padding: 5px;
+  padding: 5px 10px 10px 10px;
+  font-weight: 600;
+  color: black;
 }
 
 .listing-image {
-  height: 300px;
+  height: $listing-image-map-height;
   width: 100%;
 }
 
-.listing-address-parent {
-  margin-bottom: var(--card-section-margin);
+.listing-map {
+  height: $listing-image-map-height;
+}
+
+.listing-price-and-info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $card-section-margin;
+}
+
+.listing-price {
+  font-size: 1.75rem;
+}
+
+.listing-info {
+  font-size: 1.0625rem;
+}
+
+.listing-address-container {
+  margin-bottom: $card-section-margin;
 }
 
 .listing-address,
 .listing-address:hover {
   display: inline-block;
-  color: black;
-  font-size: 1em;
-  font-weight: 600;
-}
-
-.price-info-container {
-  overflow: auto;
-  margin-bottom: var(--card-section-margin);
-}
-
-.listing-info {
-  display: inline;
-  font-size: 1em;
-  font-weight: 600;
-  color: black;
-}
-
-.listing-info-container {
-  float: right;
-  line-height: 1.75em;
-  vertical-align: middle;
-}
-
-.listing-price {
-  float: left;
-  font-weight: 600;
-  font-size: 1.75em;
-  color: black;
-}
-
-.listing-availability {
-  font-size: 1em;
-  font-weight: 600;
-  color: black;
+  color: inherit;
 }
 
 .map-icon {
@@ -116,10 +102,6 @@
   @media screen and (min-width: $min-desktop-screen-width) {
     display: none;
   }
-}
-
-.listing-map {
-  height: 300px;
 }
 </style>
 
