@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="map-icon">
-      <a uk-icon="location" v-on:click="toggleMap"></a>
+      <a uk-icon="location" v-on:click="toggleMap" v-show="canFlip"></a>
     </div>
   </div>
 </template>
@@ -77,6 +77,24 @@
 .listing-map {
   height: 200px;
 }
+
+/* Special Style for use in Big Map */
+#popup .listing-image {
+  height: 100px;
+}
+
+#popup .listing-info-container {
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 0.8em;
+}
+
+#popup .listing-address,
+#popup .listing-address:hover {
+  font-size: 0.8em;
+}
+
+
 </style>
 
 <script>
@@ -86,7 +104,11 @@ export default {
   name: "Listing",
   props: {
     id: Number,
-    listing: Object
+    listing: Object,
+    canFlip: {
+      type: Boolean,
+      default: true
+    }
   },
   data: function () {
     return {showMap: false, mapReady: false}
