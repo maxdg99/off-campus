@@ -43,7 +43,7 @@ def __getPaginatedListings(request):
     page = request.GET.get('page', 1)
     listings = __getFilteredListings(request)
     paginator = Paginator(listings, 20)
-    
+
     try:
         listingsPage = paginator.page(page)
     except PageNotAnInteger:
@@ -65,6 +65,7 @@ def getOrderOptions(request):
     return response
 
 def __allowCors(response):
+    print("allow CORS")
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
@@ -91,7 +92,7 @@ def __getFilteredListings(request):
 
     # Only show listings with prices
     secondaryListingsFilter = secondaryListingsFilter & Q(price__isnull=False)
-    
+
     listingsFilter = listingsFilter & secondaryListingsFilter
 
     # Parses minimum and maximum distances from campus
