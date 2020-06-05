@@ -42,17 +42,6 @@ class Listing(models.Model):
 
     listings = models.Manager()
 
-class User(AbstractBaseUser):
-    class SocialAccount(models.TextChoices):
-        Google = 'G', _('Google')
-    email = models.EmailField(unique=True)
-    USERNAME_FIELD = 'email'
-    password = models.CharField(max_length=100)
-    social_account_id = models.CharField(max_length=2, choices=SocialAccount.choices)
-    favorites = models.ManyToManyField(Listing, through="Favorite")
-
-class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
-    note = models.CharField(max_length=1000)
-    rating = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
+class GoogleUser(models.Model):
+    google_id = models.CharField(max_length=255)
+    favorites = models.ManyToManyField(Listing)

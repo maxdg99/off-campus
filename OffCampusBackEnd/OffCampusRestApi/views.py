@@ -7,7 +7,7 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 
 from OffCampusRestApi.models import Listing
-from OffCampusRestApi.models import User
+from OffCampusRestApi.models import GoogleUser
 from OffCampusRestApi.compute_averages import compute_averages
 from apiclient import discovery
 import httplib2
@@ -29,7 +29,7 @@ def getSearchListingsPage(request):
 
     for listing in listingsPage["listings"]:
         if listing.price is not None:
-            avg = averages[(listing.num_bedrooms, listing.num_bathrooms)]
+            avg = averages[(listing.beds, listing.baths)]
             listing.diff_raw = listing.price - avg
             listing.percent_diff = f"{(listing.price - avg) / avg * 100:+.0f}"
 
@@ -64,7 +64,7 @@ def toggleLikedProperty(request):
 
     if request.session.has_key('offcampus.us_auth'):
         row = request.session.get('offcampus.us_auth')
-        user = User.objects.get(pk=row)
+        user = GoogleUser.objects.get(pk=row)
         favorites = user.favorites.all()
         if Listing.listings.filter(id=property_id).exists():
             listing = Listing.listings.get(id=property_id)
@@ -93,7 +93,7 @@ def getAllListings(request):
 def getLikedListings(request):
     row = request.session.get('offcampus.us_auth')
     if 'offcampus.us_auth' in request.session:
-        listings = User.objects.get(pk=row).favorites.values_list('pk', flat=True)
+        listings = GoogleUser.objects.get(pk=row).favorites.values_list('pk', flat=True)
         data =  list(listings)
         response = JsonResponse(data=data, content_type="application/json", status=200, safe=False)
         __allowCors(response)
@@ -103,16 +103,9 @@ def getLikedListings(request):
         return response
 
 @csrf_exempt
-def sign_up(request):
-    if request.POST:
-        if request.POST.get('google'):
-            pass
-
-
-@csrf_exempt
 def sign_in(request):
     if request.POST:
-        __google_sign_in(request)
+        return __google_sign_in(request)
     else:
         return HttpResponse(status=400)
 
@@ -134,7 +127,7 @@ def getOrderOptions(request):
     __allowCors(response)
     return response
 
-def __google_sign(request):
+def __google_sign_in(request):
     token = request.POST.get('id_token')
     user_id = None
     response = HttpResponse(status=404)
@@ -147,10 +140,10 @@ def __google_sign(request):
         except ValueError:
             pass
         if user_id:
-            if not User.objects.filter(google_id=user_id).exists():
-                user = User(google_id=user_id)
+            if not GoogleUser.objects.filter(google_id=user_id).exists():
+                user = GoogleUser(google_id=user_id)
                 user.save()
-            request.session['offcampus.us_auth'] = User.objects.get(google_id=user_id).pk
+            request.session['offcampus.us_auth'] = GoogleUser.objects.get(google_id=user_id).pk
             response = HttpResponse(status=201)
         __allowCors(response)
         request.session.modified = True
@@ -169,9 +162,9 @@ def __getFilteredListings(request):
 
     # Parses beds and baths
     if "beds" in queryParams and queryParams["beds"].isnumeric():
-        listingsFilter = listingsFilter & Q(num_bedrooms=queryParams["beds"])
+        listingsFilter = listingsFilter & Q(beds=queryParams["beds"])
     if "baths" in queryParams and queryParams["baths"].isnumeric():
-        listingsFilter = listingsFilter & Q(num_bathrooms=queryParams["baths"])
+        listingsFilter = listingsFilter & Q(beds=queryParams["baths"])
 
     secondaryListingsFilter = Q()
 
@@ -194,14 +187,16 @@ def __getFilteredListings(request):
 
     listings = Listing.listings.all()
 
+    print(request.session.get('offcampus.us_auth'))
     if "showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true" and request.session.has_key('offcampus.us_auth'):
         row = request.session.get('offcampus.us_auth')
-        listings = User.objects.get(pk=row).favorites.all()
+        print("SHOWING LIKES")
+        listings = GoogleUser.objects.get(pk=row).favorites.all()
 
     # Parses ordering of listings
     if "order" in queryParams:
         if queryParams["order"] in orderQueries:
-            return Listing.listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]])
+            return listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]])
         else:
             # Default order is miles from campus, increasing
-            return Listing.listings.filter(listingsFilter).order_by(orderQueries['3'])
+            return listings.filter(listingsFilter).order_by(orderQueries['3'])

@@ -184,7 +184,7 @@
     </div>
 
     <div class="map-and-listings-container">
-      <Map ref="map" />
+      <Map ref="map" showOnlyLiked="true"/>
       <div class="uk-container">
         <div class="uk-grid-medium uk-grid-match" uk-grid>
           <div
@@ -279,12 +279,14 @@ import Paginate from "vuejs-paginate";
 import Vue from 'vue'
 import { LoaderPlugin } from 'vue-google-login';
 
+axios.defaults.withCredentials = true;
+
 Vue.use(LoaderPlugin, {
   client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
 });
 
 export default {
-  name: "search",
+  name: "favorites",
   components: {
     Listing,
     Paginate,
@@ -377,12 +379,13 @@ export default {
         }
       }
 
+      filters["showOnlyLiked"] = true;
       filters["page"] = parseInt(query["page"]) || 1;
 
       this.filters = filters;
     },
     setOriginalFilters: function() {
-      this.originalFilters = Object.assign({}, this.filters);
+      this.originalFilters = Object.assign({showOnlyLiked: true}, this.filters);
     },
     updateListingsToMatchFilters: function() {
       this.searching = true
@@ -397,7 +400,8 @@ export default {
           maxPrice: this.filters.maxPrice,
           minDistance: this.filters.minDistance,
           maxDistance: this.filters.maxDistance,
-          order: this.filters.sortBy
+          order: this.filters.sortBy,
+          showOnlyLiked: true
         }
       }).then(
         result => {

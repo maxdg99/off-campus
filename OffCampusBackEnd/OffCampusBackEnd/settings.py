@@ -30,8 +30,6 @@ DEBUG = True
 # Allow localhost
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-AUTH_USER_MODEL = 'OffCampusRestApi.User'
-
 # Allow connections via host's IP address (for testing on mobile via LAN)
 if os.getenv('HOST_IP'):
     ALLOWED_HOSTS.append(os.getenv('HOST_IP'))
@@ -131,3 +129,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_COOKIE_DOMAIN = "localhost:8080"

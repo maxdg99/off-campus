@@ -23,7 +23,7 @@
         <div class="listing-availability" v-else-if="listing.availability_mode=='Date'">Available on {{getDate(listing.availability_date)}}</div>
       </div>
       <div class="listing-info-row">
-        <a :class="{liked: isLiked}" uk-icon="icon: heart; ratio: 2" @click="toggleLikedProperty()"></a>
+        <a :class="{'liked': isLiked}" uk-icon="icon: heart; ratio: 2" @click="toggleLikedProperty()"></a>
       </div>
     </div>
   </div>

@@ -18,7 +18,12 @@
 import axios from "axios";
 import Vue from "vue";
 
+axios.defaults.withCredentials = true;
+
 export default {
+    props:{
+        showOnlyLiked: String
+    },
     data: function () {
         return {
             filters: null,
@@ -46,7 +51,8 @@ export default {
                 minDistance: this.filters.minDistance,
                 maxDistance: this.filters.maxDistance,
                 showNoPrice: this.filters.showWithoutPrice,
-                order: this.filters.sortBy
+                order: this.filters.sortBy,
+                showOnlyLiked: this.showOnlyLiked
                 }
             }).then(
                 result => {
