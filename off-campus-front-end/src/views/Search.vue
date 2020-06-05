@@ -233,6 +233,10 @@
   @media screen and (min-width: $min-desktop-screen-width) {
     display: none;
   }
+
+  .uk-button.uk-button-default {
+    padding: 0 15px;
+  }
 }
 
 .beds-and-baths {
