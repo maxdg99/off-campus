@@ -8,13 +8,13 @@
       <div class="listing-price-and-info-container">
         <div v-if="listing.price" class="listing-price">${{ listing.price }}</div>
         <div v-else>N/A</div>
-        <span class="listing-info">
+        <div>
           <span>{{ listing.miles_from_campus }} mi</span>
           <span>&nbsp;|&nbsp;</span>
           <span>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</span>
           <span>&nbsp;|&nbsp;</span>
           <span>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</span>
-        </span>
+        </div>
       </div>
       <div class="listing-address-container">
         <a
@@ -79,10 +79,6 @@ $listing-image-map-height: 200px;
 
 .listing-price {
   font-size: 1.75rem;
-}
-
-.listing-info {
-  font-size: 1.0625rem;
 }
 
 .listing-address-container {
