@@ -43,7 +43,9 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/scss/_variables.scss";
+
 :root {
   --card-section-margin: 10px;
 }
@@ -110,7 +112,12 @@
   position: absolute;
   right: 20px;
   bottom: 20px;
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    display: none;
+  }
 }
+
 .listing-map {
   height: 300px;
 }
