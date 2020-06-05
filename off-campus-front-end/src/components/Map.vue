@@ -12,6 +12,12 @@
 }
 </style>
 
+<style>
+/* HACK: Fix map for retina displays */
+.ol-layer canvas {
+    transform: matrix(1, 0, 0, 1, 0, 0) !important;
+}
+</style>
 <script>
 import axios from "axios";
 import Vue from "vue";
@@ -115,7 +121,8 @@ export default {
 
 
             var vectorLayer = new ol.layer.Vector({
-                source: this.vectorSource
+                source: this.vectorSource,
+
             });
 
             var popup = new ol.Overlay({
@@ -129,7 +136,11 @@ export default {
                 target: document.getElementById("bigmap"),
                 layers: [
                     new ol.layer.Tile({
-                        source: new ol.source.OSM()
+                        source: new ol.source.XYZ({
+                            attributions: 'Tiles © Open Street Map',
+                            url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            tilePixelRatio: window.devicePixelRatio,
+                        })
                     }),
                     vectorLayer
                 ],
