@@ -185,9 +185,10 @@
       </form>
     </div>
 
-    <div id="map-and-listings-container">
+        <div id="map-and-listings-container">
       <Map ref="map" showOnlyLiked="true"/>
       <div id="listings">
+        <h4>{{this.resultCount}} Results</h4>
         <div id="listings-grid">
           <Listing
             v-for="listing in searchResults"
@@ -212,6 +213,7 @@
           :prev-text="'<span uk-pagination-previous></span>'"
           :next-text="'<span uk-pagination-next></span>'"
         />
+        <footer class="uk-text-center">&copy; {{new Date().getFullYear()}} Max Gruber, Andrew Haberlandt, Adam Lis</footer>
       </div>
     </div>
   </div>
@@ -294,8 +296,8 @@
     display: none;
   }
 
-  @media screen and (min-width: $min-laptop-screen-width) {
-    height: calc(100vh - 224px);
+  @media screen and (min-width: 960px) {
+    height: calc(100vh - 170px);
     display: grid;
     grid-template-columns: 1fr 2fr;
     column-gap: 1rem;
