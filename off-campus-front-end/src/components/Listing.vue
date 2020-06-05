@@ -78,7 +78,7 @@ $listing-image-map-height: 200px;
 }
 
 .listing-price {
-  font-size: 1.75rem;
+  font-size: 1.75em;
 }
 
 .listing-address-container {
@@ -100,24 +100,6 @@ $listing-image-map-height: 200px;
     display: none;
   }
 }
-
-/* Special Style for use in Big Map */
-#popup .listing-image {
-  height: 100px;
-}
-
-#popup .listing-info-container {
-  margin-left: 0;
-  margin-right: 0;
-  font-size: 0.8em;
-}
-
-#popup .listing-address,
-#popup .listing-address:hover {
-  font-size: 0.8em;
-}
-
-
 </style>
 
 <script>
