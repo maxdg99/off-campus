@@ -187,6 +187,7 @@
     <div class="map-and-listings-container">
       <Map ref="map" />
       <div id="listings" >
+        <h4>{{this.resultCount}} Results</h4>
         <div class="uk-grid-small uk-grid-match" uk-grid>
           <div v-for="listing in searchResults" class="uk-width-1-2@s" v-bind:key="listing.pk">
             <Listing :id="listing.pk" :listing="listing.fields" />
