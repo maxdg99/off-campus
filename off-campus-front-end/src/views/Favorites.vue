@@ -3,7 +3,8 @@
     <div class="uk-container">
       <!-- Desktop search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-5 uk-visible@m uk-margin-bottom search-filters"
+        id="desktop-search-filters"
+        class="uk-grid-small uk-child-width-1-5 uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -90,7 +91,8 @@
 
       <!-- Mobile search filters -->
       <form
-        class="uk-grid-small uk-child-width-1-2 uk-hidden@m uk-margin-bottom search-filters"
+        id="mobile-search-filters"
+        class="uk-grid-small uk-child-width-1-2 uk-margin-bottom search-filters"
         onsubmit="return false;"
         uk-grid
       >
@@ -183,37 +185,62 @@
       </form>
     </div>
 
-    <div class="map-and-listings-container">
+    <div id="map-and-listings-container">
       <Map ref="map" showOnlyLiked="true"/>
-      <div class="uk-container">
-        <div class="uk-grid-medium uk-grid-match" uk-grid>
-          <div
+      <div id="listings">
+        <div id="listings-grid">
+          <Listing
             v-for="listing in searchResults"
-            class="uk-width-1-2@s"
-            v-bind:key="listing.pk"
-          >
-            <Listing :id="listing.pk" :listing="listing.fields" v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" v-on:update-isLiked="getLikedListings"/>
-          </div>
+            :key="listing.pk"
+            :id="listing.pk"
+            :listing="listing.fields"
+            @mouseover.native="listingClicked(listing)"
+            v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" 
+            v-on:update-isLiked="getLikedListings"
+          />
         </div>
+        <Paginate
+          v-model="filters.page"
+          :page-count="pageCount"
+          :page-range="3"
+          :margin-pages="1"
+          :click-handler="updateRouteToMatchFilters"
+          :container-class="'uk-pagination uk-flex-center'"
+          :page-class="''"
+          :active-class="'uk-active'"
+          :disabled-class="'uk-disabled'"
+          :prev-text="'<span uk-pagination-previous></span>'"
+          :next-text="'<span uk-pagination-next></span>'"
+        />
       </div>
-      <Paginate
-      v-model="filters.page"
-      :page-count="pageCount"
-      :page-range="3"
-      :margin-pages="1"
-      :click-handler="updateRouteToMatchFilters"
-      :container-class="'uk-pagination uk-flex-center'"
-      :page-class="''"
-      :active-class="'uk-active'"
-      :disabled-class="'uk-disabled'"
-      :prev-text="'<span uk-pagination-previous></span>'"
-      :next-text="'<span uk-pagination-next></span>'"
-    />
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@import "@/scss/_variables.scss";
+
+#desktop-search-filters {
+  display: none;
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    display: flex;
+  }
+}
+
+#mobile-search-filters {
+  margin-top: 0.25rem;
+  display: flex;
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    display: none;
+  }
+
+  .uk-button.uk-button-default {
+    padding: 0 15px;
+  }
+}
+
 .beds-and-baths {
   & > div {
     display: inline-block;
@@ -244,29 +271,59 @@
   margin-top: 24px;
 }
 
-.listings {
-  max-height: 60%;
-  position: absolute;
-  overflow-y: scroll;
-}
-
 .result-count {
+  margin-left: 20px;
   font-weight: 600;
   font-size: 1.125em;
 }
 
-.map-and-listings-container {
-  & > #bigmap {
+#map-and-listings-container {
+  margin: 0 auto;
+  max-width: 1600px;
+  @media screen and (max-width: $min-laptop-screen-width - 1) {
+    padding: 0 15px;
+  }
+  @media screen and (min-width: $min-laptop-screen-width) {
+    padding: 0 30px;
+  }
+  @media screen and (min-width: $min-desktop-screen-width) {
+    padding: 0;
+  }
+
+  #bigmap {
     display: none;
   }
 
-  @media screen and (min-width: 960px) {
+  @media screen and (min-width: $min-laptop-screen-width) {
+    height: calc(100vh - 224px);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
+    column-gap: 1rem;
 
-    & > #bigmap {
+    #bigmap {
       display: initial;
     }
+
+    #listings {
+      /* Makes panel scrollable */
+      overflow: auto;
+    }
+  }
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+#listings-grid {
+  display: grid;
+  gap: 1rem;
+
+  @media screen and (min-width: $min-tablet-screen-width) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (min-width: $min-desktop-screen-width) {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
 </style>
@@ -279,14 +336,12 @@ import Paginate from "vuejs-paginate";
 import Vue from 'vue'
 import { LoaderPlugin } from 'vue-google-login';
 
-axios.defaults.withCredentials = true;
-
 Vue.use(LoaderPlugin, {
   client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
 });
 
 export default {
-  name: "favorites",
+  name: "search",
   components: {
     Listing,
     Paginate,
@@ -301,7 +356,8 @@ export default {
       originalFilters: {},
       pageCount: 1,
       showMobileFilters: false,
-      likedListings: []
+      likedListings: [],
+      resultCount: 0
     };
   },
   mounted: function() {
@@ -379,13 +435,12 @@ export default {
         }
       }
 
-      filters["showOnlyLiked"] = true;
       filters["page"] = parseInt(query["page"]) || 1;
 
       this.filters = filters;
     },
     setOriginalFilters: function() {
-      this.originalFilters = Object.assign({showOnlyLiked: true}, this.filters);
+      this.originalFilters = Object.assign({}, this.filters);
     },
     updateListingsToMatchFilters: function() {
       this.searching = true
@@ -435,6 +490,9 @@ export default {
 
         this.$router.push({ query: this.filters });
       }
+    },
+    listingClicked: function(listing) {
+      this.$refs.map.highlightListing(listing.pk)
     }
   },
   watch: {

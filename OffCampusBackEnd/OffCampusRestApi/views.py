@@ -151,7 +151,7 @@ def __google_sign_in(request):
 
 def __allowCors(response):
     print("allow CORS")
-    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Origin"] = "http://localhost:8080"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "x-requested-with, Content-Type"

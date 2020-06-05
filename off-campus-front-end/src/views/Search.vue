@@ -186,12 +186,11 @@
     </div>
 
     <div id="map-and-listings-container">
-      <Map ref="map" />
+      <Map ref="map" showOnlyLiked="false"/>
       <div id="listings">
         <div id="listings-grid">
           <Listing
             v-for="listing in searchResults"
-            class="uk-width-1-2@s"
             :key="listing.pk"
             :id="listing.pk"
             :listing="listing.fields"

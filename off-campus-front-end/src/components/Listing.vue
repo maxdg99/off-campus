@@ -143,7 +143,11 @@ export default {
   props: {
     id: Number,
     listing: Object,
-    isLiked: Boolean
+    isLiked: Boolean,
+    canFlip: {
+      type: Boolean,
+      default: true
+    }
   },
   methods:{
     toggleLikedProperty: function () {
@@ -175,10 +179,6 @@ export default {
       else {
         alert("There is no signed in user. Please sign in with google.")
       }
-    },
-    canFlip: {
-      type: Boolean,
-      default: true
     },
     getDate: function(date) {
       if (date) {
