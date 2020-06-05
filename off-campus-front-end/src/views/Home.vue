@@ -1,13 +1,46 @@
 <template>
-  <div class="home">
+  <div class="uk-background-cover" id="content">
     <div class="uk-container uk-text-center">
-      <h2>Welcome to Off Campus!</h2>
-      <p>Searching for off campus housing doesn't have to be difficult. That's why we made this website: to make finding housing easier for students like you. We aggregate data from multiple property companies and allow you to search and sort that property data. Say goodbye to endlessly scrolling through property company websites.</p>
-      <router-link to="/search" tag="button" class="uk-button uk-button-primary">Search Properties</router-link>
+      <div id="button-text-group" class="uk-position-center">
+        <h2 class="welcome-text">Go Bucks, Home Searching Sucks!</h2>
+        <h3 class="welcome-text">Make finding a place easier, with Off Campus</h3>
+        <router-link to="/search" tag="button" class="uk-button uk-button-primary">Search Properties</router-link>
+      </div>
     </div>
-    <br>
+    <footer id="footer" class="uk-text-center">&copy; {{new Date().getFullYear()}} Max Gruber, Andrew Haberlandt, Adam Lis</footer>
   </div>
 </template>
+
+<style scoped>
+#content {
+  background-image: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ), 
+    url(landing_page.jpg);
+  height: calc(100vh - 82px);
+  position: relative;
+}
+
+.welcome-text {
+  color: white;
+  font-weight: 600;
+  margin: 10px;
+}
+
+#button-text-group {
+  position: absolute;
+  top: 30%;
+}
+
+#footer {
+  color: white;
+  position: absolute;
+  bottom: 0%;
+  width: 100%;
+}
+</style>
 
 <script>
 export default {

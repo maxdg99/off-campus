@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="uk-navbar-container" uk-navbar>
       <div class="uk-navbar-left">
-        <router-link to="/" class="uk-navbar-item uk-logo">Off Campus</router-link>
+        <router-link to="/" id="logo" class="uk-navbar-item uk-logo">Off Campus</router-link>
         <ul class="uk-navbar-nav uk-visible@s">
           <li>
             <router-link to="/">Home</router-link>
@@ -12,6 +12,9 @@
           </li>
           <li>
             <router-link to="/favorites">Favorites</router-link>
+          </li>
+          <li>
+            <router-link to="/about">About</router-link>
           </li>
         </ul>
       </div>
@@ -41,8 +44,11 @@
             <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
           </li>
           <li>
-            <!-- TODO: implement login with Google -->
-            <a>Sign In</a>
+            <router-link to="/about" uk-toggle="target: #mobile-sidebar">About Us</router-link>
+          </li>
+          <li>
+            <!-- TODO: implement login with Google
+            <a>Sign In</a> -->
           </li>
         </ul>
       </div>
@@ -65,9 +71,12 @@ $button-primary-background: $primary-color;
 @import "uikit/src/scss/mixins-theme.scss";
 @import "uikit/src/scss/uikit-theme.scss";
 
+#logo{
+  font-weight: 600;
+}
+
 nav {
   border-bottom: $primary-color 0.125rem solid;
-  margin-bottom: 0.75rem;
 }
 
 /* Sticky footer */

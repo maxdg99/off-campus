@@ -1,0 +1,41 @@
+<template>
+    <div class="uk-container">
+        <h1 class="text-center">What is Off Campus?</h1>
+        <p class="text-center">
+            Off Campus aggregates rental property listings for the Columbus area. Our goal is to help students find the perfect off campus property in a fraction of the time.
+        </p>
+    
+        <h1 class="text-center">How does Off Campus Work?</h1>
+        <p class="text-center">
+            Where as other rental listing aggregation sites rely on rental companies inputting listings themselves (which Columbus rental companies do not tend to do), Off Campus uses various techniques to get data off of regntal company sites and on to ours.
+        </p>
+
+        <h1 class="text-center">What does this mean for you?</h1>
+        <p class="text-center">
+            Above all, this means that you can say goodbye to spending hours on research listings on each individual rental company website.  That said, we want to be clear with the fact that the methods used to put listings on Off Campus are not foolproof.  This means that you may see data formmated or displayed in odd ways.  When in doubt just click on the address to view the rental companies listing!
+        </p>
+
+        <h1 class="text-center">What rental companies do we have listings for?</h1>
+        <div class="text-center">North Steppe Properties</div>
+        <div class="text-center">Venice Properties</div>
+        <div class="text-center">Buckeye Real Estate</div>
+        <div class="text-center">Pella Properties</div>
+        <div class="text-center">Hometeam Properties</div>
+        <div class="text-center">Peak Properties</div>
+        <div class="text-center">OSU Properties</div>
+
+        <footer class="uk-text-center">&copy; {{new Date().getFullYear()}} Max Gruber, Andrew Haberlandt, Adam Lis</footer>
+    </div>
+</template>
+
+<style scoped>
+.text-center {
+    text-align: center;
+}
+</style>
+
+<script>
+export default {
+  name: "about"
+};
+</script>
