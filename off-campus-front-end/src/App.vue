@@ -15,18 +15,18 @@
           </li>
         </ul>
       </div>
-      <!-- <div class="uk-navbar-right">
+      <div class="uk-navbar-right">
         <div class="uk-navbar-item">
           <a
             class="uk-navbar-toggle uk-hidden@s"
             uk-toggle="target: #mobile-sidebar"
             uk-navbar-toggle-icon
           ></a>
-          <form class="uk-visible@s">
+          <!-- <form class="uk-visible@s">
             <button id="sign-in-button" class="uk-button uk-button-default">Sign In</button>
-          </form>
+          </form> -->
         </div>
-      </div> -->
+      </div>
     </nav>
 
     <div id="mobile-sidebar" uk-offcanvas="overlay: true; flip: true">
@@ -42,11 +42,11 @@
             <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
           </li>
           <li>
-            <router-link to="/about-us" uk-toggle="target: #mobile-sidebar">About Us</router-link>
+            <router-link to="/about" uk-toggle="target: #mobile-sidebar">About Us</router-link>
           </li>
           <li>
-            <!-- TODO: implement login with Google -->
-            <a>Sign In</a>
+            <!-- TODO: implement login with Google
+            <a>Sign In</a> -->
           </li>
         </ul>
       </div>
