@@ -274,10 +274,10 @@
 #map-and-listings-container {
   margin: 0 auto;
   max-width: 1600px;
-  @media screen and (max-width: $min-tablet-screen-width - 1) {
+  @media screen and (max-width: $min-laptop-screen-width - 1) {
     padding: 0 15px;
   }
-  @media screen and (min-width: $min-tablet-screen-width) {
+  @media screen and (min-width: $min-laptop-screen-width) {
     padding: 0 30px;
   }
   @media screen and (min-width: $min-desktop-screen-width) {
@@ -288,7 +288,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $min-tablet-screen-width) {
+  @media screen and (min-width: $min-laptop-screen-width) {
     height: calc(100vh - 224px);
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -307,18 +307,13 @@
   @media screen and (min-width: $min-desktop-screen-width) {
     grid-template-columns: 1fr 2fr;
   }
-
-
 }
 
 #listings-grid {
   display: grid;
   gap: 1rem;
 
-  @media screen and (max-width: $min-tablet-screen-width - 301) {
-    grid-template-columns: 1fr;
-  }
-  @media screen and (min-width: $min-tablet-screen-width - 300) {
+  @media screen and (min-width: $min-tablet-screen-width) {
     grid-template-columns: 1fr 1fr;
   }
   @media screen and (min-width: $min-desktop-screen-width) {

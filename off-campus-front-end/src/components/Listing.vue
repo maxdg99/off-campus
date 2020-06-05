@@ -96,7 +96,7 @@ $listing-image-map-height: 200px;
   right: 20px;
   bottom: 20px;
 
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $min-laptop-screen-width) {
     display: none;
   }
 }
