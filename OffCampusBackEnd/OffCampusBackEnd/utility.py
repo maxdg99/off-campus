@@ -45,3 +45,33 @@ def distance(lat, lon):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     d = R * c
     return d * 0.000621371 # miles
+
+def format_address(address):
+    replacements = {
+        " North": " N. ",
+        " East": " E. ",
+        " South": " S. ",
+        " West": " W. ",
+        " Rd": " Road ",
+        " St": " Street ",
+        " Ave": " Avenue ",
+        " Columbus": "",
+        " Mansfield": "",
+        " OH": ""
+    }
+
+    modifiers = [".", ",", " "]
+
+    for key in replacements:
+        for mod in modifiers:
+            address_re = re.compile(re.escape(key+mod), re.IGNORECASE)
+            address = address_re.sub(replacements[key], address)
+            print(address)
+
+    zipcode = re.search("\d{5}", address)
+    if zipcode:
+        address = address.replace(zipcode[0], " ")
+
+    address = address.replace(",", "")
+
+    return address

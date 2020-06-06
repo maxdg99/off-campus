@@ -7,6 +7,7 @@ class Listing(models.Model):
     
     image = models.CharField(max_length=1000)
     
+    pretty_address = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     unit = models.CharField(max_length=10, default="")
 
