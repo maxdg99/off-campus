@@ -118,6 +118,7 @@ def isSignedIn(request):
     
 def sign_out(request):
     request.session.flush()
+    request.session.modified = True
     response = HttpResponse(status=201)
     __allowCors(response)
     return response

@@ -130,5 +130,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-SESSION_COOKIE_DOMAIN = "localhost:8080"
+#SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = None
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'Strict'

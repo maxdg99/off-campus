@@ -19,7 +19,23 @@ const routes = [
   },
   {
     path: '/favorites',
-    component: Favorites
+    component: Favorites,
+    beforeEnter: (to, from, next) => {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8000/isSignedIn',
+        xhrFields: {
+          withCredentials: true
+        },
+        success: response => {
+          if(response.isSignedIn) {
+            next()
+          } else {
+            next(false)
+          }
+        }
+      })
+    }
   },
   {
     path: '/about',

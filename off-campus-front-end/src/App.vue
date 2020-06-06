@@ -10,7 +10,7 @@
           <li>
             <router-link to="/search" >Search</router-link>
           </li>
-          <li>
+          <li v-if="$root.isSignedIn">
             <router-link to="/favorites">Favorites</router-link>
           </li>
           <li>
