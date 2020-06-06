@@ -79,10 +79,12 @@
 }
 
 /* Address */
-a,
-a:hover {
-  display: inline-block;
+a:link, a:visited {
   color: inherit;
+  text-decoration: underline;
+}
+a:hover, a:active {
+  color: $primary-color;
 }
 
 .map-icon {
