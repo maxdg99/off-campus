@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 from OffCampusRestApi.models import Listing
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import *
+from OffCampusWebScrapers.edwards import *
 from OffCampusWebScrapers.pella import PellaScraper
 from OffCampusWebScrapers.hometeam import HometeamScraper
 from OffCampusWebScrapers.peak import PeakScraper
