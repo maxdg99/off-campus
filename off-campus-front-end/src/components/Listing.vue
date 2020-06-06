@@ -1,27 +1,23 @@
 <template>
   <div class="uk-card uk-card-small uk-card-default uk-card-hover">
     <div class="uk-card-media-top">
-      <img v-bind:src="listing.image" class="listing-image" v-show="!showMap" uk-img />
-      <div class="listing-map" v-show="showMap" ref="smolMap" />
+      <img v-bind:src="listing.image" v-show="!showMap" uk-img />
+      <div v-show="showMap" ref="smolMap" />
     </div>
-    <div class="uk-card-body listing-body">
-      <div class="listing-price-and-info-container">
-        <div v-if="listing.price" class="listing-price">${{ listing.price }}</div>
+    <div class="uk-card-body">
+      <div class="listing-info-container">
+        <div v-if="listing.price">${{ listing.price }}</div>
         <div v-else>N/A</div>
-        <div class="stats-container">
+        <div>
           <div>{{ listing.miles_from_campus }} mi</div>
-          <div class="stats-separator">&nbsp;|&nbsp;</div>
+          <div>&nbsp;|&nbsp;</div>
           <div>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</div>
-          <div class="stats-separator">&nbsp;|&nbsp;</div>
+          <div>&nbsp;|&nbsp;</div>
           <div>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</div>
         </div>
       </div>
-      <div class="listing-address-container">
-        <a
-          v-bind:href="listing.url"
-          target="_blank"
-          class="listing-address"
-        >{{ listing.pretty_address }}</a>
+      <div>
+        <a v-bind:href="listing.url" target="_blank">{{ listing.pretty_address }}</a>
       </div>
       <div>
         <div
@@ -45,57 +41,46 @@
 <style lang="scss" scoped>
 @import "@/scss/_variables.scss";
 
-$card-section-margin: 0;
-$listing-image-map-height: 200px;
+/* Image and map */
+.uk-card-media-top {
+  & > * {
+    height: 200px;
+  }
 
-.stats-container {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 10px;
+  & > img {
+    width: 100%;
+    object-fit: cover;
+  }
 }
 
-.stats-separator {
-  margin: 0px 5px;
-}
-.switcher {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.listing-body {
+.uk-card-body {
   padding: 5px 10px 10px 10px;
   font-weight: 600;
   color: black;
 }
 
-.listing-image {
-  height: $listing-image-map-height;
-  width: 100%;
-  object-fit: cover;
-}
-
-.listing-map {
-  height: $listing-image-map-height;
-}
-
-.listing-price-and-info-container {
+.listing-info-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: $card-section-margin;
+
+  /* Price */
+  & > *:first-child {
+    font-size: 1.75em;
+  }
+
+  /* Distance, beds, baths */
+  & > *:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    white-space: pre;
+    margin-left: 10px;
+  }
 }
 
-.listing-price {
-  font-size: 1.75em;
-}
-
-.listing-address-container {
-  margin-bottom: $card-section-margin;
-}
-
-.listing-address,
-.listing-address:hover {
+/* Address */
+a,
+a:hover {
   display: inline-block;
   color: inherit;
 }
