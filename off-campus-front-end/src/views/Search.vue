@@ -186,7 +186,7 @@
     </div>
 
     <div id="map-and-listings-container">
-      <Map ref="map" showOnlyLiked="false"/>
+      <Map ref="map" showOnlyLiked="false" v-on:update-isLiked="getLikedListings"/>
       <div id="listings">
         <h4>{{this.resultCount}} Results</h4>
         <div id="listings-grid">

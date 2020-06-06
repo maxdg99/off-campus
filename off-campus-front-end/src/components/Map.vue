@@ -1,7 +1,15 @@
 <template>
 <div id="bigmap">
     <div id="popup">
-        <Listing :id="selectedListing.pk" :listing="selectedListing.fields" v-if="selectedListing !== null" :canFlip=false />
+        <Listing
+            v-if="selectedListing !== null" 
+            :canFlip=false
+            :key="selectedListing.pk"
+            :id="selectedListing.pk"
+            :listing="selectedListing.fields"
+            v-bind:isLiked="$root.isSignedIn && likedListings.includes(selectedListing.pk)" 
+            v-on:update-isLiked="getLikedListings"
+          />
     </div>
 </div>
 </template>
@@ -62,13 +70,15 @@ export default {
             features: [],
             selectedListing: null,
             featureForListingID: {},
-            highlightedFeature: null
+            highlightedFeature: null,
+            likedListings: []
         }
     },
     mounted: function () {
         if (!this.mapLoaded) {
             this.makeBigMap();
         }
+    this.getLikedListings()
     },
     methods: {
         loadMap: function() {
@@ -265,6 +275,22 @@ export default {
             this.highlightedFeature = feature
 
 
+        },
+        getLikedListings: function() {
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8000/getLikedListings',
+            xhrFields: {
+            withCredentials: true
+            },
+            success: response => {
+                this.likedListings = response
+                this.$emit('update-isLiked', true)
+            },
+            failure: response => {
+                this.$root.isSignedIn = false    
+            }
+        })
         }
     },
     shouldComponentUpdate: function() {
