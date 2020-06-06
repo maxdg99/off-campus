@@ -186,7 +186,7 @@
     </div>
 
     <div id="map-and-listings-container">
-      <Map ref="map" showOnlyLiked="false" v-on:update-isLiked="getLikedListings"/>
+      <Map ref="map" showOnlyLiked="false" :likedListings="likedListings" v-on:update-isLiked="getLikedListings()"/>
       <div id="listings">
         <h4>{{this.resultCount}} Results</h4>
         <div id="listings-grid">
@@ -197,7 +197,7 @@
             :listing="listing.fields"
             @mouseover.native="listingClicked(listing)"
             v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" 
-            v-on:update-isLiked="getLikedListings"
+            v-on:update-isLiked="getLikedListings()"
           />
         </div>
         <Paginate

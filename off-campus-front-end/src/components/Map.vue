@@ -8,7 +8,7 @@
             :id="selectedListing.pk"
             :listing="selectedListing.fields"
             v-bind:isLiked="$root.isSignedIn && likedListings.includes(selectedListing.pk)" 
-            v-on:update-isLiked="getLikedListings"
+            v-on:update-isLiked="$emit('update-isLiked', true)"
           />
     </div>
 </div>
@@ -56,7 +56,11 @@ axios.defaults.withCredentials = true;
 
 export default {
     props:{
-        showOnlyLiked: String
+        showOnlyLiked: String,
+        likedListings: {
+            type: Array,
+            required: true
+        }
     },
   components: {
     Listing,
@@ -70,15 +74,12 @@ export default {
             features: [],
             selectedListing: null,
             featureForListingID: {},
-            highlightedFeature: null,
-            likedListings: []
-        }
+            highlightedFeature: null       }
     },
     mounted: function () {
         if (!this.mapLoaded) {
             this.makeBigMap();
         }
-    this.getLikedListings()
     },
     methods: {
         loadMap: function() {
@@ -275,22 +276,6 @@ export default {
             this.highlightedFeature = feature
 
 
-        },
-        getLikedListings: function() {
-        $.ajax({
-            type: 'GET',
-            url: 'http://localhost:8000/getLikedListings',
-            xhrFields: {
-            withCredentials: true
-            },
-            success: response => {
-                this.likedListings = response
-                this.$emit('update-isLiked', true)
-            },
-            failure: response => {
-                this.$root.isSignedIn = false    
-            }
-        })
         }
     },
     shouldComponentUpdate: function() {
