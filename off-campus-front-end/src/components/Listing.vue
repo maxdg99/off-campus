@@ -8,12 +8,12 @@
       <div class="listing-price-and-info-container">
         <div v-if="listing.price" class="listing-price">${{ listing.price }}</div>
         <div v-else>N/A</div>
-        <div>
-          <span>{{ listing.miles_from_campus }} mi</span>
-          <span>&nbsp;|&nbsp;</span>
-          <span>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</span>
-          <span>&nbsp;|&nbsp;</span>
-          <span>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</span>
+        <div class="stats-container">
+          <div>{{ listing.miles_from_campus }} mi</div>
+          <div class="stats-separator">&nbsp;|&nbsp;</div>
+          <div>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</div>
+          <div class="stats-separator">&nbsp;|&nbsp;</div>
+          <div>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</div>
         </div>
       </div>
       <div class="listing-address-container">
@@ -48,6 +48,15 @@
 $card-section-margin: 0;
 $listing-image-map-height: 200px;
 
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 10px;
+}
+
+.stats-separator {
+  margin: 0px 5px;
+}
 .switcher {
   position: absolute;
   left: 0;
