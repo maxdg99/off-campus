@@ -295,7 +295,7 @@
   @media screen and (min-width: $min-laptop-screen-width) {
     height: calc(100vh - 224px);
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 2fr 3fr;
     column-gap: 1rem;
 
     #bigmap {
