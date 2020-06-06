@@ -5,7 +5,7 @@
       <div v-show="showMap" ref="smolMap" />
     </div>
     <div class="uk-card-body">
-      <div class="listing-info-container">
+      <div>
         <div v-if="listing.price">${{ listing.price }}</div>
         <div v-else>N/A</div>
         <div>
@@ -17,23 +17,27 @@
         </div>
       </div>
       <div>
-        <a v-bind:href="listing.url" target="_blank">{{ listing.pretty_address }}</a>
+        <div>
+          <a
+            v-bind:href="listing.url"
+            class="listing-address"
+            target="_blank"
+          >{{ listing.pretty_address }}</a>
+          <div
+            v-if="listing.availability_mode=='Season'"
+          >Available this {{getMonth(listing.availability_date.month)}}</div>
+          <div
+            v-else-if="listing.availability_mode=='Month'"
+          >Available in {{this.months[listing.availability_date.month - 1]}}</div>
+          <div v-else-if="listing.availability_mode=='Now'">Available Now</div>
+          <div
+            v-else-if="listing.availability_mode=='Date'"
+          >Available on {{getDate(listing.availability_date)}}</div>
+        </div>
+        <div>
+          <a v-on:click="toggleMap" v-show="canFlip" class="listing-map-toggle" uk-icon="location"></a>
+        </div>
       </div>
-      <div>
-        <div
-          v-if="listing.availability_mode=='Season'"
-        >Available this {{getMonth(listing.availability_date.month)}}</div>
-        <div
-          v-else-if="listing.availability_mode=='Month'"
-        >Available in {{this.months[listing.availability_date.month - 1]}}</div>
-        <div v-else-if="listing.availability_mode=='Now'">Available Now</div>
-        <div
-          v-else-if="listing.availability_mode=='Date'"
-        >Available on {{getDate(listing.availability_date)}}</div>
-      </div>
-    </div>
-    <div class="map-icon">
-      <a uk-icon="location" v-on:click="toggleMap" v-show="canFlip"></a>
     </div>
   </div>
 </template>
@@ -57,41 +61,49 @@
   padding: 5px 10px 10px 10px;
   font-weight: 600;
   color: black;
-}
 
-.listing-info-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  /* Price */
-  & > *:first-child {
-    font-size: 1.75em;
-  }
-
-  /* Distance, beds, baths */
-  & > *:last-child {
+  & > * {
     display: flex;
-    flex-wrap: wrap;
-    white-space: pre;
-    margin-left: 10px;
+    justify-content: space-between;
+    align-items: center;
+
+    & > *:last-child {
+      display: flex;
+      white-space: pre;
+      margin-left: 0.5rem;
+    }
+  }
+
+  & > *:first-child {
+    /* Price */
+    & > *:first-child {
+      font-size: 1.75em;
+    }
+
+    /* Distance, beds, baths */
+    & > *:last-child {
+      flex-wrap: wrap;
+    }
   }
 }
 
-/* Address */
-a:link, a:visited {
-  color: inherit;
+.listing-address {
+  display: block;
   text-decoration: underline;
 }
-a:hover, a:active {
+
+/* Address and action buttons */
+a:link,
+a:visited {
+  color: inherit;
+}
+a:hover,
+a:active {
   color: $primary-color;
 }
 
-.map-icon {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-
+/* Action buttons */
+.listing-map-toggle {
   @media screen and (min-width: $min-laptop-screen-width) {
     display: none;
   }
