@@ -178,8 +178,8 @@
     <div id="map-and-listings-container">
       <Map ref="map" />
       <div id="listings">
+        <h4>{{this.resultCount}} Results</h4>
         <div id="listings-grid">
-          <h4>{{this.resultCount}} Results</h4>
           <Listing
             v-for="listing in searchResults"
             :key="listing.pk"
@@ -201,7 +201,7 @@
           :prev-text="'<span uk-pagination-previous></span>'"
           :next-text="'<span uk-pagination-next></span>'"
         />
-        <footer class="uk-text-center">&copy; {{new Date().getFullYear()}} Max Gruber, Andrew Haberlandt, Adam Lis</footer>
+        <Footer id="footer" />
       </div>
     </div>
   </div>
@@ -322,20 +322,26 @@
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
+
+#footer {
+  margin-top: -1rem;
+}
 </style>
 
 <script>
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
 import Map from "@/components/Map.vue";
+import Footer from "@/components/Footer.vue";
 import Paginate from "vuejs-paginate";
 
 export default {
   name: "search",
   components: {
     Listing,
-    Paginate,
-    Map
+    Map,
+    Footer,
+    Paginate
   },
   data: function() {
     return {

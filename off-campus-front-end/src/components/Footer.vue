@@ -4,6 +4,7 @@
 
 <style scoped>
 footer {
+  box-sizing: border-box;
   padding: 0.5rem 0;
 }
 </style>
