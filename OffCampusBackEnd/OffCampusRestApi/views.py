@@ -22,7 +22,7 @@ def getSearchListingsPage(request):
 
     for listing in listingsPage["listings"]:
         if listing.price is not None:
-            avg = averages[(listing.num_bedrooms, listing.num_bathrooms)]
+            avg = averages[(listing.beds, listing.baths)]
             listing.diff_raw = listing.price - avg
             listing.percent_diff = f"{(listing.price - avg) / avg * 100:+.0f}"
 
@@ -43,7 +43,7 @@ def __getPaginatedListings(request):
     page = request.GET.get('page', 1)
     listings = __getFilteredListings(request)
     paginator = Paginator(listings, 20)
-    
+
     try:
         listingsPage = paginator.page(page)
     except PageNotAnInteger:
@@ -65,6 +65,7 @@ def getOrderOptions(request):
     return response
 
 def __allowCors(response):
+    print("allow CORS")
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
@@ -77,9 +78,9 @@ def __getFilteredListings(request):
 
     # Parses beds and baths
     if "beds" in queryParams and queryParams["beds"].isnumeric():
-        listingsFilter = listingsFilter & Q(num_bedrooms=queryParams["beds"])
+        listingsFilter = listingsFilter & Q(beds=queryParams["beds"])
     if "baths" in queryParams and queryParams["baths"].isnumeric():
-        listingsFilter = listingsFilter & Q(num_bathrooms=queryParams["baths"])
+        listingsFilter = listingsFilter & Q(baths=queryParams["baths"])
 
     secondaryListingsFilter = Q()
 
@@ -91,7 +92,7 @@ def __getFilteredListings(request):
 
     # Only show listings with prices
     secondaryListingsFilter = secondaryListingsFilter & Q(price__isnull=False)
-    
+
     listingsFilter = listingsFilter & secondaryListingsFilter
 
     # Parses minimum and maximum distances from campus
