@@ -21,6 +21,10 @@ class PeakScraper(Scraper):
                 units = units.find('tbody').find_all('tr')
                 for u in units:
                     unit = u.find('td', {'class': 'unit'}).text
+                    street_number = re.search('^\d+-?\d* ', address)
+                    single_address = address.replace(street_number[0], '')
+                    single_address = f'{unit} {single_address}'
+                    print(single_address)
 
                     price = u.find('td', {'class': 'rent'}).text
                     price = price.replace('$', '')
@@ -55,7 +59,7 @@ class PeakScraper(Scraper):
                         isAvailable = False
 
 
-                    d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
+                    d = {"scraper": cls.__name__, "url": url, "image": image, "address": single_address, "beds": beds, "baths": baths, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
                     print(d)
                     callback(d)
                 

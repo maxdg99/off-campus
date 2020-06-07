@@ -42,11 +42,11 @@ class PellaScraper(Scraper):
                 image = prop.find('img')["src"]
 
                 address = prop.find('h2').getText()
-                if address.find("St") >= 0:
-                    address = address[:address.find("St")]
-                if address.find("Ave") >= 0:
-                    address = address[:address.find("Ave")]
-                address = address + "Columbus Ohio 43210"
+                # if address.find("St") >= 0:
+                #     address = address[:address.find("St")]
+                # if address.find("Ave") >= 0:
+                #     address = address[:address.find("Ave")]
+                address = address + " Columbus Ohio 43210"
 
                 for child in prop.find("div", {'class': 'hover-details'}).findChildren("div", recursive=False):
                     if "$" in child.text:
@@ -83,11 +83,20 @@ class PellaScraper(Scraper):
                 if avail_date:
                     avail_date = avail_date.getText()
                     avail_date = avail_date.split(' ')
-                
-                    if len(avail_date) >= 4:
+                    if '' in avail_date:
+                        avail_date.remove('')
+                    print(avail_date)
+                    if len(avail_date) == 4:
+                        avail_date[2] = (avail_date[2])[:-3]
+                        print(avail_date)
                         avail_date = avail_date[1] + '/' + PellaScraper.__clean_date(avail_date[2]) + '/' + avail_date[3]
                         avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
                         avail_mode = "Date"
+                        is_avail = True
+                    elif len(avail_date) == 3: 
+                        avail_date = avail_date[1] + '/1/' + avail_date[2]
+                        avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
+                        avail_mode = "Month"
                         is_avail = True
                     else:
                         avail_date = None
