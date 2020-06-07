@@ -160,7 +160,11 @@ def __allowCors(response):
 
 def __getFilteredListings(request):
     queryParams = request.GET
-    listingsFilter = Q(active=True)
+
+    if not ("showOnlyLiked" in queryParams and queryParams["showOnlyLiked"] == "true"):
+        listingsFilter = Q(active=True)
+    else:
+        listingsFilter = Q()
 
     # Parses beds and baths
     if "beds" in queryParams and queryParams["beds"].isnumeric():

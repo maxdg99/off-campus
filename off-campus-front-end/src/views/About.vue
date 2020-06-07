@@ -23,6 +23,11 @@
         <div class="text-center">Hometeam Properties</div>
         <div class="text-center">Peak Properties</div>
         <div class="text-center">OSU Properties</div>
+        <div class="text-center">Kohn Royer Griffith Inc.</div>
+        <div class="text-center">My First Place Properties</div>
+        <div class="text-center">Legacy Management Services</div>
+        <div class="text-center">OSU Live Properties</div>
+        <div class="text-center">VIP Realty</div>
 
         <footer class="uk-text-center">&copy; {{new Date().getFullYear()}} Max Gruber, Andrew Haberlandt, Adam Lis</footer>
     </div>

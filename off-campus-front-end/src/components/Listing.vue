@@ -1,5 +1,5 @@
 <template>
-  <div class="uk-card uk-card-small uk-card-default uk-card-hover">
+  <div class="uk-card uk-card-small uk-card-default uk-card-hover" :class="{inactive: !listing.active}">
     <div class="uk-card-media-top">
       <img v-bind:src="listing.image" class="listing-image" v-show="!showMap" uk-img />
       <div class="listing-map" v-show="showMap" ref="smolMap" />
@@ -38,6 +38,7 @@
       <div class="listing-info-row">
         <a :class="{'liked': isLiked}" uk-icon="icon: heart; ratio: 2" @click="toggleLikedProperty()"></a>
       </div>
+      <span v-if="!listing.active">This listing is no longer available.</span>
     </div>
     <div class="map-icon">
       <a uk-icon="location" v-on:click="toggleMap" v-show="canFlip"></a>
@@ -50,6 +51,10 @@
 
 $card-section-margin: 0;
 $listing-image-map-height: 200px;
+
+.inactive {
+  border: 2px orange solid;
+}
 
 .liked {
   color: rgb(247, 93, 177)
