@@ -42,12 +42,11 @@
             <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
           </li>
           <li>
-            <router-link to="/about" uk-toggle="target: #mobile-sidebar">About Us</router-link>
+            <router-link to="/about" uk-toggle="target: #mobile-sidebar">About</router-link>
           </li>
-          <li>
-            <!-- TODO: implement login with Google
-            <a>Sign In</a> -->
-          </li>
+          <!-- <li>
+            <a>Sign In</a>
+          </li> -->
         </ul>
       </div>
     </div>
@@ -75,6 +74,7 @@ $button-primary-background: $primary-color;
 
 nav {
   border-bottom: $primary-color 0.125rem solid;
+  margin-bottom: 0.75rem;
 }
 
 /* Sticky footer */
