@@ -36,7 +36,23 @@ if not DEBUG:
     # change this if we want property managers to trace user interactions back to our site
     SECURE_REFERRER_POLICY = "no-referrer"
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': None,
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 # Allow localhost
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
