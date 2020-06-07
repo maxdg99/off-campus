@@ -2,19 +2,14 @@
   <div class="search">
     <div class="uk-container">
       <!-- Desktop search filters -->
-      <form
-        id="desktop-search-filters"
-        class="uk-grid-small uk-child-width-1-5 uk-margin-bottom search-filters"
-        onsubmit="return false;"
-        uk-grid
-      >
+      <form id="desktop-search-filters" onsubmit="return false;">
         <div class="beds-and-baths">
           <div>
-            <label for="bedrooms">Bedrooms</label>
+            <label for="bedrooms">Beds</label>
             <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -90,12 +85,7 @@
       </form>
 
       <!-- Mobile search filters -->
-      <form
-        id="mobile-search-filters"
-        class="uk-grid-small uk-child-width-1-2 uk-margin-bottom search-filters"
-        onsubmit="return false;"
-        uk-grid
-      >
+      <form id="mobile-search-filters" onsubmit="return false;">
         <div>
           <button
             class="uk-button uk-button-default uk-width-expand"
@@ -113,11 +103,11 @@
 
         <div v-show="showMobileFilters" class="beds-and-baths">
           <div>
-            <label for="bedrooms">Bedrooms</label>
+            <label for="bedrooms">Beds</label>
             <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -218,19 +208,25 @@
 <style lang="scss" scoped>
 @import "@/scss/_variables.scss";
 
-#desktop-search-filters {
-  display: none;
+#desktop-search-filters,
+#mobile-search-filters {
+  margin-bottom: 20px;
+  display: grid;
+  row-gap: 0.5rem;
+  column-gap: 1rem;
+}
 
-  @media screen and (min-width: $min-desktop-screen-width) {
-    display: flex;
+#desktop-search-filters {
+  grid-template-columns: repeat(5, 1fr);
+  @media screen and (max-width: $min-laptop-screen-width - 1) {
+    display: none;
   }
 }
 
 #mobile-search-filters {
   margin-top: 0.25rem;
-  display: flex;
-
-  @media screen and (min-width: $min-desktop-screen-width) {
+  grid-template-columns: repeat(2, 1fr);
+  @media screen and (min-width: $min-laptop-screen-width) {
     display: none;
   }
 
@@ -278,21 +274,21 @@
 #map-and-listings-container {
   margin: 0 auto;
   max-width: 1600px;
-  @media screen and (max-width: $min-laptop-screen-width - 1) {
-    padding: 0 15px;
-  }
-  @media screen and (min-width: $min-laptop-screen-width) {
-    padding: 0 30px;
-  }
-  @media screen and (min-width: $min-desktop-screen-width) {
-    padding: 0;
-  }
 
   #bigmap {
     display: none;
   }
 
+  @media screen and (max-width: $uikit-min-small-screen-width - 1) {
+    padding: 0 15px;
+  }
+
+  @media screen and (min-width: $uikit-min-small-screen-width) {
+    padding: 0 30px;
+  }
+
   @media screen and (min-width: $min-laptop-screen-width) {
+    padding: 0;
     height: calc(100vh - 224px);
     display: grid;
     grid-template-columns: 2fr 3fr;
@@ -352,7 +348,9 @@ export default {
     };
   },
   mounted: function() {
-    const forms = document.querySelectorAll("form.search-filters");
+    const forms = document.querySelectorAll(
+      "#desktop-search-filters, #mobile-search-filters"
+    );
     forms.forEach(form => {
       form.addEventListener("input", this.onFilterInput);
 
@@ -427,7 +425,7 @@ export default {
         result => {
           this.pageCount = result.data.page_count;
           this.searchResults = result.data.listings;
-          this.resultCount = result.data.result_count
+          this.resultCount = result.data.result_count;
           this.searching = false;
         },
         error => {
@@ -457,7 +455,7 @@ export default {
       }
     },
     listingClicked: function(listing) {
-      this.$refs.map.highlightListing(listing.pk)
+      this.$refs.map.highlightListing(listing.pk);
     }
   },
   watch: {
