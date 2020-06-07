@@ -291,7 +291,7 @@
 
   @media screen and (min-width: $min-laptop-screen-width) {
     padding: 0;
-    height: calc(100vh - 170px);
+    height: calc(100vh - 182px);
     display: grid;
     grid-template-columns: 2fr 3fr;
     column-gap: 1rem;
