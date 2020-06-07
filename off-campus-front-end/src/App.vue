@@ -77,21 +77,6 @@ nav {
   margin-bottom: 0.75rem;
 }
 
-/* Sticky footer */
-html {
-  height: 100%;
-}
-body {
-  min-height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-}
-footer {
-  grid-row-start: 3;
-  grid-row-end: 4;
-  padding: 0.5rem 0;
-}
-
 /* Smaller OpenStreetMap attribution */
 .ol-attribution {
   font-size: 0.75rem;
