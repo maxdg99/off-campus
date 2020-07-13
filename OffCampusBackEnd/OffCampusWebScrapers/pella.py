@@ -73,7 +73,7 @@ class PellaScraper(Scraper):
                 unit = ""
                 if len(unit_re) > 0:
                     unit = unit_re[0]
-                    address = address.replace(unit, '')
+                    address = address.replace(unit,)
                     unit = unit.strip()
                 address = address.strip()
 
