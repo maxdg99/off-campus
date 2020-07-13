@@ -5,16 +5,6 @@ import re
 import math
 
 def getLatLong(address):
-    # to_find = re.compile("Street|St|Avenue|Ave|Road|Rd")
-    # match = to_find.search(address)
-    # if match:
-    #     idx = address.find(",")
-    #     if idx != match.end() and ',' in address:
-    #         print("before: "+address)
-    #         address = address[0:match.end()] + address[idx:]
-    #         print("after "+address)
-
-
     query = {"key": "7a42def0c4b84b58a6bef95d82a82bcb", "q": address}
     r = requests.get('https://api.opencagedata.com/geocode/v1/json', params=query)
     o = r.json()
