@@ -26,7 +26,34 @@ class AppfolioScraper():
 
             price = (prop.find('div', {'class':'sidebar__price rent-banner__text js-listing-blurb-rent'})).getText(strip=True)
 
-            address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText(strip=True)
+            address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
+
+            mix = re.findall(' \d[A-Za-z],', address)
+            letter = re.findall(' [A-Za-z],', address)
+            number = re.findall('[# ]\d{1,2},', address)
+            unit = ""
+
+            if len(mix) > 0:
+                unit = mix[0]
+                address = address.replace(unit, ',')
+                unit = unit.replace(' ', '').replace(',', '')
+            elif len(letter) > 0:
+                print(letter)
+                if len(letter) >= 2:
+                    unit = letter[1]
+                else:
+                    unit = letter[0]
+                address = address.replace(unit, 'n')
+                unit = unit.replace(' ', '').replace(',', '')
+            elif len(number) > 0:
+                if len(number) >= 2:
+                    unit = number[1]
+                else:
+                    unit = number[0]
+                address = address.replace(unit, '')
+                unit = unit.replace(' ', '').replace(',', '').replace('#', '')
+
+            address = address.replace('Apt.', '')
 
             bed_and_bath = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
             if bed_and_bath is None:
@@ -67,9 +94,9 @@ class AppfolioScraper():
             else:
                 description = ""
 
-            d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
+            d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True, "unit": unit}
             print(d)
-            callback(d)
+            #callback(d)
 
 
 class NorthsteppeScraper(Scraper):

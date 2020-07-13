@@ -114,6 +114,6 @@ class OSUPropertiesScraper(Scraper):
                     avail_date = datetime.datetime.strptime(match[0], "%B %d, %Y").date()
                     avail_mode = "Date"
         
-            d = {"scraper": cls.__name__, "url": baseURL + urlAddOns[beds-1], "image": baseImage + image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
-            print(d)
-            callback(d)
+                d = {"scraper": cls.__name__, "url": baseURL + urlAddOns[beds-1], "image": baseImage + image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
+                print(d)
+                callback(d)

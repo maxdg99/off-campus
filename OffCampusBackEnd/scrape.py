@@ -43,7 +43,7 @@ def insert_listing_from_dict(l):
         print("inserting: "+l["address"])
 
         # Get lat long
-        l["latitude"], l["longitude"] = getLatLong(l["address"])
+        l["latitude"], l["longitude"] = getLatLong(l["address"] + " Columbus, Ohio")
 
         l["pretty_address"] = format_address(l["address"])
 
