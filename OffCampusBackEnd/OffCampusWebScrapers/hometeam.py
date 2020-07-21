@@ -4,6 +4,7 @@ import re
 from urllib.parse import urljoin
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import AppfolioScraper
+from OffCampusBackEnd.utility import format_address
 
 
 class HometeamAppfolioScraper(Scraper):
@@ -11,13 +12,15 @@ class HometeamAppfolioScraper(Scraper):
 
     @classmethod
     def process_listings(cls, callback):
-        AppfolioScraper.process_listings(HometeamAppfolioScraper.url, cls, callback)
+        AppfolioScraper.process_listings(HometeamAppfolioScraper.url, cls.__name__, callback)
 
 class HometeamScraper(Scraper):
 
+    url = "https://www.hometeamproperties.net/osu-off-campus-housing"
+
     @classmethod
     def process_listings(cls, callback):
-        req = requests.get(url="https://www.hometeamproperties.net/osu-off-campus-housing")
+        req = requests.get(url=HometeamScraper.url)
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')
         properties = soup.find("div", {"class": "grid"})
@@ -37,20 +40,25 @@ class HometeamScraper(Scraper):
                         city = "Mansfield"
                     else:
                         city = "Columbus"
-                    d = {"scraper": hometeam_listing["scraper"], "url": hometeam_listing["url"], "image": hometeam_listing["image"], "address": f'{data["street_number"]} {data["street_name"]}, {city} OH', "beds": hometeam_listing["beds"],
-                        "baths": hometeam_listing["baths"], "price": appfolio_listing["price"], "availability_date": appfolio_listing["availability_date"], "availability_mode": 'Date', "active": True}
+
+                    #address = format_address(appfolio_listing["address"])
+
+                    d = {"scraper": hometeam_listing["scraper"], "url": hometeam_listing["url"], "image": hometeam_listing["image"], "address": appfolio_listing["address"], "beds": hometeam_listing["beds"],
+                        "baths": hometeam_listing["baths"], "price": appfolio_listing["price"], "availability_date": appfolio_listing["availability_date"], "availability_mode": appfolio_listing["availability_mode"], "active": True}
                     
                     if data["unit"]:
                         d["unit"] = data["unit"]
-                        
-                    print(d)
+                    
                     callback(d)
 
     def __dict_from_listing(cls, listingDiv):
             data = {}
+            
+            data["scraper"] = cls.__name__
             data["image"] = listingDiv.find("img")["src"]
-            data["url"] = urljoin(HometeamAppfolioScraper.url,
+            data["url"] = urljoin(HometeamScraper.url,
                                 listingDiv.find("a")["href"])
+
             address = listingDiv.find("h4").text
             address = address[0:address.find(":")].strip()
             data["address"] = address
@@ -62,7 +70,6 @@ class HometeamScraper(Scraper):
 
             data["beds"] = bedbath[0]
             data["baths"] = bedbath[2]
-            data["scraper"] = cls.__name__
 
             data["price"] = None
             data["availability_date"] = None

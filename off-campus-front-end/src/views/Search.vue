@@ -2,19 +2,14 @@
   <div class="search">
     <div class="uk-container">
       <!-- Desktop search filters -->
-      <form
-        id="desktop-search-filters"
-        class="uk-grid-small uk-child-width-1-5 uk-margin-bottom search-filters"
-        onsubmit="return false;"
-        uk-grid
-      >
+      <form id="desktop-search-filters" onsubmit="return false;">
         <div class="beds-and-baths">
           <div>
-            <label for="bedrooms">Bedrooms</label>
+            <label for="bedrooms">Beds</label>
             <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -90,12 +85,7 @@
       </form>
 
       <!-- Mobile search filters -->
-      <form
-        id="mobile-search-filters"
-        class="uk-grid-small uk-child-width-1-2 uk-margin-bottom search-filters"
-        onsubmit="return false;"
-        uk-grid
-      >
+      <form id="mobile-search-filters" onsubmit="return false;">
         <div>
           <button
             class="uk-button uk-button-default uk-width-expand"
@@ -113,11 +103,11 @@
 
         <div v-show="showMobileFilters" class="beds-and-baths">
           <div>
-            <label for="bedrooms">Bedrooms</label>
+            <label for="bedrooms">Beds</label>
             <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -188,6 +178,7 @@
     <div id="map-and-listings-container">
       <Map ref="map" />
       <div id="listings">
+        <h4>{{this.resultCount}} Results</h4>
         <div id="listings-grid">
           <Listing
             v-for="listing in searchResults"
@@ -210,6 +201,7 @@
           :prev-text="'<span uk-pagination-previous></span>'"
           :next-text="'<span uk-pagination-next></span>'"
         />
+        <Footer id="footer" />
       </div>
     </div>
   </div>
@@ -218,20 +210,30 @@
 <style lang="scss" scoped>
 @import "@/scss/_variables.scss";
 
-#desktop-search-filters {
-  display: none;
+#desktop-search-filters,
+#mobile-search-filters {
+  margin-bottom: 20px;
+  display: grid;
+  row-gap: 0.5rem;
+  column-gap: 1rem;
+}
 
-  @media screen and (min-width: $min-desktop-screen-width) {
-    display: flex;
+#desktop-search-filters {
+  grid-template-columns: repeat(5, 1fr);
+  @media screen and (max-width: $min-laptop-screen-width - 1) {
+    display: none;
   }
 }
 
 #mobile-search-filters {
   margin-top: 0.25rem;
-  display: flex;
-
-  @media screen and (min-width: $min-desktop-screen-width) {
+  grid-template-columns: repeat(2, 1fr);
+  @media screen and (min-width: $min-laptop-screen-width) {
     display: none;
+  }
+
+  .uk-button.uk-button-default {
+    padding: 0 15px;
   }
 }
 
@@ -265,27 +267,33 @@
   margin-top: 24px;
 }
 
+.result-count {
+  margin-left: 20px;
+  font-weight: 600;
+  font-size: 1.125em;
+}
+
 #map-and-listings-container {
   margin: 0 auto;
   max-width: 1600px;
-  @media screen and (max-width: $min-tablet-screen-width - 1) {
-    padding: 0 15px;
-  }
-  @media screen and (min-width: $min-tablet-screen-width) {
-    padding: 0 30px;
-  }
-  @media screen and (min-width: $min-desktop-screen-width) {
-    padding: 0;
-  }
 
   #bigmap {
     display: none;
   }
 
-  @media screen and (min-width: $min-desktop-screen-width) {
-    height: calc(100vh - 224px);
+  @media screen and (max-width: $uikit-min-small-screen-width - 1) {
+    padding: 0 15px;
+  }
+
+  @media screen and (min-width: $uikit-min-small-screen-width) {
+    padding: 0 30px;
+  }
+
+  @media screen and (min-width: $min-laptop-screen-width) {
+    padding: 0;
+    height: calc(100vh - 182px);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 3fr;
     column-gap: 1rem;
 
     #bigmap {
@@ -297,14 +305,26 @@
       overflow: auto;
     }
   }
+
+  @media screen and (min-width: $min-desktop-screen-width) {
+    grid-template-columns: 1fr 2fr;
+  }
 }
 
 #listings-grid {
   display: grid;
   gap: 1rem;
+
   @media screen and (min-width: $min-tablet-screen-width) {
     grid-template-columns: 1fr 1fr;
   }
+  @media screen and (min-width: $min-desktop-screen-width) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+#footer {
+  margin-top: -1rem;
 }
 </style>
 
@@ -312,14 +332,16 @@
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
 import Map from "@/components/Map.vue";
+import Footer from "@/components/Footer.vue";
 import Paginate from "vuejs-paginate";
 
 export default {
   name: "search",
   components: {
     Listing,
-    Paginate,
-    Map
+    Map,
+    Footer,
+    Paginate
   },
   data: function() {
     return {
@@ -329,11 +351,14 @@ export default {
       filters: {},
       originalFilters: {},
       pageCount: 1,
-      showMobileFilters: false
+      showMobileFilters: false,
+      resultCount: 0
     };
   },
   mounted: function() {
-    const forms = document.querySelectorAll("form.search-filters");
+    const forms = document.querySelectorAll(
+      "#desktop-search-filters, #mobile-search-filters"
+    );
     forms.forEach(form => {
       form.addEventListener("input", this.onFilterInput);
 
@@ -408,6 +433,7 @@ export default {
         result => {
           this.pageCount = result.data.page_count;
           this.searchResults = result.data.listings;
+          this.resultCount = result.data.result_count;
           this.searching = false;
         },
         error => {
@@ -437,7 +463,7 @@ export default {
       }
     },
     listingClicked: function(listing) {
-      this.$refs.map.highlightListing(listing.pk)
+      this.$refs.map.highlightListing(listing.pk);
     }
   },
   watch: {

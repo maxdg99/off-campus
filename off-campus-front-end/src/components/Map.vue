@@ -6,9 +6,14 @@
 </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 #popup {
-    max-width: 200px;
+  width: 250px;
+  font-size: 0.75em;
+
+  .listing-image {
+    height: 150px;
+  }
 }
 </style>
 

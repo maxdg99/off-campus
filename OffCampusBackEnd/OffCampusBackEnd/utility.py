@@ -16,11 +16,10 @@ def getLatLong(address):
 
 
     query = {"key": "7a42def0c4b84b58a6bef95d82a82bcb", "q": address}
-    # print(urllib.parse.urlencode(query))
     r = requests.get('https://api.opencagedata.com/geocode/v1/json', params=query)
     o = r.json()
-    #print(json.dumps(o))
     latLongParent = o["results"][0]["geometry"]
+    address = address[:address.find(", United States of America")]
     if latLongParent and "lat" in latLongParent:
         latitude = latLongParent["lat"]
         longitude = latLongParent["lng"]

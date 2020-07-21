@@ -51,7 +51,7 @@ def __getPaginatedListings(request):
     except EmptyPage:
         listingsPage = paginator.page(paginator.num_pages)
 
-    return {"page_count": paginator.num_pages, "listings": listingsPage}
+    return {"page_count": paginator.num_pages, "listings": listingsPage, "result_count": len(listings)}
 
 def getAllListings(request):
     listings = __getFilteredListings(request)

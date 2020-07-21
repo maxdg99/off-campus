@@ -9,6 +9,7 @@ class Listing(models.Model):
     
     pretty_address = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
+
     unit = models.CharField(max_length=10, default="")
 
     beds = models.PositiveIntegerField(null=True)
