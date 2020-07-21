@@ -93,3 +93,31 @@ class BuckeyeScraper(Scraper):
     @classmethod
     def process_listings(cls, callback):
         AppfolioScraper.process_listings(BuckeyeScraper.url, cls.__name__, callback)
+
+class MyFirstPlaceScraper(Scraper):
+    url = "https://my1stplace.appfolio.com/listings"
+    
+    @classmethod
+    def process_listings(cls, callback):
+        AppfolioScraper.process_listings(MyFirstPlaceScraper.url, cls.__name__, callback)
+    
+class LegacyScraper(Scraper):
+    url = "https://legacymgmt.appfolio.com/listings"
+
+    @classmethod
+    def process_listings(cls, callback):
+        AppfolioScraper.process_listings(LegacyScraper.url, cls.__name__, callback)
+
+class OSULiveScraper(Scraper):
+    url = "https://osulive.appfolio.com/listings"
+
+    @classmethod
+    def process_listings(cls, callback):
+        AppfolioScraper.process_listings(OSULiveScraper.url, cls.__name__, callback)
+
+class VIPScraper(Scraper):
+    url = "https://viprealtyhomes.appfolio.com/listings"
+
+    @classmethod
+    def process_listings(cls, callback):
+        AppfolioScraper.process_listings(VIPScraper.url, cls.__name__, callback)

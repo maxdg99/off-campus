@@ -10,6 +10,7 @@ from OffCampusWebScrapers.pella import PellaScraper
 from OffCampusWebScrapers.hometeam import HometeamScraper
 from OffCampusWebScrapers.peak import PeakScraper
 from OffCampusWebScrapers.osu_properties import OSUPropertiesScraper
+from OffCampusWebScrapers.krg import KRGScraper
 from OffCampusBackEnd.utility import getLatLong, distance, format_address
 
 options = [cls for cls in Scraper.__subclasses__()]
@@ -49,6 +50,8 @@ def insert_listing_from_dict(l):
         if l["latitude"] is not None:
             l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)
             print("\t\tDistance: "+str(distance(l["latitude"], l["longitude"])))
+
+        l['pretty_address'] = format_address(l['address'])
 
         obj = Listing(**l)
 
