@@ -9,7 +9,6 @@ from OffCampusRestApi.models import Listing
 from OffCampusRestApi.models import User
 from OffCampusRestApi.compute_averages import compute_averages
 import json
-
 orderOptions = [{'id': '1', 'text': 'Price Increasing'}, {'id': '2', 'text': 'Price Decreasing'}, {'id': '3', 'text': 'Distance Increasing'}, {'id': '4', 'text': 'Distance Decreasing'}]
 orderQueries = {'1': 'price', '2': '-price', '3': 'miles_from_campus', '4': '-miles_from_campus'}
 
@@ -100,11 +99,11 @@ def __getFilteredListings(request):
         listingsFilter = listingsFilter & Q(miles_from_campus__gte=queryParams["minDistance"])
     if "maxDistance" in queryParams and queryParams["maxDistance"].isnumeric():
         listingsFilter = listingsFilter & Q(miles_from_campus__lte=queryParams["maxDistance"])
-
+    
     # Parses ordering of listings
-    if "order" in queryParams:
-        if queryParams["order"] in orderQueries:
-            return Listing.listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]])
-        else:
-            # Default order is miles from campus, increasing
-            return Listing.listings.filter(listingsFilter).order_by(orderQueries['3'])
+    if "order" in queryParams and queryParams["order"] in orderQueries:
+        return Listing.listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]])
+    
+    # Default order is miles from campus, increasing
+    return Listing.listings.filter(listingsFilter).order_by(orderQueries['3'])
+
