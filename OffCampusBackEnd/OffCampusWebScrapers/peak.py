@@ -36,7 +36,7 @@ class PeakScraper(Scraper):
 
                         range_street_number = re.search('^\d+-?\d* ', address)
                         single_address = address.replace(range_street_number[0], '')
-                        single_address = f'{street_number} {single_address}'
+                        single_address = f'{street_number} {single_address} Columbus, OH'
                         print(single_address)
 
                         price = u.find('td', {'class': 'rent'}).text

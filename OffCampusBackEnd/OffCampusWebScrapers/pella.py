@@ -68,12 +68,13 @@ class PellaScraper(Scraper):
                 listing_soup = BeautifulSoup(listing_html, 'html.parser')
 
                 address = listing_soup.find('h2').getText()
+
                 title = listing_soup.find('h1').getText()
                 unit_re = re.findall("#\d|Apt [A-Z]", title)
                 unit = ""
                 if len(unit_re) > 0:
                     unit = unit_re[0]
-                    address = address.replace(unit,)
+                    address = address.replace(unit, "")
                     unit = unit.strip()
                 address = address.strip()
 
@@ -95,6 +96,8 @@ class PellaScraper(Scraper):
                     avail_date = avail_date.split(' ')
                     if '' in avail_date:
                         avail_date.remove('')
+                    if 'Mid' in avail_date:
+                        avail_date.remove('Mid')
                     print(avail_date)
                     if len(avail_date) == 4:
                         print(avail_date)

@@ -35,7 +35,7 @@ def distance(lat, lon):
     d = R * c
     return d * 0.000621371 # miles
 
-def format_address(address):
+def format_address(address, unit):
     replacements = {
         " North": " N. ",
         " East": " E. ",
@@ -46,7 +46,8 @@ def format_address(address):
         " Ave": " Avenue ",
         " Columbus": "",
         " Mansfield": "",
-        " OH": ""
+        " OH": "",
+        "OH": "",
     }
 
     modifiers = [".", ",", " "]
@@ -62,5 +63,8 @@ def format_address(address):
         address = address.replace(zipcode[0], " ")
 
     address = address.replace(",", "")
+
+    if unit:
+        address = address + " - " + unit
 
     return address

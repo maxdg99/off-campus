@@ -43,9 +43,12 @@ def insert_listing_from_dict(l):
         print("inserting: "+l["address"])
 
         # Get lat long
-        l["latitude"], l["longitude"] = getLatLong(l["address"] + " Columbus, Ohio")
+        l["latitude"], l["longitude"] = getLatLong(l["address"])
 
-        l["pretty_address"] = format_address(l["address"])
+        try:
+            l["pretty_address"] = format_address(l["address"], l["unit"])
+        except:
+            l["pretty_address"] = format_address(l["address"], "")
 
         if l["latitude"] is not None:
             l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)

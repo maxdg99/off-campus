@@ -72,7 +72,7 @@ class OSUPropertiesScraper(Scraper):
 
             beds = urlAddOns.index(prop['beds']) + 1
             
-            address = prop['address'] + ' ' + prop['city'] + ' ' + prop['state'] + ' ' + prop['zip_code']
+            address = f'{prop["address"]} {prop["city"]}, {prop["state"]} {prop["zip_code"]}'
             
             price = prop['price']
             if "-" in price:

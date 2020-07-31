@@ -22,7 +22,9 @@
             v-bind:href="listing.url"
             class="listing-address"
             target="_blank"
-          >{{ listing.pretty_address }}</a>
+          >
+            {{ listing.pretty_address }}
+          </a>
           <div
             v-if="listing.availability_mode=='Season'"
           >Available this {{getMonth(listing.availability_date.month)}}</div>
