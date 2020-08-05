@@ -142,11 +142,25 @@ Put the following in /opt/apartments/app/OffCampusBackEnd/.env.local
 ```
 SECRET_KEY=^f)iru73nvws+!1#^3xf3wl2tu&y+$9yk=v^j@_tc+v7^d&a^f
 DEBUG=false
+HOST_URL=api.offcampus.us
+```
+
+```
+sudo service nginx restart
+```
+
+Follow steps 2 and 3 of [this](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx)
+
+Then run
+```
+sudo certbot --nginx
 ```
 
 Now run:
 ```
 sudo systemctl daemon-reload
 sudo systemctl start uwsgi
+```
 
+Everything should now work (it definitely won't but it's worth a try)
 
