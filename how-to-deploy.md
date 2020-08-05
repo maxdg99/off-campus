@@ -62,6 +62,7 @@ cd ../off-campus-front-end
 npm install
 npm run build
 # ... wait patiently ...
+```
 
 More more stuff
 -----
@@ -135,6 +136,12 @@ now run:
 ```
 sudo ln -s /etc/nginx/sites-available/apartments-api /etc/nginx/sites-enabled/apartments-api
 sudo ln -s /etc/nginx/sites-available/apartments-front /etc/nginx/sites-enabled/apartments-front
+```
+
+Put the following in /opt/apartments/app/OffCampusBackEnd/.env.local
+```
+SECRET_KEY=^f)iru73nvws+!1#^3xf3wl2tu&y+$9yk=v^j@_tc+v7^d&a^f
+DEBUG=false
 ```
 
 Now run:
