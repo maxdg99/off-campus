@@ -29,6 +29,10 @@
         <div class="text-center">OSU Live Properties</div>
         <div class="text-center">VIP Realty</div>
 
+        <h1 class="text-center">Disclaimer</h1>
+        <p class="text-center">
+           Off Campus is not liable for the correctness of any and all listing information on our site.  Off Campus is a web scraping application.  As a result, data collected via our scrapers may be formatted poorly or inaccurate.  If information displayed in a listing on OffCampus.us does not appear correct, please visit the rental companies site or contact the rental company directly for better detail on a given property.
+        </p>        
         <footer class="uk-text-center">&copy; {{new Date().getFullYear()}} Max Gruber, Andrew Haberlandt, Adam Lis</footer>
     </div>
 </template>

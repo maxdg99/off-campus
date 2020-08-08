@@ -3,6 +3,7 @@
     <div class="uk-card-media-top">
       <img v-bind:src="listing.image" class="listing-image" v-show="!showMap" uk-img />
       <div class="listing-map" v-show="showMap" ref="smolMap" />
+      <a v-show="this.$root.isSignedIn" :class="{'liked': isLiked}" class="uk-icon-button" id="like-button" uk-icon="icon: heart; ratio: 1.25" @click="isLiked ? unlikeProperty() : likeProperty()"></a>
     </div>
     <div class="uk-card-body listing-body">
       <div class="listing-price-and-info-container">
@@ -35,9 +36,6 @@
           v-else-if="listing.availability_mode=='Date'"
         >Available on {{getDate(listing.availability_date)}}</div>
       </div>
-      <div class="listing-info-row">
-        <a :class="{'liked': isLiked}" uk-icon="icon: heart; ratio: 2" @click="toggleLikedProperty()"></a>
-      </div>
       <span v-if="!listing.active">This listing is no longer available.</span>
     </div>
     <div class="map-icon">
@@ -51,6 +49,14 @@
 
 $card-section-margin: 0;
 $listing-image-map-height: 200px;
+
+#like-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 5px;
+  margin-right: 5px;
+}
 
 .inactive {
   border: 2px orange solid;
@@ -155,11 +161,11 @@ export default {
     }
   },
   methods:{
-    toggleLikedProperty: function () {
+    likeProperty: function () {
       if(this.$root.isSignedIn) {
         $.ajax({
           type: 'GET',
-          url: 'http://localhost:8000/toggleLikedProperty',
+          url: 'http://localhost:8000/likeProperty',
           data: {
             property_id: this.id
           },
@@ -167,8 +173,36 @@ export default {
             withCredentials: true
           },
           success: (data) => {
-            this.$emit('update-isLiked', data.isLiked)
-            console.log("Listing successfully toggled to " + data.isLiked)
+            this.$emit('update-isLiked', true)
+          },
+          failure: (response) => {
+            if(response.status == 401){
+              console.log("Error: User is not signed in")
+              this.$root.isSignedIn = false
+            }
+            else if(response.status == 404) {
+              console.log("Error: Listing does not exists.")
+            }
+          }
+        });
+      }
+      else {
+        alert("There is no signed in user. Please sign in with google.")
+      }
+    },
+    unlikeProperty: function () {
+      if(this.$root.isSignedIn) {
+        $.ajax({
+          type: 'GET',
+          url: 'http://localhost:8000/unlikeProperty',
+          data: {
+            property_id: this.id
+          },
+          xhrFields: {
+            withCredentials: true
+          },
+          success: (data) => {
+            this.$emit('update-isLiked', false)
           },
           failure: (response) => {
             if(response.status == 401){

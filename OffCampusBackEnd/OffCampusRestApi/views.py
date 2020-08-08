@@ -58,22 +58,44 @@ def __getPaginatedListings(request):
 
     return {"page_count": paginator.num_pages, "listings": listingsPage, "result_count": len(listings)}
 
-def toggleLikedProperty(request):
-    property_id = request.GET['property_id']
+def likeProperty(request):
     data = {}
+    property_id = None
+
+    if 'property_id' in request.GET:
+        property_id = request.GET['property_id']
 
     if request.session.has_key('offcampus.us_auth'):
         row = request.session.get('offcampus.us_auth')
         user = GoogleUser.objects.get(pk=row)
         favorites = user.favorites.all()
+        try:
+            listing = Listing.listings.get(id=property_id)
+            user.favorites.add(listing)
+            response = JsonResponse(status=200, data=data)
+        except Listing.DoesNotExist:
+            # Fail because this means the listing does not exist
+            response = HttpResponse(status=404)    
+    else:
+        # This means the user is not logged in
+        response = HttpResponse(status=401)
+    __allowCors(response)
+    return response
+        
+def unlikeProperty(request):
+    data = {}
+    property_id = None
+
+    if 'property_id' in request.GET:
+        property_id = request.GET['property_id']
+
+    if request.session.has_key('offcampus.us_auth') and property_id:
+        row = request.session.get('offcampus.us_auth')
+        user = GoogleUser.objects.get(pk=row)
+        favorites = user.favorites.all()
         if Listing.listings.filter(id=property_id).exists():
             listing = Listing.listings.get(id=property_id)
-            if listing in favorites:
-                user.favorites.remove(listing)
-                data["isLiked"] = False
-            else:
-                user.favorites.add(listing)
-                data["isLiked"] = True
+            user.favorites.remove(listing)
             response = JsonResponse(status=200, data=data)
         else:
             # Fail because this means the listing does not exist
@@ -91,8 +113,8 @@ def getAllListings(request):
     return response
 
 def getLikedListings(request):
-    row = request.session.get('offcampus.us_auth')
     if 'offcampus.us_auth' in request.session:
+        row = request.session.get('offcampus.us_auth')
         listings = GoogleUser.objects.get(pk=row).favorites.values_list('pk', flat=True)
         data =  list(listings)
         response = JsonResponse(data=data, content_type="application/json", status=200, safe=False)
@@ -155,7 +177,7 @@ def __allowCors(response):
     response["Access-Control-Allow-Origin"] = "http://localhost:8080"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "x-requested-with, Content-Type"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     response["Access-Control-Allow-Credentials"] = 'true'
 
 def __getFilteredListings(request):

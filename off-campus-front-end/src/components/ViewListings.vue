@@ -386,15 +386,6 @@ export default {
     this.getLikedListings()
   },
   methods: {
-    toggleLikedListing: function(listingId) {
-      if(this.likedListings.includes(listingId)) {
-        var index = this.likedListings.indexOf(listingId)
-        this.likedListings.splice(index,1)
-      }
-      else {
-        this.likedListings.push(listingId)
-      }
-    },
     getLikedListings: function() {
       $.ajax({
         type: 'GET',
