@@ -10,6 +10,7 @@ This started as Max Gruber, Andrew Haberlandt, and Adam Lis's Hack OHI/O 2019 pr
     1. Install the dependencies in the Django project: `pip install -r requirements.txt`
     1. Copy `sample-db.sqlite3` and rename it to `db.sqlite3`
     1. Create `.env.local` and populate it as follow: `SECRET_KEY={insert secret key here}`
+    1. Run the following Django command: `python manage.py migrate`
     1. Run the Django app with this command: `python manage.py runserver`
 1. Front end
     1. Install [Node.js](https://nodejs.org/)
