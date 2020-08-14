@@ -3,7 +3,15 @@
     <div class="uk-card-media-top">
       <img v-bind:src="listing.image" class="listing-image" v-show="!showMap" uk-img />
       <div class="listing-map" v-show="showMap" ref="smolMap" />
-      <a v-show="this.$root.isSignedIn" :class="{'liked': isLiked}" class="uk-icon-button" id="like-button" uk-icon="icon: heart; ratio: 1.25" @click="isLiked ? unlikeProperty() : likeProperty()"></a>
+      <a @click="isLiked ? unlikeProperty() : likeProperty()"  v-show="this.$root.isSignedIn" id="like-button">
+        <svg viewBox="0 0 512 512">
+          <path v-bind:fill="isLiked ? 'rgb(247, 93, 177)' : 'gray'" d="M376,30c-27.783,0-53.255,8.804-75.707,26.168c-21.525,16.647-35.856,37.85-44.293,53.268
+            c-8.437-15.419-22.768-36.621-44.293-53.268C189.255,38.804,163.783,30,136,30C58.468,30,0,93.417,0,177.514
+            c0,90.854,72.943,153.015,183.369,247.118c18.752,15.981,40.007,34.095,62.099,53.414C248.38,480.596,252.12,482,256,482
+            s7.62-1.404,10.532-3.953c22.094-19.322,43.348-37.435,62.111-53.425C439.057,330.529,512,268.368,512,177.514
+            C512,93.417,453.532,30,376,30z"/>
+        </svg>
+      </a>
     </div>
     <div class="uk-card-body listing-body">
       <div class="listing-price-and-info-container">
@@ -56,14 +64,17 @@ $listing-image-map-height: 200px;
   right: 0;
   margin-top: 5px;
   margin-right: 5px;
+
+  width: 30px;
+  height: 30px;
+
+  background-color: white;
+  border-radius: 24px;
+  padding: 8px;
 }
 
 .inactive {
   border: 2px orange solid;
-}
-
-.liked {
-  color: rgb(247, 93, 177)
 }
 
 .switcher {
