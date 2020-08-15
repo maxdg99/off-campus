@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Search from '../views/Search.vue'
+import List from '../views/List.vue'
 import About from '../views/About.vue'
 import NotFound from '../views/NotFound.vue'
 
@@ -15,6 +16,10 @@ const routes = [
   {
     path: '/search',
     component: Search
+  },
+  {
+    path: '/list',
+    component: List
   },
   {
     path: '/about',
