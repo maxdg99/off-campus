@@ -1,13 +1,11 @@
-How to deploy using uwsgi (suitable for production
-====
+# How to deploy using uwsgi (suitable for production
 
 We will be using /opt/apartments/ for our stuff. Why? idk.
 
 Right now I'm using a t2.micro on AWS. Ubuntu 18.04.
 
-Install shit
-------
-```
+## Install shit
+```sh
 sudo apt update
 sudo apt install python3 python3-pip nginx npm
 sudo pip3 install --system uwsgi
@@ -16,9 +14,8 @@ sudo npm install -g npm@3
 hash -d npm
 ```
 
-Generate SSH Key
------
-```
+## Generate SSH Key
+```sh
 ssh-keygen
 # Default location is fine
 # USE A GOOD PASSWORD
@@ -27,14 +24,13 @@ ssh-keygen
 Now, paste the output of the following command in your Github SSH keys section
 
 MUCH MORE SECURE WAY: Add it as a deploy key for this repo (annoyingly we don't have permission to, because Supreme Overlord Max)
-```
+```sh
 cat ~/.ssh/id_rsa.pub 
 ```
 
 
-More stuff
--------
-```
+## More stuff
+```sh
 sudo useradd apartments
 sudo usermod -a -G apartments ubuntu
 sudo usermod -a -G apartments www-data
@@ -64,11 +60,10 @@ npm run build
 # ... wait patiently ...
 ```
 
-More more stuff
------
+## More more stuff
 
 Put the following in /etc/systemd/system/uwsgi.service (you'll need sudo)
-```
+```nginx
 [Unit]
 Description=Apartments uWSGI Emperor
 After=syslog.target
@@ -88,7 +83,7 @@ WantedBy=multi-user.target
 ```
 
 Write the following to /etc/nginx/sites-available/apartments-front
-```
+```nginx
 server {
 	root /opt/apartments/app/off-campus-front-end/dist;
 	index index.html index.htm index.nginx-debian.html;
@@ -107,7 +102,7 @@ server {
 
 Write the following to /etc/nginx/sites-available/apartments-api
 
-```
+```nginx
 # the upstream component nginx needs to connect to
 upstream django {
   server unix:///opt/apartments/sock/apartments.sock; # for a file socket
@@ -133,31 +128,31 @@ server {
 ```
 
 now run:
-```
+```sh
 sudo ln -s /etc/nginx/sites-available/apartments-api /etc/nginx/sites-enabled/apartments-api
 sudo ln -s /etc/nginx/sites-available/apartments-front /etc/nginx/sites-enabled/apartments-front
 ```
 
 Put the following in /opt/apartments/app/OffCampusBackEnd/.env.local
-```
+```sh
 SECRET_KEY=^f)iru73nvws+!1#^3xf3wl2tu&y+$9yk=v^j@_tc+v7^d&a^f
 DEBUG=false
 HOST_URL=api.offcampus.us
 ```
 
-```
+```sh
 sudo service nginx restart
 ```
 
 Follow steps 2 and 3 of [this](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx)
 
 Then run
-```
+```sh
 sudo certbot --nginx
 ```
 
 Now run:
-```
+```sh
 sudo systemctl daemon-reload
 sudo systemctl start uwsgi
 ```
