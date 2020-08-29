@@ -28,15 +28,14 @@ class AppfolioScraper():
 
             address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
 
-
-            if ' - ' in address:
+            if ' - ' in address and className == 'VeniceScraper':
                 two_part_address = address.index(' - ')
                 address = address[two_part_address:]
 
-            number_letter = re.findall(' \d[A-Za-z],', address)
-            letter_number = re.findall(' [A-Za-z]\d,', address)
-            letter = re.findall(' [A-Za-z],', address)
-            number = re.findall('[# ]\d{1,2},', address)
+            number_letter = re.findall(' \d{1,3}[ ]?[A-Za-z],', address)
+            letter_number = re.findall(' [A-Za-z]\d', address)
+            letter = re.findall('[# ][A-Za-z][, ]', address)
+            number = re.findall('[# ]\d{1,3},', address)
             unit = ""
 
             if len(number_letter) > 0:
@@ -54,7 +53,10 @@ class AppfolioScraper():
                 else:
                     unit = letter[0]
                 address = address.replace('  ', ' ')
-                address = address.replace(unit, ',')
+                if ',' in unit:
+                    address = address.replace(unit, ',')
+                else:
+                    address = address.replace(unit, ' ')
                 unit = unit.replace(' ', '').replace(',', '')
             elif len(number) > 0:
                 if len(number) >= 2:
@@ -70,6 +72,7 @@ class AppfolioScraper():
             address = address.replace('Unit', '')
             address = address.replace(',,', ',')
             address = address.replace(' , ', ', ')
+            address = address.replace(' -,', ',')
             address = address.replace(' - ', '')
 
             bed_and_bath = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
@@ -130,7 +133,6 @@ class VeniceScraper(Scraper):
     def process_listings(cls, callback):
         AppfolioScraper.process_listings(VeniceScraper.url, cls.__name__, callback)
 
-
 class BuckeyeScraper(Scraper):
     url = "https://buckeye.appfolio.com/listings"
 
@@ -138,7 +140,7 @@ class BuckeyeScraper(Scraper):
     def process_listings(cls, callback):
         AppfolioScraper.process_listings(BuckeyeScraper.url, cls.__name__, callback)
 
-class MyFirstPlaceScraper(Scraper):
+class MyFirstPlaceScraper(Scraper): #bad
     url = "https://my1stplace.appfolio.com/listings"
     
     @classmethod
