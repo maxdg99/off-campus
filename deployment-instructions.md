@@ -1,35 +1,29 @@
-# How to deploy using uwsgi (suitable for production
+# First-time deployment
+These instructions have been tested on an AWS t2.micro with Ubuntu 18.04. Our code will go in /opt/apartments/ because Andrew said so. 
 
-We will be using /opt/apartments/ for our stuff. Why? idk.
-
-Right now I'm using a t2.micro on AWS. Ubuntu 18.04.
-
-## Install shit
+## Install dependencies
 ```sh
 sudo apt update
-sudo apt install python3 python3-pip nginx npm
+sudo apt install python3 python3-pip nginx npm virtualenv snap
+# This will take a while
 sudo pip3 install --system uwsgi
-# ...wait patiently...
 sudo npm install -g npm@3
-hash -d npm
 ```
 
 ## Generate SSH Key
 ```sh
 ssh-keygen
-# Default location is fine
+# Use default location
 # USE A GOOD PASSWORD
-```
-
-Now, paste the output of the following command in your Github SSH keys section
-
-MUCH MORE SECURE WAY: Add it as a deploy key for this repo (annoyingly we don't have permission to, because Supreme Overlord Max)
-```sh
 cat ~/.ssh/id_rsa.pub 
 ```
 
+Paste the output into GitHub
+* More secure way: add as deployment key for this repo
+* Less secure way: add to GitHub account SSH keys
 
-## More stuff
+
+## Set up apartments user
 ```sh
 sudo useradd apartments
 sudo usermod -a -G apartments ubuntu
@@ -40,29 +34,35 @@ sudo chmod 775 /opt/apartments
 sudo mkdir /opt/apartments/sock
 sudo chown apartments:apartments /opt/apartments/sock
 sudo chmod 774 /opt/apartments/sock
+# Log out and log back in before continuing
+```
 
-# Log out and log back in before continuing.
+## Clone and build project
+```sh
 cd /opt/apartments/
 git clone git@github.com:maxdg99/Apartment-Web-Scraper.git app
 sudo chown -R apartments:apartments app
+
 virtualenv -p python3 venv
 source venv/bin/activate
 cd app/OffCampusBackEnd
 pip install -r requirements.txt
-pip install -r requirements-deploy.txt 
+pip install -r requirements-deploy.txt
+python manage.py migrate
+python manage.py scrape
+deactivate
 
 sudo mkdir -p /etc/uwsgi/vassals/
 sudo cp production_uwsgi.ini /etc/uwsgi/vassals/
 
+# This will take a while
 cd ../off-campus-front-end
 npm install
 npm run build
-# ... wait patiently ...
 ```
 
-## More more stuff
-
-Put the following in /etc/systemd/system/uwsgi.service (you'll need sudo)
+## Set up configuration files
+Write the following to /etc/systemd/system/uwsgi.service (using sudo)
 ```nginx
 [Unit]
 Description=Apartments uWSGI Emperor
@@ -82,7 +82,7 @@ NotifyAccess=all
 WantedBy=multi-user.target
 ```
 
-Write the following to /etc/nginx/sites-available/apartments-front
+Write the following to /etc/nginx/sites-available/apartments-front (using sudo)
 ```nginx
 server {
 	root /opt/apartments/app/off-campus-front-end/dist;
@@ -100,8 +100,7 @@ server {
 }
 ```
 
-Write the following to /etc/nginx/sites-available/apartments-api
-
+Write the following to /etc/nginx/sites-available/apartments-api (using sudo)
 ```nginx
 # the upstream component nginx needs to connect to
 upstream django {
@@ -127,35 +126,32 @@ server {
 }
 ```
 
-now run:
-```sh
-sudo ln -s /etc/nginx/sites-available/apartments-api /etc/nginx/sites-enabled/apartments-api
-sudo ln -s /etc/nginx/sites-available/apartments-front /etc/nginx/sites-enabled/apartments-front
-```
-
-Put the following in /opt/apartments/app/OffCampusBackEnd/.env.local
+Write the following to /opt/apartments/app/OffCampusBackEnd/.env.local
 ```sh
 SECRET_KEY=^f)iru73nvws+!1#^3xf3wl2tu&y+$9yk=v^j@_tc+v7^d&a^f
 DEBUG=false
 HOST_URL=api.offcampus.us
 ```
 
+## Finish setup
 ```sh
+sudo ln -s /etc/nginx/sites-available/apartments-api /etc/nginx/sites-enabled/apartments-api
+sudo ln -s /etc/nginx/sites-available/apartments-front /etc/nginx/sites-enabled/apartments-front
+
 sudo service nginx restart
-```
 
-Follow steps 2 and 3 of [this](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx)
-
-Then run
-```sh
+sudo snap install --classic certbot
 sudo certbot --nginx
-```
+# Enter your email to be notified about certificate expirations
 
-Now run:
-```sh
 sudo systemctl daemon-reload
 sudo systemctl start uwsgi
 ```
 
-Everything should now work (it definitely won't but it's worth a try)
+You're done! Everything should be up and running.
 
+# Normal deployment
+1. Pull code changes
+1. Run Django migrations
+1. Run Django scrapers
+1. Rebuild front end
