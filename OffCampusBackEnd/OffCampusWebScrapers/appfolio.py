@@ -28,13 +28,23 @@ class AppfolioScraper():
 
             address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
 
-            mix = re.findall(' \d[A-Za-z],', address)
+
+            if ' - ' in address:
+                two_part_address = address.index(' - ')
+                address = address[two_part_address:]
+
+            number_letter = re.findall(' \d[A-Za-z],', address)
+            letter_number = re.findall(' [A-Za-z]\d,', address)
             letter = re.findall(' [A-Za-z],', address)
             number = re.findall('[# ]\d{1,2},', address)
             unit = ""
 
-            if len(mix) > 0:
-                unit = mix[0]
+            if len(number_letter) > 0:
+                unit = number_letter[0]
+                address = address.replace(unit, ',')
+                unit = unit.replace(' ', '').replace(',', '')
+            elif len(letter_number) > 0:
+                unit = letter_number[0]
                 address = address.replace(unit, ',')
                 unit = unit.replace(' ', '').replace(',', '')
             elif len(letter) > 0:
@@ -43,17 +53,24 @@ class AppfolioScraper():
                     unit = letter[1]
                 else:
                     unit = letter[0]
-                address = address.replace(unit, 'n')
+                address = address.replace('  ', ' ')
+                address = address.replace(unit, ',')
                 unit = unit.replace(' ', '').replace(',', '')
             elif len(number) > 0:
                 if len(number) >= 2:
                     unit = number[1]
                 else:
                     unit = number[0]
-                address = address.replace(unit, '')
+                address = address.replace('  ', ' ')
+                address = address.replace(unit, ',')
                 unit = unit.replace(' ', '').replace(',', '').replace('#', '')
 
             address = address.replace('Apt.', '')
+            address = address.replace('Apartment', '')
+            address = address.replace('Unit', '')
+            address = address.replace(',,', ',')
+            address = address.replace(' , ', ', ')
+            address = address.replace(' - ', '')
 
             bed_and_bath = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
             if bed_and_bath is None:
@@ -107,7 +124,7 @@ class NorthsteppeScraper(Scraper):
         AppfolioScraper.process_listings(NorthsteppeScraper.url, cls.__name__, callback)
 
 class VeniceScraper(Scraper):
-    url = "https://veniceprops.appfolio.com/listings/listings"
+    url = "https://veniceprops.appfolio.com/listings"
 
     @classmethod
     def process_listings(cls, callback):
