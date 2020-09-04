@@ -68,6 +68,19 @@
         </div>
 
         <div>
+          <label class="uk-form-label">Campus Area</label>
+          <div class="uk-form-controls">
+            <select class="uk-select" v-model="filters.campus_area">
+              <option
+                v-for="option in campus_area_options"
+                :key="option.code"
+                :value="option.code"
+              >{{ option.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
             <select class="uk-select" v-model="filters.sortBy">
@@ -335,6 +348,11 @@ Vue.use(LoaderPlugin, {
   client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
 });
 
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
+
+Vue.component('v-select', vSelect)
+
 export default {
   name: "ViewListings",
   components: {
@@ -355,7 +373,8 @@ export default {
       pageCount: 1,
       showMobileFilters: false,
       likedListings: [],
-      resultCount: 0
+      resultCount: 0,
+      campus_area_options: []
     };
   },
   mounted: function() {
@@ -373,6 +392,7 @@ export default {
     });
 
     this.setSortOptions();
+    this.setAreaOptions();
     this.updateFiltersFromQueryString(this.$route.query);
     this.setOriginalFilters();
     this.updateListingsToMatchFilters();
@@ -407,6 +427,19 @@ export default {
         }
       );
     },
+    setAreaOptions: function() {
+      axios({
+        method: "GET",
+        url: process.env.VUE_APP_API_URL + "/areaOptions"
+      }).then(
+        result => {
+          this.campus_area_options = result.data;
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    },
     updateFiltersFromQueryString: function(query) {
       var filters = {
         bedrooms: "",
@@ -415,6 +448,7 @@ export default {
         maxPrice: "",
         minDistance: "",
         maxDistance: "",
+        campus_area: "",
         sortBy: "1"
       };
 
@@ -444,6 +478,7 @@ export default {
           maxPrice: this.filters.maxPrice,
           minDistance: this.filters.minDistance,
           maxDistance: this.filters.maxDistance,
+          campus_area: this.filters.campus_area,
           order: this.filters.sortBy,
           showOnlyLiked: this.showOnlyLiked
         }

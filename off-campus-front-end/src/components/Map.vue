@@ -94,6 +94,7 @@ export default {
                 minDistance: this.filters.minDistance,
                 maxDistance: this.filters.maxDistance,
                 showNoPrice: this.filters.showWithoutPrice,
+                campus_area: this.filters.campus_area,
                 order: this.filters.sortBy,
                 showOnlyLiked: this.showOnlyLiked
                 }
