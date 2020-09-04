@@ -56,7 +56,7 @@
 @import "@/scss/_variables.scss";
 
 $card-section-margin: 0;
-$listing-image-map-height: 200px;
+$listing-image-map-height: 150px;
 
 #like-button {
   position: absolute;

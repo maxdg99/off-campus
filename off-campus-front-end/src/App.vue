@@ -25,8 +25,8 @@
             uk-toggle="target: #mobile-sidebar"
             uk-navbar-toggle-icon
           ></a>
-          <GoogleLogin v-show="!$root.isSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
-          <button v-on:click="logOut()" v-show="$root.isSignedIn" class="uk-button uk-button-danger">Sign Out</button>
+          <GoogleLogin class="uk-visible@s" v-show="!$root.isSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+          <button class="uk-button uk-button-danger uk-visible@s" v-on:click="logOut()" v-show="$root.isSignedIn">Sign Out</button>
         </div>
       </div>
     </nav>
@@ -47,8 +47,8 @@
             <router-link to="/about" uk-toggle="target: #mobile-sidebar">About Us</router-link>
           </li>
           <li>
-            <!-- TODO: implement login with Google
-            <a>Sign In</a> -->
+            <GoogleLogin class="mobile-button" v-show="!$root.isSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+            <button v-on:click="logOut()" v-show="$root.isSignedIn" class="uk-button uk-button-danger mobile-button">Sign Out</button>
           </li>
         </ul>
       </div>
@@ -75,6 +75,24 @@ $button-primary-background: $primary-color;
   font-weight: 600;
 }
 
+.mobile-button {
+  margin: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  /* 
+    Don't worry about this, the google sign in component is weird. 
+    This is needed to center the button.
+  */
+  & > div {
+    margin: 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 nav {
   border-bottom: $primary-color 0.125rem solid;
 }
@@ -88,11 +106,7 @@ body {
   display: grid;
   grid-template-rows: auto 1fr auto;
 }
-.google-sign-in-parent {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 footer {
   grid-row-start: 3;
   grid-row-end: 4;

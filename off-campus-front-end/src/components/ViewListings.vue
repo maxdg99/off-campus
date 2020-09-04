@@ -85,7 +85,7 @@
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
-          >Search</button>
+          >Search - {{this.resultCount}} RESULTS</button>
         </div>
       </form>
 
@@ -108,7 +108,7 @@
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
-          >Search</button>
+          >Search - {{this.resultCount}}</button>
         </div>
 
         <div v-show="showMobileFilters" class="beds-and-baths">
@@ -188,7 +188,6 @@
     <div id="map-and-listings-container">
       <Map ref="map" :showOnlyLiked="showOnlyLiked" :likedListings="likedListings" v-on:update-isLiked="getLikedListings()"/>
       <div id="listings">
-        <h4>{{this.resultCount}} Results</h4>
         <div id="listings-grid">
           <Listing
             v-for="listing in searchResults"
@@ -273,12 +272,6 @@
   margin-top: 24px;
 }
 
-.result-count {
-  margin-left: 20px;
-  font-weight: 600;
-  font-size: 1.125em;
-}
-
 #map-and-listings-container {
   margin: 0 auto;
   max-width: 1600px;
@@ -325,7 +318,7 @@
     grid-template-columns: 1fr 1fr;
   }
   @media screen and (min-width: $min-desktop-screen-width) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>
