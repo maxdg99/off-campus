@@ -11,9 +11,11 @@
         <div>
           <div>{{ listing.miles_from_campus }} mi</div>
           <div>&nbsp;|&nbsp;</div>
-          <div>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</div>
+          <div>{{ `${listing.beds} ${listing.beds==1 ? "bd" : "bds"}` }}</div>
           <div>&nbsp;|&nbsp;</div>
-          <div>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</div>
+          <div>{{ listing.baths }} ba</div>
+          <div v-if="listing.unit">&nbsp;|&nbsp;</div>
+          <div v-if="listing.unit">{{ listing.unit }}</div>
         </div>
       </div>
       <div>
@@ -23,7 +25,7 @@
             class="listing-address"
             target="_blank"
           >
-            {{ listing.pretty_address }}
+            {{ listing.address }}
           </a>
           <div
             v-if="listing.availability_mode=='Season'"

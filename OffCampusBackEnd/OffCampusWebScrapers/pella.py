@@ -3,6 +3,7 @@ import re
 import requests
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
+from OffCampusBackEnd.utility import parse_address
 
 class PellaScraper(Scraper):
 
@@ -69,6 +70,12 @@ class PellaScraper(Scraper):
 
                 address = listing_soup.find('h2').getText()
 
+                parsed_address, unknown = parse_address(address)
+
+                print(address)
+                print(parsed_address)
+                print("\n")
+
                 title = listing_soup.find('h1').getText()
                 unit_re = re.findall("#\d|Apt [A-Z]", title)
                 unit = ""
@@ -119,7 +126,7 @@ class PellaScraper(Scraper):
                     avail_mode = "None"
                     is_avail = False
 
-                d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail, "unit": unit}
+                d = {"scraper": cls.__name__, "url": url, "image": image, "address": parse_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail, "unit": unit}
                 print(d)
                 #callback(d)
             

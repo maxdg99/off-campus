@@ -3,6 +3,7 @@ import requests
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
 import re
+from OffCampusBackEnd.utility import parse_address
 
 class OSUPropertiesScraper(Scraper):
 
@@ -73,6 +74,11 @@ class OSUPropertiesScraper(Scraper):
             beds = urlAddOns.index(prop['beds']) + 1
             
             address = f'{prop["address"]} {prop["city"]}, {prop["state"]} {prop["zip_code"]}'
+            parsed_address, unknown = parse_address(address)
+
+            print(address)
+            print(parsed_address)
+            print("\n")
             
             price = prop['price']
             if "-" in price:
@@ -114,6 +120,6 @@ class OSUPropertiesScraper(Scraper):
                     avail_date = datetime.datetime.strptime(match[0], "%B %d, %Y").date()
                     avail_mode = "Date"
         
-                d = {"scraper": cls.__name__, "url": baseURL + urlAddOns[beds-1], "image": baseImage + image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
+                d = {"scraper": cls.__name__, "url": baseURL + urlAddOns[beds-1], "image": baseImage + image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
                 print(d)
                 callback(d)

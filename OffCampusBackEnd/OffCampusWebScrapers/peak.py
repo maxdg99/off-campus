@@ -3,7 +3,7 @@ import requests
 import re
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
-
+from OffCampusBackEnd.utility import parse_address
 
 class PeakScraper(Scraper):
     @classmethod
@@ -38,6 +38,8 @@ class PeakScraper(Scraper):
                         single_address = address.replace(range_street_number[0], '')
                         single_address = f'{street_number} {single_address} Columbus, OH'
                         print(single_address)
+
+                        parsed_address, unknown = parse_address(single_address)
 
                         price = u.find('td', {'class': 'rent'}).text
                         price = price.replace('$', '')
@@ -76,7 +78,7 @@ class PeakScraper(Scraper):
                             avail_mode = 'None'
                             isAvailable = False
 
-                        d = {"scraper": cls.__name__, "url": url, "image": image, "address": single_address, "beds": beds, "baths": baths,
+                        d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths,
                             "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True, "unit": unit}
                         print(d)
                         callback(d)

@@ -3,6 +3,7 @@ import requests
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
 import re
+from OffCampusBackEnd.utility import parse_address
 
 class KRGScraper(Scraper):
     @staticmethod
@@ -26,7 +27,7 @@ class KRGScraper(Scraper):
             req = requests.get(url=req_url, headers={"User-Agent": "Mozilla/5.0"})
             html = req.text
             soup = BeautifulSoup(html, 'html.parser')
-            pages = soup.find('div', {'class', 'NavigationPage'}).te
+            pages = soup.find('div', {'class', 'NavigationPage'})
 
             table = soup.find('table')
             listings = table.find_all('td')
@@ -35,6 +36,10 @@ class KRGScraper(Scraper):
                 url = url.replace('rmwebsvc_mode=', 'rmwebsvc_mode=javascript')
                 image = KRGScraper._remove_special_chars(listing.find('img')['src'])
                 address = listing.find('div', {'class': '\\\"address\\\"'}).text.replace('"', '')
+                city_state = listing.find('span', {'class': '\\\"csz\\\"'}).text.replace('"', '')
+                address = address + " " + city_state
+
+                parsed_address, unknown = parse_address(address)
 
                 price = listing.find('div', {'class': '\\\"rent\\\"'}).text
                 price = price.replace('$', '')
@@ -63,6 +68,6 @@ class KRGScraper(Scraper):
                         avail_date = datetime.datetime.strptime(availability, "%M%d%Y").date()
                     avail_mode = 'Date'
 
-                d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
+                d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
                 print(d)
-                #callback(d)
+                callback(d)

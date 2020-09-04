@@ -5,7 +5,7 @@ from OffCampusWebScrapers.scraper import Scraper
 import requests
 import re
 from urllib.parse import urljoin
-from OffCampusBackEnd.utility import format_address
+from OffCampusBackEnd.utility import parse_address
 
 class AppfolioScraper():
 
@@ -28,52 +28,12 @@ class AppfolioScraper():
 
             address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
 
-            if ' - ' in address and className == 'VeniceScraper':
-                two_part_address = address.index(' - ')
-                address = address[two_part_address:]
+            parsed_address, unknown = parse_address(address)
 
-            number_letter = re.findall(' \d{1,3}[ ]?[A-Za-z],', address)
-            letter_number = re.findall(' [A-Za-z]\d', address)
-            letter = re.findall('[# ][A-Za-z][, ]', address)
-            number = re.findall('[# ]\d{1,3},', address)
+            print(address)
+            print(parsed_address)
+            print("\n")
             unit = ""
-
-            if len(number_letter) > 0:
-                unit = number_letter[0]
-                address = address.replace(unit, ',')
-                unit = unit.replace(' ', '').replace(',', '')
-            elif len(letter_number) > 0:
-                unit = letter_number[0]
-                address = address.replace(unit, ',')
-                unit = unit.replace(' ', '').replace(',', '')
-            elif len(letter) > 0:
-                print(letter)
-                if len(letter) >= 2:
-                    unit = letter[1]
-                else:
-                    unit = letter[0]
-                address = address.replace('  ', ' ')
-                if ',' in unit:
-                    address = address.replace(unit, ',')
-                else:
-                    address = address.replace(unit, ' ')
-                unit = unit.replace(' ', '').replace(',', '')
-            elif len(number) > 0:
-                if len(number) >= 2:
-                    unit = number[1]
-                else:
-                    unit = number[0]
-                address = address.replace('  ', ' ')
-                address = address.replace(unit, ',')
-                unit = unit.replace(' ', '').replace(',', '').replace('#', '')
-
-            address = address.replace('Apt.', '')
-            address = address.replace('Apartment', '')
-            address = address.replace('Unit', '')
-            address = address.replace(',,', ',')
-            address = address.replace(' , ', ', ')
-            address = address.replace(' -,', ',')
-            address = address.replace(' - ', '')
 
             bed_and_bath = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
             if bed_and_bath is None:
@@ -114,9 +74,9 @@ class AppfolioScraper():
             else:
                 description = ""
 
-            d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True, "unit": unit}
-            print(d)
-            #callback(d)
+            d = {"scraper": className, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True, "unit": unit}
+            #print(d)
+            callback(d)
 
 
 class NorthsteppeScraper(Scraper):
