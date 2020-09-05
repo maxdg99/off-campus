@@ -9,9 +9,9 @@ def compute_averages():
     d = {}
     averages = {}
     for x in Listing.listings.all():
-        if x.num_bathrooms is None or x.num_bedrooms is None or x.price is None:
+        if x.baths is None or x.beds is None or x.price is None:
             continue
-        key = (x.num_bedrooms, x.num_bathrooms)
+        key = (x.beds, x.baths)
         if key in d:
             d[key].append(x)
         else:
