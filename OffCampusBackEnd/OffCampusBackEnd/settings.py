@@ -154,6 +154,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_DISK_LOCATION = '/Users/andrew/Documents/New-Projects/hackohio2019/Apartment-Web-Scraper/OffCampusBackEnd/OffCampusRestApi/static/'
+STATIC_URL = '/static/' # note this is not used for images
 
+if os.getenv('STATIC_BASE'):
+    STATIC_BASE = os.getenv('STATIC_BASE')
+else:
+    STATIC_BASE = 'http://offcampus.us/you/dunce/you/need/to/set/STATIC_BASE/in/.env/and/rescrape'
+
+if os.getenv('STATIC_DISK_LOCATION'):
+    STATIC_DISK_LOCATION = os.getenv('STATIC_DISK_LOCATION')
+else:
+    STATIC_DISK_LOCATION = '/you/dunce/you/need/to/set/STATIC_DISK_LOCATION/in/.env/and/rescrape'

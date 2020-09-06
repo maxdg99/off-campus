@@ -14,8 +14,7 @@ from OffCampusWebScrapers.krg import KRGScraper
 from OffCampusBackEnd.utility import getLatLong, distance, standardize_address
 import os, sys
 from PIL import Image
-from OffCampusBackEnd.settings import STATIC_DISK_LOCATION, STATIC_URL
-
+from OffCampusBackEnd.settings import STATIC_BASE, STATIC_DISK_LOCATION
 options = [cls for cls in Scraper.__subclasses__()]
 
 print("Available classnames: "+str(options))
@@ -62,7 +61,7 @@ def insert_listing_from_dict(l):
             obj.save()
 
         image_path = os.path.join(STATIC_DISK_LOCATION, f"images/{obj.id}.png")
-        image_url = os.path.join(STATIC_URL, f"images/{obj.id}.png")
+        image_url = os.path.join(STATIC_BASE, f"images/{obj.id}.png")
 
         response = requests.get(obj.image)
         file = open(image_path, "wb")
