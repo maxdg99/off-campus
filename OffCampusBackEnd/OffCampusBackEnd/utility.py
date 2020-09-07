@@ -16,7 +16,6 @@ def parse_address(address):
     address = address.replace('Apartment', ' ')
     address = address.replace('Unit', ' ')
     address = address.replace('(OSU)', ' ')
-    address = address.replace('#', ' ')
 
     tokens = address.split(' ')
     

@@ -15,7 +15,7 @@
           <div>&nbsp;|&nbsp;</div>
           <div>{{ listing.baths }} ba</div>
           <div v-if="listing.unit">&nbsp;|&nbsp;</div>
-          <div v-if="listing.unit">{{ listing.unit }}</div>
+          <div v-if="listing.unit">Unit {{ listing.unit }}</div>
         </div>
       </div>
       <div>
