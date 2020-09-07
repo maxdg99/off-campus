@@ -30,20 +30,37 @@ def getLatLong(address):
     return (None, None)
 
 def distance(lat, lon):
-    clocktower = (40.0049371,-83.012978)
+    keypoint = (40.0016731,-83.0156426) # Currently: 18th Ave Library
     R = 6371e3 # meters
     loc = (lat, lon)
-    clocktowerLatR = clocktower[0] / 180 * math.pi
+    keypointLatR = keypoint[0] / 180 * math.pi
     locLatR = lat / 180 * math.pi
 
-    deltaLat = (clocktower[0] - loc[0]) / 180 * math.pi
-    deltaLon = (clocktower[1] - loc[1]) / 180 * math.pi
+    deltaLat = (keypoint[0] - loc[0]) / 180 * math.pi
+    deltaLon = (keypoint[1] - loc[1]) / 180 * math.pi
 
-    a = math.sin(deltaLat / 2) * math.sin(deltaLat / 2) + math.cos(locLatR) * math.cos(clocktowerLatR) * math.sin(deltaLon / 2) * math.sin(deltaLon / 2)
+    a = math.sin(deltaLat / 2) * math.sin(deltaLat / 2) + math.cos(locLatR) * math.cos(keypointLatR) * math.sin(deltaLon / 2) * math.sin(deltaLon / 2)
 
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     d = R * c
     return d * 0.000621371 # miles
+
+def get_region(lat, lon):
+    thompsonLibraryLatitude = 39.99925
+    laneAndHighLongitude = -83.00936
+    kingAndCanonLongitude = -83.02211
+
+    if lat > thompsonLibraryLatitude:
+        result = 'north'
+    else:
+        result = 'south'
+
+    if lon < kingAndCanonLongitude:
+        result += 'west'
+    elif lon > laneAndHighLongitude:
+        result += 'east'
+    
+    return result
 
 def format_address(address):
     replacements = {

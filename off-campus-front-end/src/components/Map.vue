@@ -94,6 +94,7 @@ export default {
                 minDistance: this.filters.minDistance,
                 maxDistance: this.filters.maxDistance,
                 showNoPrice: this.filters.showWithoutPrice,
+                campus_area: this.filters.campus_area,
                 order: this.filters.sortBy,
                 showOnlyLiked: this.showOnlyLiked
                 }
@@ -129,8 +130,8 @@ export default {
                     this.features.push(iconFeature)
                     this.featureForListingID[listing.pk] = iconFeature
                 }
-                this.vectorSource.refresh()
             }
+            this.vectorSource.refresh()
         },
         makeBigMap: function () {
             //var instances = M.Tooltip.init(document.getElementById("popup"), {});

@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 
 class Listing(models.Model):
     AVAILABILITY_MODE = [('S', 'Season'), ('M', 'Month'), ('N', 'Now'), ('-', 'None'), ('D', 'Date')]
+    CAMPUS_AREA = [('west', 'West Campus'), ('south', 'South Campus'), ('east', 'East Campus (Univ. District)'), ('north', 'North Campus')]
+
     url = models.CharField(max_length=1000)
     
     image = models.CharField(max_length=1000)
@@ -32,6 +34,8 @@ class Listing(models.Model):
 
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
+
+    campus_area = models.CharField(max_length=6, choices=CAMPUS_AREA)
     
     miles_from_campus = models.FloatField(null=True)
     

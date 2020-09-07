@@ -9,14 +9,14 @@ from django.views.decorators.csrf import csrf_exempt
 from OffCampusRestApi.models import Listing
 from OffCampusRestApi.models import GoogleUser
 from OffCampusRestApi.compute_averages import compute_averages
-from apiclient import discovery
-import httplib2
-from oauth2client import client
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import json
 
 orderOptions = [{'id': '1', 'text': 'Price Increasing'}, {'id': '2', 'text': 'Price Decreasing'}, {'id': '3', 'text': 'Distance Increasing'}, {'id': '4', 'text': 'Distance Decreasing'}]
+areaOptions = [{'name': "Any", 'code': ""}, {'name': "North", 'code': "north"}, {'name': "South", 'code': "south"}, {'name': "Northwest", 'code': "northwest"}, {'name': "Northeast", 'code': "northeast"}, {'name': "Southwest", 'code': "southwest"}, {'name': "Southeast", 'code': "southeast"}]
+areaOptionsKeys = list(map(lambda x: x['code'], areaOptions))
+areaOptionsKeys.remove('')
 orderQueries = {'1': 'price', '2': '-price', '3': 'miles_from_campus', '4': '-miles_from_campus'}
 
 averages = None
@@ -150,6 +150,11 @@ def getOrderOptions(request):
     __allowCors(response)
     return response
 
+def getAreaOptions(request):
+    response = JsonResponse(areaOptions, safe=False)
+    __allowCors(response)
+    return response
+
 def __google_sign_in(request):
     token = request.POST.get('id_token')
     user_id = None
@@ -212,6 +217,9 @@ def __getFilteredListings(request):
         listingsFilter = listingsFilter & Q(miles_from_campus__gte=queryParams["minDistance"])
     if "maxDistance" in queryParams and queryParams["maxDistance"].isnumeric():
         listingsFilter = listingsFilter & Q(miles_from_campus__lte=queryParams["maxDistance"])
+
+    if "campus_area" in queryParams and queryParams["campus_area"] in areaOptionsKeys:
+        listingsFilter = listingsFilter & Q(campus_area=queryParams["campus_area"])
 
     listings = Listing.listings.all()
 
