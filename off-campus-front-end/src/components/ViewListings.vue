@@ -348,11 +348,6 @@ Vue.use(LoaderPlugin, {
   client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
 });
 
-import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css';
-
-Vue.component('v-select', vSelect)
-
 export default {
   name: "ViewListings",
   components: {
