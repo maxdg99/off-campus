@@ -4,6 +4,15 @@ import json
 import re
 import math
 
+STREET_RANGE = 'street_range'
+STREET_NUMBER = 'street_number'
+UNIT = 'unit'
+STREET_NAME = 'street_name'
+STREET_PREFIX = 'street_prefix'
+STREET_TYPE = 'street_type'
+CITY = 'city'
+STATE = 'state'
+
 def parse_address(address):  
     result = {}
     unknown = []
@@ -31,9 +40,9 @@ def handle_token(token, tokens, unknown, result):
 
     # Looks for a range denoted like 10-20.
     range = re.findall('\d+[-]\d+', token)
-    if len(range) > 0 and 'street_range' not in result:
+    if len(range) > 0 and STREET_RANGE not in result:
         addresses = re.findall('\d+', token)
-        result['street_range'] = [addresses[0], addresses[1]]
+        result[STREET_RANGE] = [addresses[0], addresses[1]]
         return
 
     # Prepare a regular expression to look for street names with numbers in the name.
@@ -44,38 +53,38 @@ def handle_token(token, tokens, unknown, result):
         number_token = int(token)
 
         # Trying to find a zipcode.
-        if len(token) == 5 and ('street_number' in result or 'street_range' in result):
+        if len(token) == 5 and (STREET_NUMBER in result or STREET_RANGE in result):
             result['zipcode'] = token
             return
 
         # Looks for a range in the format 20 - 30.
-        if len(tokens) >= 2 and tokens[0] == '-' and tokens[1].isdigit() and 'street_range' not in result:
+        if len(tokens) >= 2 and tokens[0] == '-' and tokens[1].isdigit() and STREET_RANGE not in result:
             upper_address = int(tokens[1])
-            result['street_range'] = [number_token, upper_address]
+            result[STREET_RANGE] = [number_token, upper_address]
             tokens = tokens[2:]
             return
 
         # So we know we found the zip and range, so this can only be street number or unit.
         # Need to make sure that the street number is in the range provided otherwise it ain't it.
         # If it ain't a street number or unit, then we throw it in the wtf pile.
-        if 'street_number' not in result:
-            if 'street_range' not in result:
-                result['street_number'] = token
-                remove_duplicates('street_number', result, tokens)
-            elif 'street_range' in result and int(result['street_range'][0]) <= number_token and number_token <= int(result['street_range'][1]):
-                result['street_number'] = token
-                remove_duplicates('street_number', result, tokens)
-            elif 'unit' not in result:
-                result['unit'] = token
-                remove_duplicates('unit', result, tokens)
+        if STREET_NUMBER not in result:
+            if STREET_RANGE not in result:
+                result[STREET_NUMBER] = token
+                remove_duplicates(STREET_NUMBER, result, tokens)
+            elif STREET_RANGE in result and int(result[STREET_RANGE][0]) <= number_token and number_token <= int(result[STREET_RANGE][1]):
+                result[STREET_NUMBER] = token
+                remove_duplicates(STREET_NUMBER, result, tokens)
+            elif UNIT not in result:
+                result[UNIT] = token
+                remove_duplicates(UNIT, result, tokens)
             else:
                 unknown.append(token)
             return
         
         # It is possible that we get to this point, whatever string is left we chuck in the unit
-        if 'unit' not in result:
-            result['unit'] = token
-            remove_duplicates('unit', result, tokens)
+        if UNIT not in result:
+            result[UNIT] = token
+            remove_duplicates(UNIT, result, tokens)
 
     elif token.isalpha():
 
@@ -83,67 +92,67 @@ def handle_token(token, tokens, unknown, result):
         street_types = ["avenue", "street", "road", "boulevard", "drive", "circle", "ave", "st", "rd", "blvd", "dr", "cir"]
 
         # Check if the string is a road direction
-        if token.lower() in street_prefixes and 'street_name' not in result:
-            result["street_prefix"] = token
-            remove_duplicates('street_prefix', result, tokens)
+        if token.lower() in street_prefixes and STREET_NAME not in result:
+            result[STREET_PREFIX] = token
+            remove_duplicates(STREET_PREFIX, result, tokens)
             return
 
         # Check if the string is a road type
         if token.lower() in street_types:
-            result["street_type"] = token
-            remove_duplicates('street_type', result, tokens)
+            result[STREET_TYPE] = token
+            remove_duplicates(STREET_TYPE, result, tokens)
             return
 
         # Check if the string is a state or city.  This is pretty arbitrary for right now, but seems to work.
         if token.lower() in ["oh", "ohio"]:
 
-            result['state'] = token
+            result[STATE] = token
             return
 
-        elif len(token) > 3 and 'street_name' in result:
+        elif len(token) > 3 and STREET_NAME in result:
 
-            result['city'] = token
+            result[CITY] = token
             return
 
         # Here we are going through the different combinations of a unit and street name being set.
         # I make the assumption that a street name must be long than two characters, which I think it a good assumption.
         # If the token is less than equal to two characters, we say that it is a unit
         # If we get to the end, we throw the token in the wtf pile.
-        if 'street_name' not in result and 'unit' not in result and len(token) > 2:
+        if STREET_NAME not in result and UNIT not in result and len(token) > 2:
 
-            result['street_name'] = token
-            remove_duplicates('street_name', result, tokens)
+            result[STREET_NAME] = token
+            remove_duplicates(STREET_NAME, result, tokens)
 
-        elif 'street_name' not in result and 'unit' not in result and len(token) <= 2:
+        elif STREET_NAME not in result and UNIT not in result and len(token) <= 2:
 
-            result['unit'] = token
-            remove_duplicates('unit', result, tokens)
+            result[UNIT] = token
+            remove_duplicates(UNIT, result, tokens)
 
-        elif 'street_name' in result and 'unit' not in result:
+        elif STREET_NAME in result and UNIT not in result:
 
-            result['unit'] = token
-            remove_duplicates('unit', result, tokens)
+            result[UNIT] = token
+            remove_duplicates(UNIT, result, tokens)
 
-        elif 'street_name' not in result and 'unit' in result:
+        elif STREET_NAME not in result and UNIT in result:
 
-            result['street_name'] = token
-            remove_duplicates('street_name', result, tokens)
+            result[STREET_NAME] = token
+            remove_duplicates(STREET_NAME, result, tokens)
 
         else:
 
             unknown.append(token)
 
     # Check to see if our numbered street regex found a numbers street
-    elif len(numbered_street) > 0 and 'street_name' not in result:
+    elif len(numbered_street) > 0 and STREET_NAME not in result:
 
-        result['street_name'] = token
-        remove_duplicates('street_name', result, tokens)
+        result[STREET_NAME] = token
+        remove_duplicates(STREET_NAME, result, tokens)
 
     # Again, here we just throw the junk in the unit
-    elif 'unit' not in result and token.isalnum():
+    elif UNIT not in result and token.isalnum():
 
-        result['unit'] = token
-        remove_duplicates('unit', result, tokens)
+        result[UNIT] = token
+        remove_duplicates(UNIT, result, tokens)
 
     # Lastly, we throw everything else int the wtf pile.
     else:
@@ -153,12 +162,12 @@ def handle_token(token, tokens, unknown, result):
     # Now we take a look at the unknowns to see if we can find a better representation of the unit.
     for token in unknown:
         if token.isalnum():
-            if 'unit' in result and len(result['unit']) < len(token):
-                unknown.append(result['unit'])
-                result['unit'] = token
+            if UNIT in result and len(result[UNIT]) < len(token):
+                unknown.append(result[UNIT])
+                result[UNIT] = token
                 unknown.remove(token)
             else:
-                result['unit'] = token
+                result[UNIT] = token
                 unknown.remove(token)
 
 def remove_duplicates(key, result, tokens):
@@ -182,53 +191,53 @@ def standardize_address(address):
         "circle": "cir"
     }
 
-    if 'street_number' not in address and 'street_range' not in address and 'unit' in address:
-        address['street_number'] = address['unit']
-        address.pop('unit')
+    if STREET_NUMBER not in address and STREET_RANGE not in address and UNIT in address:
+        address[STREET_NUMBER] = address[UNIT]
+        address.pop(UNIT)
 
-    if ('street_prefix' in address) and  (address['street_prefix'].lower() in street_prefixes):
-        address['street_prefix'] = street_prefixes[address['street_prefix'].lower()].lower().capitalize()
-    elif 'street_prefix' in address:
-        address['street_prefix'] = address['street_prefix'].lower().capitalize()
+    if (STREET_PREFIX in address) and  (address[STREET_PREFIX].lower() in street_prefixes):
+        address[STREET_PREFIX] = street_prefixes[address[STREET_PREFIX].lower()].lower().capitalize()
+    elif STREET_PREFIX in address:
+        address[STREET_PREFIX] = address[STREET_PREFIX].lower().capitalize()
 
-    address['street_name'] = address['street_name'].lower().capitalize()
+    address[STREET_NAME] = address[STREET_NAME].lower().capitalize()
 
-    if 'street_type' in address and address['street_type'].lower() in street_types:
-            address['street_type'] = street_types[address['street_type'].lower()].lower().capitalize()
-    elif 'street_type' in address:
-        address['street_type'] = address['street_type'].lower().capitalize()
+    if STREET_TYPE in address and address[STREET_TYPE].lower() in street_types:
+            address[STREET_TYPE] = street_types[address[STREET_TYPE].lower()].lower().capitalize()
+    elif STREET_TYPE in address:
+        address[STREET_TYPE] = address[STREET_TYPE].lower().capitalize()
 
-    if 'city' in address:
-        address['city'] = address['city'].lower().capitalize()
+    if CITY in address:
+        address[CITY] = address[CITY].lower().capitalize()
 
-    if 'state' in address:
-        if address['state'] == "OHIO":
-            address['state'] = "OH"
-        address['state'] = address['state'].upper()
+    if STATE in address:
+        if address[STATE] == "OHIO":
+            address[STATE] = "OH"
+        address[STATE] = address[STATE].upper()
 
-    if 'unit' in address:
-        address['unit'] = address['unit'].upper()
+    if UNIT in address:
+        address[UNIT] = address[UNIT].upper()
 
     string_address = ""
 
-    if 'street_range' in address and 'street_number' not in address:
-        string_address = string_address + f'{address["street_range"][0]} - {address["street_range"][1]}'
-    elif 'street_number' in address:
-        string_address = string_address + address['street_number']
+    if STREET_RANGE in address and STREET_NUMBER not in address:
+        string_address = string_address + f'{address[STREET_RANGE][0]} - {address[STREET_RANGE][1]}'
+    elif STREET_NUMBER in address:
+        string_address = string_address + address[STREET_NUMBER]
 
-    if 'street_prefix' in address:
-        string_address = string_address + f' {address["street_prefix"]}'
+    if STREET_PREFIX in address:
+        string_address = string_address + f' {address[STREET_PREFIX]}'
 
-    string_address = string_address + f' {address["street_name"]}'
+    string_address = string_address + f' {address[STREET_NAME]}'
 
-    if 'street_type' in address:
-        string_address = string_address + f' {address["street_type"]}'
+    if STREET_TYPE in address:
+        string_address = string_address + f' {address[STREET_TYPE]}'
 
-    if 'city' in address:
-        string_address = string_address + f', {address["city"]}'
+    if CITY in address:
+        string_address = string_address + f', {address[CITY]}'
 
-    if 'state' in address:
-        string_address = string_address + f' {address["state"]}'
+    if STATE in address:
+        string_address = string_address + f' {address[STATE]}'
 
     print("\n")
     print("STRING ADDRESS: " +  string_address)
