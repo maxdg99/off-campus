@@ -12,7 +12,9 @@ from OffCampusWebScrapers.peak import PeakScraper
 from OffCampusWebScrapers.osu_properties import OSUPropertiesScraper
 from OffCampusWebScrapers.krg import KRGScraper
 from OffCampusBackEnd.utility import getLatLong, distance, standardize_address
-
+import os, sys
+from PIL import Image
+from OffCampusBackEnd.settings import STATIC_BASE, STATIC_DISK_LOCATION
 options = [cls for cls in Scraper.__subclasses__()]
 
 print("Available classnames: "+str(options))
@@ -58,6 +60,29 @@ def insert_listing_from_dict(l):
         if l["price"] != None and int(l["price"]) > 0:
             obj.save()
 
+        image_path = os.path.join(STATIC_DISK_LOCATION, f"images/{obj.id}.png")
+        image_url = os.path.join(STATIC_BASE, f"images/{obj.id}.png")
+
+        response = requests.get(obj.image)
+        file = open(image_path, "wb")
+        file.write(response.content)
+
+        # Get the size in MB of the file without resizing
+        file_size = os.stat(image_path).st_size / 1000000
+
+        file.close()
+
+        # If the file is bigger than 1 MB, we should resize it and store it.
+        if file_size > 1:
+            obj.image = image_url
+            obj.save()
+
+            image = Image.open(image_path)
+            image.thumbnail((300, 300))
+            image.save(image_path)
+        else:
+            os.remove(image_path)
+
     except Listing.MultipleObjectsReturned:
         print("multiple returned for: "+l["address"])
 
@@ -73,4 +98,4 @@ def scrape(classnames=None):
         Listing.listings.filter(scraper__in=classnames).update(active=False)
     for o in classes:
         o.process_listings(insert_listing_from_dict)
-    
+
