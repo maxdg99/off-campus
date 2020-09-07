@@ -13,6 +13,7 @@ def parse_address(address):
     address = address.replace('.', ' ')
     address = address.replace('#', ' ')
     address = address.replace('Apt', ' ')
+    address = address.replace('APT', ' ')
     address = address.replace('Apartment', ' ')
     address = address.replace('Unit', ' ')
     address = address.replace('(OSU)', ' ')

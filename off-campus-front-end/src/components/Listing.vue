@@ -1,7 +1,7 @@
 <template>
   <div class="uk-card uk-card-small uk-card-default uk-card-hover">
     <div class="uk-card-media-top">
-      <img v-bind:src="listing.image" v-show="!showMap" uk-img />
+      <img v-bind:src="listing.image" v-show="!showMap" uk-img alt="Image Unavailable" onerror="this.src='https://pixy.org/download/22490/'"/>
       <div v-show="showMap" ref="smolMap" />
     </div>
     <div class="uk-card-body">
