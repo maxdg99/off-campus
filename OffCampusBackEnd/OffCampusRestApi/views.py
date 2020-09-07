@@ -14,7 +14,9 @@ from google.auth.transport import requests
 import json
 
 orderOptions = [{'id': '1', 'text': 'Price Increasing'}, {'id': '2', 'text': 'Price Decreasing'}, {'id': '3', 'text': 'Distance Increasing'}, {'id': '4', 'text': 'Distance Decreasing'}]
-areaOptions = [{'name': "Any", 'code': ""}, {'name': "North", 'code': "north"}, {'name': "South", 'code': "south"}, {'name': "West", 'code': "west"}, {'name': "East", 'code': "east"}]
+areaOptions = [{'name': "Any", 'code': ""}, {'name': "North", 'code': "north"}, {'name': "South", 'code': "south"}, {'name': "Northwest", 'code': "northwest"}, {'name': "Northeast", 'code': "northeast"}, {'name': "Southwest", 'code': "southwest"}, {'name': "Southeast", 'code': "southeast"}]
+areaOptionsKeys = list(map(lambda x: x['code'], areaOptions))
+areaOptionsKeys.remove('')
 orderQueries = {'1': 'price', '2': '-price', '3': 'miles_from_campus', '4': '-miles_from_campus'}
 
 averages = None
@@ -216,7 +218,7 @@ def __getFilteredListings(request):
     if "maxDistance" in queryParams and queryParams["maxDistance"].isnumeric():
         listingsFilter = listingsFilter & Q(miles_from_campus__lte=queryParams["maxDistance"])
 
-    if "campus_area" in queryParams and queryParams["campus_area"] in ["north", "south", "east", "west"]:
+    if "campus_area" in queryParams and queryParams["campus_area"] in areaOptionsKeys:
         listingsFilter = listingsFilter & Q(campus_area=queryParams["campus_area"])
 
     listings = Listing.listings.all()

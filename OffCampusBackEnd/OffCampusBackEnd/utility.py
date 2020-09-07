@@ -46,19 +46,21 @@ def distance(lat, lon):
     return d * 0.000621371 # miles
 
 def get_region(lat, lon):
-    westBound = -83.025 # 1. Anyone West of this is considered West Campus
-    southBound = 39.995 # 2. Anyone South of this is considered South Campus
-    northBound = 40.006 # 3. Anyone North of this is considered North Campus
-    eastBound = -83.009 # 4. Anyone East of this is considered 'East Campus' (University District)
+    thompsonLibraryLatitude = 39.99925
+    laneAndHighLongitude = -83.00936
+    kingAndCanonLongitude = -83.02211
 
-    if lon < westBound:
-        return 'west'
-    elif lat < southBound:
-        return 'south'
-    elif lat > northBound:
-        return 'north'
+    if lat > thompsonLibraryLatitude:
+        result = 'north'
     else:
-        return 'east'
+        result = 'south'
+
+    if lon < kingAndCanonLongitude:
+        result += 'west'
+    elif lon > laneAndHighLongitude:
+        result += 'east'
+    
+    return result
 
 def format_address(address):
     replacements = {

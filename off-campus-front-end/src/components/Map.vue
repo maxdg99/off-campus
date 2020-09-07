@@ -130,8 +130,8 @@ export default {
                     this.features.push(iconFeature)
                     this.featureForListingID[listing.pk] = iconFeature
                 }
-                this.vectorSource.refresh()
             }
+            this.vectorSource.refresh()
         },
         makeBigMap: function () {
             //var instances = M.Tooltip.init(document.getElementById("popup"), {});
