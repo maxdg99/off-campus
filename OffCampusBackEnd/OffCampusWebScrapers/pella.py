@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
+import re
 import requests
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
+from OffCampusBackEnd.utility import parse_address
 
 class PellaScraper(Scraper):
 
@@ -12,6 +14,10 @@ class PellaScraper(Scraper):
         date = date.replace('th', '')
         date = date.replace(',', '')
         return date
+
+    def __clean_month(month):
+        month = re.sub("Sept$", "September", month)
+        return month
 
     @classmethod
     def process_listings(cls, callback):
@@ -41,13 +47,6 @@ class PellaScraper(Scraper):
 
                 image = prop.find('img')["src"]
 
-                address = prop.find('h2').getText()
-                # if address.find("St") >= 0:
-                #     address = address[:address.find("St")]
-                # if address.find("Ave") >= 0:
-                #     address = address[:address.find("Ave")]
-                address = address + " Columbus Ohio 43210"
-
                 for child in prop.find("div", {'class': 'hover-details'}).findChildren("div", recursive=False):
                     if "$" in child.text:
                         price = child.text[1:child.text.find(".")]
@@ -58,6 +57,8 @@ class PellaScraper(Scraper):
                     beds = 1
                 elif "House" in beds:
                     beds = None # What should we do with this?
+                elif "Commercial" in beds:
+                    beds = None
                 else:
                     beds = beds[:beds.find(" ")]
                     beds = beds.replace('+', '')
@@ -66,6 +67,23 @@ class PellaScraper(Scraper):
                 listing_req = requests.get(url=url)
                 listing_html = listing_req.text
                 listing_soup = BeautifulSoup(listing_html, 'html.parser')
+
+                address = listing_soup.find('h2').getText()
+
+                parsed_address, unknown = parse_address(address)
+
+                print(address)
+                print(parsed_address)
+                print("\n")
+
+                title = listing_soup.find('h1').getText()
+                unit_re = re.findall("#\d|Apt [A-Z]", title)
+                unit = ""
+                if len(unit_re) > 0:
+                    unit = unit_re[0]
+                    address = address.replace(unit, "")
+                    unit = unit.strip()
+                address = address.strip()
 
                 baths = listing_soup.find("div", {'class': 'field field-name-field-baths field-type-taxonomy-term-reference field-label-hidden'})
                 baths = baths.find("div", {'class': 'field-item even'}).getText()
@@ -85,16 +103,17 @@ class PellaScraper(Scraper):
                     avail_date = avail_date.split(' ')
                     if '' in avail_date:
                         avail_date.remove('')
+                    if 'Mid' in avail_date:
+                        avail_date.remove('Mid')
                     print(avail_date)
                     if len(avail_date) == 4:
-                        avail_date[2] = (avail_date[2])[:-3]
                         print(avail_date)
-                        avail_date = avail_date[1] + '/' + PellaScraper.__clean_date(avail_date[2]) + '/' + avail_date[3]
+                        avail_date = PellaScraper.__clean_month(avail_date[1]) + '/' + PellaScraper.__clean_date(avail_date[2]) + '/' + avail_date[3]
                         avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
                         avail_mode = "Date"
                         is_avail = True
                     elif len(avail_date) == 3: 
-                        avail_date = avail_date[1] + '/1/' + avail_date[2]
+                        avail_date = PellaScraper.__clean_month(avail_date[1]) + '/1/' + avail_date[2]
                         avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
                         avail_mode = "Month"
                         is_avail = True
@@ -107,7 +126,7 @@ class PellaScraper(Scraper):
                     avail_mode = "None"
                     is_avail = False
 
-                d = {"scraper": cls.__name__, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail}
+                d = {"scraper": cls.__name__, "url": url, "image": image, "address": parse_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail, "unit": unit}
                 print(d)
-                callback(d)
+                #callback(d)
             

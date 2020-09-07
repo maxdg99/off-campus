@@ -5,7 +5,7 @@ from OffCampusWebScrapers.scraper import Scraper
 import requests
 import re
 from urllib.parse import urljoin
-from OffCampusBackEnd.utility import format_address
+from OffCampusBackEnd.utility import parse_address
 
 class AppfolioScraper():
 
@@ -26,7 +26,14 @@ class AppfolioScraper():
 
             price = (prop.find('div', {'class':'sidebar__price rent-banner__text js-listing-blurb-rent'})).getText(strip=True)
 
-            address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText(strip=True)
+            address = (prop.find('span', {'class':'u-pad-rm js-listing-address'})).getText()
+
+            parsed_address, unknown = parse_address(address)
+
+            print(address)
+            print(parsed_address)
+            print("\n")
+            unit = ""
 
             bed_and_bath = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
             if bed_and_bath is None:
@@ -67,8 +74,8 @@ class AppfolioScraper():
             else:
                 description = ""
 
-            d = {"scraper": className, "url": url, "image": image, "address": address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True}
-            print(d)
+            d = {"scraper": className, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True, "unit": unit}
+            #print(d)
             callback(d)
 
 
@@ -80,12 +87,11 @@ class NorthsteppeScraper(Scraper):
         AppfolioScraper.process_listings(NorthsteppeScraper.url, cls.__name__, callback)
 
 class VeniceScraper(Scraper):
-    url = "https://veniceprops.appfolio.com/listings/listings"
+    url = "https://veniceprops.appfolio.com/listings"
 
     @classmethod
     def process_listings(cls, callback):
         AppfolioScraper.process_listings(VeniceScraper.url, cls.__name__, callback)
-
 
 class BuckeyeScraper(Scraper):
     url = "https://buckeye.appfolio.com/listings"
@@ -94,7 +100,7 @@ class BuckeyeScraper(Scraper):
     def process_listings(cls, callback):
         AppfolioScraper.process_listings(BuckeyeScraper.url, cls.__name__, callback)
 
-class MyFirstPlaceScraper(Scraper):
+class MyFirstPlaceScraper(Scraper): #bad
     url = "https://my1stplace.appfolio.com/listings"
     
     @classmethod

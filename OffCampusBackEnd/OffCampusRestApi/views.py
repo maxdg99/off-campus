@@ -15,6 +15,7 @@ orderQueries = {'1': 'price', '2': '-price', '3': 'miles_from_campus', '4': '-mi
 averages = None
 
 def getSearchListingsPage(request):
+    global averages
     listingsPage = __getPaginatedListings(request)
     if not averages:
         averages = compute_averages()

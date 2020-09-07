@@ -1,7 +1,7 @@
 <template>
   <div class="uk-card uk-card-small uk-card-default uk-card-hover">
     <div class="uk-card-media-top">
-      <img v-bind:src="listing.image" v-show="!showMap" uk-img />
+      <img v-bind:src="listing.image" v-show="!showMap" uk-img alt="Image Unavailable" onerror="this.src='https://pixy.org/download/22490/'"/>
       <div v-show="showMap" ref="smolMap" />
     </div>
     <div class="uk-card-body">
@@ -11,9 +11,11 @@
         <div>
           <div>{{ listing.miles_from_campus }} mi</div>
           <div>&nbsp;|&nbsp;</div>
-          <div>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</div>
+          <div>{{ `${listing.beds} ${listing.beds==1 ? "bd" : "bds"}` }}</div>
           <div>&nbsp;|&nbsp;</div>
-          <div>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</div>
+          <div>{{ listing.baths }} ba</div>
+          <div v-if="listing.unit">&nbsp;|&nbsp;</div>
+          <div v-if="listing.unit">Unit {{ listing.unit }}</div>
         </div>
       </div>
       <div>
@@ -22,7 +24,9 @@
             v-bind:href="listing.url"
             class="listing-address"
             target="_blank"
-          >{{ listing.pretty_address }}</a>
+          >
+            {{ listing.address }}
+          </a>
           <div
             v-if="listing.availability_mode=='Season'"
           >Available this {{getMonth(listing.availability_date.month)}}</div>

@@ -7,9 +7,15 @@ class Listing(models.Model):
     
     image = models.CharField(max_length=1000)
     
-    pretty_address = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
-
+    street_number = models.CharField(max_length=10, default="")
+    street_range = models.CharField(max_length=15, default="")
+    street_prefix = models.CharField(max_length=10, default="")
+    street_name = models.CharField(max_length=50, default="")
+    street_type = models.CharField(max_length=10, default="")
+    city = models.CharField(max_length=50, default="")
+    state = models.CharField(max_length=5, default="")
+    zipcode = models.CharField(max_length=5, default="")
     unit = models.CharField(max_length=10, default="")
 
     beds = models.PositiveIntegerField(null=True)

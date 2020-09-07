@@ -4,10 +4,8 @@ import re
 from urllib.parse import urljoin
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import AppfolioScraper
-from OffCampusBackEnd.utility import format_address
 
-
-class HometeamAppfolioScraper(Scraper):
+class HometeamAppfolioScraper:
     url = "https://ht.appfolio.com/listings"
 
     @classmethod
@@ -41,10 +39,8 @@ class HometeamScraper(Scraper):
                     else:
                         city = "Columbus"
 
-                    #address = format_address(appfolio_listing["address"])
-
                     d = {"scraper": hometeam_listing["scraper"], "url": hometeam_listing["url"], "image": hometeam_listing["image"], "address": appfolio_listing["address"], "beds": hometeam_listing["beds"],
-                        "baths": hometeam_listing["baths"], "price": appfolio_listing["price"], "availability_date": appfolio_listing["availability_date"], "availability_mode": appfolio_listing["availability_mode"], "active": True}
+                        "baths": hometeam_listing["baths"], "price": appfolio_listing["price"], "availability_date": appfolio_listing["availability_date"], "availability_mode": appfolio_listing["availability_mode"], "active": True, "unit": appfolio_listing["unit"]}
                     
                     if data["unit"]:
                         d["unit"] = data["unit"]
@@ -270,22 +266,21 @@ class HometeamScraper(Scraper):
 
         # Get the address components of each address
         address1_components = HometeamScraper.__get_address_components(address1)
-        address2_components = HometeamScraper.__get_address_components(address2)
 
         # Declare some variables to use as opposed to have to reference the dictionary every time
         address1_lower = address1_components["lower_range"]
         address1_upper = address1_components["upper_range"]
-        address2_lower = address2_components["lower_range"]
-        address2_upper = address2_components["upper_range"]
+        address2_lower = address2["address_range"][0] if "address_range" in address2 else None
+        address2_upper = address2["address_range"][1] if "address_range" in address2 else None
 
         address1_unit = address1_components["unit"]
-        address2_unit = address2_components["unit"]
+        address2_unit = address2["unit"] if "unit" in address2 else None
 
         address1_street_name = address1_components["street_name"]
-        address2_street_name = address2_components["street_name"]
+        address2_street_name = address2["street_name"]
 
         address1_zipcode = address1_components["zipcode"]
-        address2_zipcode = address2_components["zipcode"]
+        address2_zipcode = address2["zipcode"] if "zipcode" in address2 else None
 
         unit = None
 
