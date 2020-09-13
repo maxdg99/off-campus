@@ -226,7 +226,7 @@
             v-for="listing in searchResults"
             :key="listing.pk"
             :id="listing.pk"
-            :listing="listing.fields"
+            :listing="listing"
             @mouseover.native="listingClicked(listing)"
             v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" 
             v-on:update-isLiked="getLikedListings()"

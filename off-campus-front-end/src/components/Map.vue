@@ -6,7 +6,7 @@
             :canFlip=false
             :key="selectedListing.pk"
             :id="selectedListing.pk"
-            :listing="selectedListing.fields"
+            :listing="selectedListing"
             v-bind:isLiked="$root.isSignedIn && likedListings.includes(selectedListing.pk)" 
             v-on:update-isLiked="$emit('update-isLiked', true)"
           />
@@ -117,8 +117,8 @@ export default {
             this.features = []
             this.featureForListingID = {}
             for (let listing of results) {
-                var latitude = listing.fields.latitude
-                var longitude = listing.fields.longitude
+                var latitude = listing.latitude
+                var longitude = listing.longitude
                 if (latitude && longitude) {
                     var iconFeature = new ol.Feature({
                         geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude])),

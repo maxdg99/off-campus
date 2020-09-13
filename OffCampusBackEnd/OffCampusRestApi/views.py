@@ -40,7 +40,6 @@ def getSearchListingsPage(request):
 
 def getPaginatedListings(request):
     queryResult = __getPaginatedListings(request)
-    queryResult["listings"] = json.loads(serializers.serialize('json', queryResult["listings"])) # this is dumb-af but it's what i gotta do
     response = JsonResponse(queryResult)
     __allowCors(response)
     return response
@@ -58,7 +57,7 @@ def __getPaginatedListings(request):
     except EmptyPage:
         listingsPage = paginator.page(paginator.num_pages)
 
-    return {"page_count": paginator.num_pages, "listings": listingsPage, "result_count": len(listings)}
+    return {"page_count": paginator.num_pages, "listings": list(listingsPage), "result_count": len(listings)}
 
 def likeProperty(request):
     data = {}
@@ -110,7 +109,7 @@ def unlikeProperty(request):
 
 def getAllListings(request):
     listings = __getFilteredListings(request)
-    response = HttpResponse(serializers.serialize('json', listings), content_type="application/json")
+    response = JsonResponse(list(listings), safe=False)
     __allowCors(response)
     return response
 
@@ -234,7 +233,7 @@ def __getFilteredListings(request):
     # Parses ordering of listings
     if "order" in queryParams:
         if queryParams["order"] in orderQueries:
-            return listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]])
+            return listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]]).values('address', 'active', 'availability_date', 'availability_mode', 'beds', 'baths', 'campus_area', 'image', 'latitude', 'longitude', 'price', 'url', 'pk')
         else:
             # Default order is miles from campus, increasing
-            return listings.filter(listingsFilter).order_by(orderQueries['3'])
+            return listings.filter(listingsFilter).order_by(orderQueries['3']).values('address', 'active', 'availability_date', 'availability_mode', 'beds', 'baths', 'campus_area', 'image', 'latitude', 'longitude', 'price', 'url', 'pk')
