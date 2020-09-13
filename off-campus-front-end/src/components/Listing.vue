@@ -28,6 +28,7 @@
       <div class="listing-address-container">
         <a
           v-bind:href="listing.url"
+          rel="noreferrer"
           target="_blank"
           class="listing-address"
         >{{ listing.address }}</a>
