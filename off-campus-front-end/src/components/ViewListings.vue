@@ -342,7 +342,7 @@
   }
 
   @media screen and (min-width: $min-desktop-screen-width) {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 2fr 3fr;
   }
 }
 
