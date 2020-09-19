@@ -128,7 +128,7 @@
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
-          >Search - {{this.resultCount}}</button>
+          >Search - {{this.resultCount}}<span id="mobile-results-text"> results</span></button>
         </div>
 
         <div v-show="showMobileFilters" class="beds-and-baths">
@@ -244,7 +244,7 @@
 #desktop-search-filters {
   display: none;
 
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $min-laptop-screen-width) {
     display: flex;
   }
 }
@@ -253,7 +253,7 @@
   margin-top: 0.25rem;
   display: flex;
 
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $min-laptop-screen-width) {
     display: none;
   }
 
@@ -295,16 +295,22 @@
   align-items: center;
 }
 
+#mobile-results-text {
+  @media screen and (max-width: $min-tablet-screen-width - 1) {
+    display: none;
+  }
+}
+
 #map-and-listings-container {
   margin: 0 auto;
   max-width: 100%;
-  @media screen and (max-width: $min-laptop-screen-width - 1) {
+  @media screen and (max-width: $min-tablet-screen-width - 1) {
     padding: 0 15px;
   }
-  @media screen and (min-width: $min-laptop-screen-width) {
+  @media screen and (min-width: $min-tablet-screen-width) {
     padding: 0 30px;
   }
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $min-laptop-screen-width) {
     padding: 0;
   }
 
@@ -312,7 +318,7 @@
     display: none;
   }
 
-  @media screen and (min-width: 960px) {
+  @media screen and (min-width: $min-laptop-screen-width) {
     /* This prevents multiple scrollbars on the desktop listings page */
     height: calc(100vh - 178px);
     display: grid;

@@ -3,7 +3,7 @@
     <div class="uk-card-media-top">
       <img class="listing-image" v-bind:src="listing.image" v-show="!showMap" uk-img alt="Image Unavailable" onerror="this.src='https://pixy.org/download/22490/'"/>
       <div class="listing-map" v-show="showMap" ref="smolMap" />
-      <a @click="isLiked ? unlikeProperty() : likeProperty()"  v-show="this.$root.isSignedIn" id="like-button">
+      <a @click="isLiked ? unlikeProperty() : likeProperty()"  v-show="this.$root.isSignedIn" class="like-button">
         <svg viewBox="0 0 512 512">
           <path v-bind:fill="isLiked ? 'rgb(247, 93, 177)' : 'gray'" d="M376,30c-27.783,0-53.255,8.804-75.707,26.168c-21.525,16.647-35.856,37.85-44.293,53.268
             c-8.437-15.419-22.768-36.621-44.293-53.268C189.255,38.804,163.783,30,136,30C58.468,30,0,93.417,0,177.514
@@ -57,9 +57,8 @@
 @import "@/scss/_variables.scss";
 
 $card-section-margin: 0;
-$listing-image-map-height: 200px;
 
-#like-button {
+.like-button {
   position: absolute;
   top: 0;
   right: 0;
@@ -90,14 +89,17 @@ $listing-image-map-height: 200px;
   color: black;
 }
 
-.listing-image {
-  height: $listing-image-map-height;
-  width: 100%;
-  object-fit: cover;
+
+.listing-image, .listing-map {
+  height: 175px;
+  @media screen and (min-width: $min-tablet-screen-width) {
+    height: 200px;
+  }
 }
 
-.listing-map {
-  height: $listing-image-map-height;
+.listing-image {
+  width: 100%;
+  object-fit: cover;
 }
 
 .listing-price-and-info-container {
@@ -211,7 +213,7 @@ export default {
         });
       }
       else {
-        alert("There is no signed in user. Please sign in with google.")
+        alert("There is no signed in user. Please sign in with Google.")
       }
     },
     getDate(date) {
