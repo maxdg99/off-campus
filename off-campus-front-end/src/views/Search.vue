@@ -4,7 +4,6 @@
 
 <script>
 import ViewListings from "@/components/ViewListings.vue";
-import Vue from 'vue'
 
 export default {
   name: "search",

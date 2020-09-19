@@ -208,19 +208,6 @@
     <div id="map-and-listings-container">
       <Map ref="map" :showOnlyLiked="showOnlyLiked" :likedListings="likedListings" v-on:update-isLiked="getLikedListings()"/>
       <div id="listings">
-        <Paginate
-          v-model="filters.page"
-          :page-count="pageCount"
-          :page-range="3"
-          :margin-pages="1"
-          :click-handler="updateRouteToMatchFilters"
-          :container-class="'uk-pagination uk-flex-center'"
-          :page-class="''"
-          :active-class="'uk-active'"
-          :disabled-class="'uk-disabled'"
-          :prev-text="'<span uk-pagination-previous></span>'"
-          :next-text="'<span uk-pagination-next></span>'"
-        />
         <div id="listings-grid">
           <Listing
             v-for="listing in searchResults"
@@ -310,7 +297,7 @@
 
 #map-and-listings-container {
   margin: 0 auto;
-  max-width: 1600px;
+  max-width: 100%;
   @media screen and (max-width: $min-laptop-screen-width - 1) {
     padding: 0 15px;
   }
@@ -326,7 +313,8 @@
   }
 
   @media screen and (min-width: 960px) {
-    height: calc(100vh - 170px);
+    /* This prevents multiple scrollbars on the desktop listings page */
+    height: calc(100vh - 178px);
     display: grid;
     grid-template-columns: 1fr 2fr;
     column-gap: 1rem;
@@ -351,11 +339,15 @@
   gap: 1rem;
 
   @media screen and (min-width: $min-tablet-screen-width) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
   @media screen and (min-width: $min-desktop-screen-width) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
+}
+
+#footer {
+  margin-top: -1rem;
 }
 </style>
 
@@ -363,6 +355,7 @@
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
 import Map from "@/components/Map.vue";
+import Footer from "@/components/Footer.vue";
 import Paginate from "vuejs-paginate";
 import Vue from 'vue'
 import { LoaderPlugin } from 'vue-google-login';
@@ -376,7 +369,8 @@ export default {
   components: {
     Listing,
     Paginate,
-    Map
+    Map,
+    Footer
   },
   props: {
       showOnlyLiked: String

@@ -57,7 +57,7 @@
 @import "@/scss/_variables.scss";
 
 $card-section-margin: 0;
-$listing-image-map-height: 125px;
+$listing-image-map-height: 200px;
 
 #like-button {
   position: absolute;
@@ -118,7 +118,7 @@ $listing-image-map-height: 125px;
 .listing-address,
 .listing-address:hover {
   display: inline-block;
-  color: inherit;
+  color: $primary-color;
 }
 
 .map-icon {

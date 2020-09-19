@@ -98,6 +98,7 @@ $button-primary-background: $primary-color;
 
 nav {
   border-bottom: $primary-color 0.125rem solid;
+  margin-bottom: 0.75rem;
 }
 
 /* Sticky footer */
