@@ -92,7 +92,7 @@ $card-section-margin: 0;
 
 .listing-image, .listing-map {
   height: 175px;
-  @media screen and (min-width: $min-tablet-screen-width) {
+  @media screen and (min-width: $tablet-breakpoint) {
     height: 200px;
   }
 }

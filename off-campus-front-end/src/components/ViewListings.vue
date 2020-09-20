@@ -252,7 +252,7 @@
 #desktop-search-filters {
   display: none;
 
-  @media screen and (min-width: $min-laptop-screen-width) {
+  @media screen and (min-width: $laptop-breakpoint) {
     display: flex;
   }
 }
@@ -261,7 +261,7 @@
   margin-top: 0.25rem;
   display: flex;
 
-  @media screen and (min-width: $min-laptop-screen-width) {
+  @media screen and (min-width: $laptop-breakpoint) {
     display: none;
   }
 
@@ -304,14 +304,14 @@
 }
 
 #mobile-results-text {
-  @media screen and (max-width: $min-tablet-screen-width - 1) {
+  @media screen and (max-width: $tablet-breakpoint - 1) {
     display: none;
   }
 }
 
 #mobile-sort-by {
   width: 100%;
-  @media screen and (min-width: $min-tablet-screen-width) {
+  @media screen and (min-width: $tablet-breakpoint) {
     width: 50%;
   }
 }
@@ -319,13 +319,13 @@
 #map-and-listings-container {
   margin: 0 auto;
   max-width: 100%;
-  @media screen and (max-width: $min-tablet-screen-width - 1) {
+  @media screen and (max-width: $tablet-breakpoint - 1) {
     padding: 0 15px;
   }
-  @media screen and (min-width: $min-tablet-screen-width) {
+  @media screen and (min-width: $tablet-breakpoint) {
     padding: 0 30px;
   }
-  @media screen and (min-width: $min-laptop-screen-width) {
+  @media screen and (min-width: $laptop-breakpoint) {
     padding: 0;
   }
 
@@ -333,7 +333,7 @@
     display: none;
   }
 
-  @media screen and (min-width: $min-laptop-screen-width) {
+  @media screen and (min-width: $laptop-breakpoint) {
     /* This prevents multiple scrollbars on the desktop listings page */
     height: calc(100vh - 178px);
     display: grid;
@@ -350,7 +350,7 @@
     }
   }
 
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $desktop-breakpoint) {
     grid-template-columns: 2fr 3fr;
   }
 }
@@ -359,10 +359,10 @@
   display: grid;
   gap: 1rem;
 
-  @media screen and (min-width: $min-tablet-screen-width) {
+  @media screen and (min-width: $tablet-breakpoint) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $desktop-breakpoint) {
     grid-template-columns: repeat(3, 1fr);
   }
 }
