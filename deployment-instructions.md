@@ -151,7 +151,19 @@ sudo systemctl start uwsgi
 You're done! Everything should be up and running.
 
 # Normal deployment
-1. Pull code changes
-1. Run Django migrations
-1. Run Django scrapers
-1. Rebuild front end
+1. Stop application: `sudo systemctl stop uwsgi`
+1. Navigate to repository: `cd /opt/apartments/app`
+1. Pull new code: `git pull`
+1. Navigate to back end directory: `cd OffCampusBackEnd`
+1. Delete Django database *if necessary*: `rm db.sqlite3`
+1. Enter virtual environment: `source /opt/apartments/venv/bin/activate`
+1. Run Django migrations: `python manage.py migrate`
+1. Run Django scrapers: `python manage.py scrape`
+1. Exit virtual environment: `deactivate`
+1. Navigate to front end directory: `cd ../off-campus-front-end`
+1. Rebuild front end:
+	```
+	npm install
+	npm run build
+	```
+1. Restart application:	`sudo systemctl start uwsgi`
