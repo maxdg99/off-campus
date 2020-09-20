@@ -8,13 +8,20 @@
         onsubmit="return false;"
         uk-grid
       >
-        <div class="beds-and-baths">
+        <div class="two-inputs">
           <div>
-            <label for="bedrooms">Bedrooms</label>
-            <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" v-on:change="updateListingsToMatchFilters" />
+            <label for="bedrooms">Beds</label>
+            <input
+              class="uk-input"
+              id="bedrooms"
+              type="number"
+              min="0"
+              v-model="filters.bedrooms"
+              v-on:change="updateListingsToMatchFilters"
+            />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -26,18 +33,8 @@
           </div>
         </div>
 
-        <div class="range">
+        <div>
           <label for="min-price">Price</label>
-          <input
-            class="uk-input"
-            id="min-price"
-            type="number"
-            min="0"
-            placeholder="Min"
-            v-model="filters.minPrice"
-            v-on:change="updateListingsToMatchFilters"
-          />
-          <span>&ndash;</span>
           <input
             class="uk-input"
             id="max-price"
@@ -49,18 +46,8 @@
           />
         </div>
 
-        <div class="range">
+        <div>
           <label for="min-distance">Distance</label>
-          <input
-            class="uk-input"
-            id="min-distance"
-            type="number"
-            min="0"
-            placeholder="Min"
-            v-model="filters.minDistance"
-            v-on:change="updateListingsToMatchFilters"
-          />
-          <span>&ndash;</span>
           <input
             class="uk-input"
             id="max-distance"
@@ -75,7 +62,11 @@
         <div>
           <label class="uk-form-label">Campus Area</label>
           <div class="uk-form-controls">
-            <select class="uk-select" v-model="filters.campus_area" v-on:change="updateListingsToMatchFilters">
+            <select
+              class="uk-select"
+              v-model="filters.campus_area"
+              v-on:change="updateListingsToMatchFilters"
+            >
               <option
                 v-for="option in campus_area_options"
                 :key="option.code"
@@ -88,7 +79,11 @@
         <div>
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
-            <select class="uk-select" v-model="filters.sortBy" v-on:change="updateListingsToMatchFilters">
+            <select
+              class="uk-select"
+              v-model="filters.sortBy"
+              v-on:change="updateListingsToMatchFilters"
+            >
               <option
                 v-for="option in sortOptions"
                 :key="option.id"
@@ -98,14 +93,12 @@
           </div>
         </div>
 
-        <div class="search-button">
+        <div id="desktop-results-text">
           <div uk-spinner v-if="searching"></div>
-          <div v-else><span uk-icon="icon: check"></span> {{this.resultCount}} results</div>
-          <!-- <button
-            class="uk-button uk-button-primary uk-width-expand"
-            v-on:click="updateRouteToMatchFilters"
-            v-bind:disabled="searching"
-          >Search - {{this.resultCount}} RESULTS</button> -->
+          <div v-else>
+            <span uk-icon="icon: check"></span>
+            {{this.resultCount}} results
+          </div>
         </div>
       </form>
 
@@ -128,16 +121,19 @@
             class="uk-button uk-button-primary uk-width-expand"
             v-on:click="updateRouteToMatchFilters"
             v-bind:disabled="searching"
-          >Search - {{this.resultCount}}</button>
+          >
+            Search - {{this.resultCount}}
+            <span id="mobile-results-text">results</span>
+          </button>
         </div>
 
-        <div v-show="showMobileFilters" class="beds-and-baths">
+        <div v-show="showMobileFilters" class="two-inputs">
           <div>
-            <label for="bedrooms">Bedrooms</label>
+            <label for="bedrooms">Beds</label>
             <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -148,46 +144,48 @@
           </div>
         </div>
 
-        <div v-show="showMobileFilters" class="range">
-          <label for="min-price">Price</label>
-          <input
-            class="uk-input"
-            id="min-price"
-            type="number"
-            min="0"
-            placeholder="Min"
-            v-model="filters.minPrice"
-          />
-          <span>&ndash;</span>
-          <input
-            class="uk-input"
-            id="max-price"
-            type="number"
-            min="0"
-            placeholder="Max"
-            v-model="filters.maxPrice"
-          />
+        <div v-show="showMobileFilters" class="two-inputs">
+          <div>
+            <label for="min-price">Price</label>
+            <input
+              class="uk-input"
+              id="max-price"
+              type="number"
+              min="0"
+              placeholder="Max"
+              v-model="filters.maxPrice"
+              v-on:change="updateListingsToMatchFilters"
+            />
+          </div>
+          <div>
+            <label for="min-distance">Distance</label>
+            <input
+              class="uk-input"
+              id="max-distance"
+              type="number"
+              min="0"
+              placeholder="Max"
+              v-model="filters.maxDistance"
+              v-on:change="updateListingsToMatchFilters"
+            />
+          </div>
         </div>
 
-        <div v-show="showMobileFilters" class="range">
-          <label for="min-distance">Distance</label>
-          <input
-            class="uk-input"
-            id="min-distance"
-            type="number"
-            min="0"
-            placeholder="Min"
-            v-model="filters.minDistance"
-          />
-          <span>&ndash;</span>
-          <input
-            class="uk-input"
-            id="max-distance"
-            type="number"
-            min="0"
-            placeholder="Max"
-            v-model="filters.maxDistance"
-          />
+        <div v-show="showMobileFilters">
+          <label class="uk-form-label">Campus Area</label>
+          <div class="uk-form-controls">
+            <select
+              class="uk-select"
+              v-model="filters.campus_area"
+              v-on:change="updateListingsToMatchFilters"
+            >
+              <option
+                v-for="option in campus_area_options"
+                :key="option.code"
+                :value="option.code"
+              >{{ option.name }}</option>
+            </select>
+          </div>
         </div>
 
         <div v-show="showMobileFilters">
@@ -206,21 +204,13 @@
     </div>
 
     <div id="map-and-listings-container">
-      <Map ref="map" :showOnlyLiked="showOnlyLiked" :likedListings="likedListings" v-on:update-isLiked="getLikedListings()"/>
+      <Map
+        ref="map"
+        :showOnlyLiked="showOnlyLiked"
+        :likedListings="likedListings"
+        v-on:update-isLiked="getLikedListings()"
+      />
       <div id="listings">
-        <Paginate
-          v-model="filters.page"
-          :page-count="pageCount"
-          :page-range="3"
-          :margin-pages="1"
-          :click-handler="updateRouteToMatchFilters"
-          :container-class="'uk-pagination uk-flex-center'"
-          :page-class="''"
-          :active-class="'uk-active'"
-          :disabled-class="'uk-disabled'"
-          :prev-text="'<span uk-pagination-previous></span>'"
-          :next-text="'<span uk-pagination-next></span>'"
-        />
         <div id="listings-grid">
           <Listing
             v-for="listing in searchResults"
@@ -228,7 +218,7 @@
             :id="listing.pk"
             :listing="listing"
             @mouseover.native="listingClicked(listing)"
-            v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)" 
+            v-bind:isLiked="$root.isSignedIn && likedListings.includes(listing.pk)"
             v-on:update-isLiked="getLikedListings()"
           />
         </div>
@@ -257,7 +247,7 @@
 #desktop-search-filters {
   display: none;
 
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $laptop-breakpoint) {
     display: flex;
   }
 }
@@ -266,7 +256,7 @@
   margin-top: 0.25rem;
   display: flex;
 
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $laptop-breakpoint) {
     display: none;
   }
 
@@ -275,7 +265,7 @@
   }
 }
 
-.beds-and-baths {
+.two-inputs {
   & > div {
     display: inline-block;
     width: 48%;
@@ -286,38 +276,30 @@
   }
 }
 
-.range {
-  label {
-    display: block;
-  }
-
-  span {
-    padding: 0 0.25rem;
-  }
-
-  input {
-    /* Width of span containing dash is 1rem */
-    width: calc((100% - 1rem) / 2);
-  }
-}
-
-.search-button {
-  margin-top: 24px;
+#desktop-results-text {
+  margin-top: 1.5rem;
+  padding-left: 2rem;
   display: flex;
   justify-content: left;
   align-items: center;
 }
 
+#mobile-results-text {
+  @media screen and (max-width: $tablet-breakpoint - 1) {
+    display: none;
+  }
+}
+
 #map-and-listings-container {
   margin: 0 auto;
-  max-width: 1600px;
-  @media screen and (max-width: $min-laptop-screen-width - 1) {
+  max-width: 100%;
+  @media screen and (max-width: $tablet-breakpoint - 1) {
     padding: 0 15px;
   }
-  @media screen and (min-width: $min-laptop-screen-width) {
+  @media screen and (min-width: $tablet-breakpoint) {
     padding: 0 30px;
   }
-  @media screen and (min-width: $min-desktop-screen-width) {
+  @media screen and (min-width: $laptop-breakpoint) {
     padding: 0;
   }
 
@@ -325,8 +307,9 @@
     display: none;
   }
 
-  @media screen and (min-width: 960px) {
-    height: calc(100vh - 170px);
+  @media screen and (min-width: $laptop-breakpoint) {
+    /* This prevents multiple scrollbars on the desktop listings page */
+    height: calc(100vh - 178px);
     display: grid;
     grid-template-columns: 1fr 2fr;
     column-gap: 1rem;
@@ -341,8 +324,8 @@
     }
   }
 
-  @media screen and (min-width: $min-desktop-screen-width) {
-    grid-template-columns: 1fr 2fr;
+  @media screen and (min-width: $desktop-breakpoint) {
+    grid-template-columns: 2fr 3fr;
   }
 }
 
@@ -350,12 +333,16 @@
   display: grid;
   gap: 1rem;
 
-  @media screen and (min-width: $min-tablet-screen-width) {
-    grid-template-columns: 1fr 1fr;
+  @media screen and (min-width: $tablet-breakpoint) {
+    grid-template-columns: repeat(2, 1fr);
   }
-  @media screen and (min-width: $min-desktop-screen-width) {
-    grid-template-columns: 1fr 1fr;
+  @media screen and (min-width: $desktop-breakpoint) {
+    grid-template-columns: repeat(3, 1fr);
   }
+}
+
+#footer {
+  margin-top: -1rem;
 }
 </style>
 
@@ -363,12 +350,14 @@
 import axios from "axios";
 import Listing from "@/components/Listing.vue";
 import Map from "@/components/Map.vue";
+import Footer from "@/components/Footer.vue";
 import Paginate from "vuejs-paginate";
-import Vue from 'vue'
-import { LoaderPlugin } from 'vue-google-login';
+import Vue from "vue";
+import { LoaderPlugin } from "vue-google-login";
 
 Vue.use(LoaderPlugin, {
-  client_id: "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com"
+  client_id:
+    "958584611085-255aprn4g9hietf5198mtkkuqhpov49q.apps.googleusercontent.com",
 });
 
 export default {
@@ -376,12 +365,13 @@ export default {
   components: {
     Listing,
     Paginate,
-    Map
+    Map,
+    Footer,
   },
   props: {
-      showOnlyLiked: String
+    showOnlyLiked: String,
   },
-  data: function() {
+  data: function () {
     return {
       searching: false,
       searchResults: [],
@@ -392,16 +382,16 @@ export default {
       showMobileFilters: false,
       likedListings: [],
       resultCount: 0,
-      campus_area_options: []
+      campus_area_options: [],
     };
   },
-  mounted: function() {
+  mounted: function () {
     const forms = document.querySelectorAll("form.search-filters");
-    forms.forEach(form => {
+    forms.forEach((form) => {
       form.addEventListener("input", this.onFilterInput);
 
       // Ensures that pressing enter on the filters form clicks "Search", not "Filter & Sort"
-      form.addEventListener("keypress", event => {
+      form.addEventListener("keypress", (event) => {
         if (event.keyCode == 13) {
           event.preventDefault();
           document.querySelector("button.uk-button-primary").click();
@@ -414,51 +404,52 @@ export default {
     this.updateFiltersFromQueryString(this.$route.query);
     this.setOriginalFilters();
     this.updateListingsToMatchFilters();
-    this.getLikedListings()
+    this.getLikedListings();
   },
   methods: {
-    getLikedListings: function() {
+    getLikedListings: function () {
       $.ajax({
-        type: 'GET',
-        url: 'http://localhost:8000/getLikedListings',
+        type: "GET",
+        url: "http://localhost:8000/getLikedListings",
         xhrFields: {
-          withCredentials: true
+          withCredentials: true,
         },
-        success: response => {
-          this.likedListings = response
+        success: (response) => {
+          this.likedListings = response;
         },
-        failure: response => {
-          this.$root.isSignedIn = false          }
-      })
+        failure: (response) => {
+          this.$root.isSignedIn = false;
+        },
+      });
       this.updateListingsToMatchFilters();
     },
-    setSortOptions: function() {
+    setSortOptions: function () {
       axios({
         method: "GET",
-        url: process.env.VUE_APP_API_URL + "/orderOptions"
+        url: process.env.VUE_APP_API_URL + "/orderOptions",
       }).then(
-        result => {
+        (result) => {
           this.sortOptions = result.data;
         },
-        error => {
+        (error) => {
           console.error(error);
         }
       );
     },
-    setAreaOptions: function() {
+    setAreaOptions: function () {
       axios({
         method: "GET",
-        url: process.env.VUE_APP_API_URL + "/areaOptions"
+        url: process.env.VUE_APP_API_URL + "/areaOptions",
       }).then(
-        result => {
+        (result) => {
           this.campus_area_options = result.data;
         },
-        error => {
+        (error) => {
           console.error(error);
         }
       );
     },
-    updateFiltersFromQueryString: function(query) {
+    updateFiltersFromQueryString: function (query) {
       var filters = {
         bedrooms: "",
         bathrooms: "",
@@ -467,7 +458,7 @@ export default {
         minDistance: "",
         maxDistance: "",
         campus_area: "",
-        sortBy: "3"
+        sortBy: "3",
       };
 
       for (var key in filters) {
@@ -480,11 +471,11 @@ export default {
 
       this.filters = filters;
     },
-    setOriginalFilters: function() {
+    setOriginalFilters: function () {
       this.originalFilters = Object.assign({}, this.filters);
     },
-    updateListingsToMatchFilters: function() {
-      this.searching = true
+    updateListingsToMatchFilters: function () {
+      this.searching = true;
       axios({
         method: "GET",
         url: process.env.VUE_APP_API_URL + "/paginatedListings",
@@ -498,16 +489,16 @@ export default {
           maxDistance: this.filters.maxDistance,
           campus_area: this.filters.campus_area,
           order: this.filters.sortBy,
-          showOnlyLiked: this.showOnlyLiked
-        }
+          showOnlyLiked: this.showOnlyLiked,
+        },
       }).then(
-        result => {
+        (result) => {
           this.pageCount = result.data.page_count;
           this.searchResults = result.data.listings;
-          this.resultCount = result.data.result_count
+          this.resultCount = result.data.result_count;
           this.searching = false;
         },
-        error => {
+        (error) => {
           console.error(error);
           this.searching = false;
         }
@@ -516,7 +507,7 @@ export default {
       this.$refs.map.filters = this.filters;
       this.$refs.map.loadMap();
     },
-    updateRouteToMatchFilters: function() {
+    updateRouteToMatchFilters: function () {
       window.scroll({ top: 0, left: 0, behavior: "smooth" });
 
       let filtersHaveChanged =
@@ -533,9 +524,9 @@ export default {
         this.$router.push({ query: this.filters });
       }
     },
-    listingClicked: function(listing) {
-      this.$refs.map.highlightListing(listing.pk)
-    }
+    listingClicked: function (listing) {
+      this.$refs.map.highlightListing(listing.pk);
+    },
   },
   watch: {
     // Handles forward/backward buttons in browser
@@ -543,7 +534,7 @@ export default {
       this.updateFiltersFromQueryString(to.query);
       this.updateListingsToMatchFilters();
       this.setOriginalFilters();
-    }
-  }
+    },
+  },
 };
 </script>
