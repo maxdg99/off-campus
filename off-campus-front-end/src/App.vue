@@ -26,7 +26,7 @@
             uk-navbar-toggle-icon
           ></a>
           <GoogleLogin class="uk-visible@s" v-show="!$root.isSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
-          <button class="uk-button uk-button-danger uk-visible@s" v-on:click="logOut()" v-show="$root.isSignedIn">Sign Out</button>
+          <button class="uk-button uk-button-default uk-visible@s" v-on:click="logOut()" v-show="$root.isSignedIn">Sign Out</button>
         </div>
       </div>
     </nav>
@@ -48,7 +48,7 @@
           </li>
           <li>
             <GoogleLogin class="mobile-button" v-show="!$root.isSignedIn" :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
-            <button v-on:click="logOut()" v-show="$root.isSignedIn" class="uk-button uk-button-danger mobile-button">Sign Out</button>
+            <button v-on:click="logOut()" v-show="$root.isSignedIn" class="uk-button uk-button-default mobile-button">Sign Out</button>
           </li>
           <!-- <li>
             <a>Sign In</a>
@@ -79,7 +79,7 @@ $button-primary-background: $primary-color;
 }
 
 .mobile-button {
-  margin: 0;
+  margin: 1.25rem 0;
   display: block;
   margin-left: auto;
   margin-right: auto;
