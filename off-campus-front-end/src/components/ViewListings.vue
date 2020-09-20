@@ -10,11 +10,11 @@
       >
         <div class="beds-and-baths">
           <div>
-            <label for="bedrooms">Bedrooms</label>
+            <label for="bedrooms">Beds</label>
             <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" v-on:change="updateListingsToMatchFilters" />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -101,11 +101,6 @@
         <div class="search-button">
           <div uk-spinner v-if="searching"></div>
           <div v-else><span uk-icon="icon: check"></span> {{this.resultCount}} results</div>
-          <!-- <button
-            class="uk-button uk-button-primary uk-width-expand"
-            v-on:click="updateRouteToMatchFilters"
-            v-bind:disabled="searching"
-          >Search - {{this.resultCount}} RESULTS</button> -->
         </div>
       </form>
 
@@ -133,11 +128,11 @@
 
         <div v-show="showMobileFilters" class="beds-and-baths">
           <div>
-            <label for="bedrooms">Bedrooms</label>
+            <label for="bedrooms">Beds</label>
             <input class="uk-input" id="bedrooms" type="number" min="0" v-model="filters.bedrooms" />
           </div>
           <div>
-            <label for="bathrooms">Bathrooms</label>
+            <label for="bathrooms">Baths</label>
             <input
               class="uk-input"
               id="bathrooms"
@@ -191,6 +186,19 @@
         </div>
 
         <div v-show="showMobileFilters">
+          <label class="uk-form-label">Campus Area</label>
+          <div class="uk-form-controls">
+            <select class="uk-select" v-model="filters.campus_area" v-on:change="updateListingsToMatchFilters">
+              <option
+                v-for="option in campus_area_options"
+                :key="option.code"
+                :value="option.code"
+              >{{ option.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div v-show="showMobileFilters" id="mobile-sort-by">
           <label class="uk-form-label">Sort By</label>
           <div class="uk-form-controls">
             <select class="uk-select" v-model="filters.sortBy">
@@ -298,6 +306,13 @@
 #mobile-results-text {
   @media screen and (max-width: $min-tablet-screen-width - 1) {
     display: none;
+  }
+}
+
+#mobile-sort-by {
+  width: 100%;
+  @media screen and (min-width: $min-tablet-screen-width) {
+    width: 50%;
   }
 }
 

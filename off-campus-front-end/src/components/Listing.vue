@@ -20,9 +20,9 @@
         <div>
           <span>{{ listing.miles_from_campus }} mi</span>
           <span>&nbsp;|&nbsp;</span>
-          <span>{{ `${listing.beds} ${listing.beds==1 ? "bed" : "beds"}` }}</span>
+          <span>{{ `${listing.beds} ${listing.beds==1 ? "bd" : "bds"}` }}</span>
           <span>&nbsp;|&nbsp;</span>
-          <span>{{ `${listing.baths} ${listing.baths==1 ? "bath" : "baths"}` }}</span>
+          <span>{{listing.baths}} ba</span>
         </div>
       </div>
       <div class="listing-address-container">
