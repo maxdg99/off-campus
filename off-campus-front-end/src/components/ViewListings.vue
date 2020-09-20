@@ -415,7 +415,7 @@ export default {
     getLikedListings: function () {
       $.ajax({
         type: "GET",
-        url: "http://localhost:8000/getLikedListings",
+        url: process.env.VUE_APP_API_URL + "/getLikedListings",
         xhrFields: {
           withCredentials: true,
         },

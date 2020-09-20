@@ -157,7 +157,7 @@ export default {
     onSuccess: function(googleUser) {
       $.ajax({
         type: 'POST',
-        url: 'http://localhost:8000/signIn',
+        url: process.env.VUE_APP_API_URL + '/signIn',
         data:{
           id_token: googleUser.getAuthResponse().id_token
         },
@@ -183,7 +183,7 @@ export default {
     logOut: function(){
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:8000/signOut',
+        url: process.env.VUE_APP_API_URL + '/signOut',
         xhrFields: {
           withCredentials: true
         },
@@ -196,7 +196,7 @@ export default {
     isSignedIn: function(){
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:8000/isSignedIn',
+        url: process.env.VUE_APP_API_URL + '/isSignedIn',
         xhrFields: {
           withCredentials: true
         },

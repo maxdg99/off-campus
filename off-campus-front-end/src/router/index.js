@@ -23,7 +23,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       $.ajax({
         type: 'GET',
-        url: 'http://localhost:8000/isSignedIn',
+        url: process.env.VUE_APP_API_URL + '/isSignedIn',
         xhrFields: {
           withCredentials: true
         },

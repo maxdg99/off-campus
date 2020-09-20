@@ -162,7 +162,7 @@ export default {
       if(this.$root.isSignedIn) {
         $.ajax({
           type: 'GET',
-          url: 'http://localhost:8000/likeProperty',
+          url: process.env.VUE_APP_API_URL + '/likeProperty',
           data: {
             property_id: this.id
           },
@@ -191,7 +191,7 @@ export default {
       if(this.$root.isSignedIn) {
         $.ajax({
           type: 'GET',
-          url: 'http://localhost:8000/unlikeProperty',
+          url: process.env.VUE_APP_API_URL + '/unlikeProperty',
           data: {
             property_id: this.id
           },
