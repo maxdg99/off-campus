@@ -13,7 +13,11 @@
 
 <style scoped>
 #content {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  background-image: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ), 
     url(landing_page.jpg);
   height: calc(100vh - 82px);
   position: relative;

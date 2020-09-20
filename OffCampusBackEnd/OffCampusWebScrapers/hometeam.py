@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import AppfolioScraper
 
+
 class HometeamAppfolioScraper:
     url = "https://ht.appfolio.com/listings"
 

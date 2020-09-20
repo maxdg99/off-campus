@@ -2,9 +2,6 @@
 $primary-color: hsl(200, 100%, 38%);
 
 // Screen sizes
-$min-tablet-screen-width: 600px;
-$min-laptop-screen-width: 900px;
-$min-desktop-screen-width: 1280px;
-
-// UIKit screen sizes
-$uikit-min-small-screen-width: 640px;
+$tablet-breakpoint: 640px;
+$laptop-breakpoint: 1000px;
+$desktop-breakpoint: 1500px;
