@@ -17,7 +17,8 @@
               type="number"
               min="0"
               v-model="filters.bedrooms"
-              v-on:change="updateListingsToMatchFilters"
+              v-on:keyup="updateRouteToMatchFilters"
+              v-on:change="updateRouteToMatchFilters"
             />
           </div>
           <div>
@@ -28,34 +29,39 @@
               type="number"
               min="0"
               v-model="filters.bathrooms"
-              v-on:change="updateListingsToMatchFilters"
+              v-on:keyup="updateRouteToMatchFilters"
+              v-on:change="updateRouteToMatchFilters"
             />
           </div>
         </div>
 
         <div>
-          <label for="min-price">Price</label>
+          <label for="max-price">Price</label>
           <input
             class="uk-input"
             id="max-price"
             type="number"
             min="0"
+            step="50"
             placeholder="Max"
             v-model="filters.maxPrice"
-            v-on:change="updateListingsToMatchFilters"
+            v-on:keyup="updateRouteToMatchFilters"
+            v-on:change="updateRouteToMatchFilters"
           />
         </div>
 
         <div>
-          <label for="min-distance">Distance</label>
+          <label for="max-distance">Distance</label>
           <input
             class="uk-input"
             id="max-distance"
             type="number"
             min="0"
+            step="0.1"
             placeholder="Max"
             v-model="filters.maxDistance"
-            v-on:change="updateListingsToMatchFilters"
+            v-on:keyup="updateRouteToMatchFilters"
+            v-on:change="updateRouteToMatchFilters"
           />
         </div>
 
@@ -65,7 +71,7 @@
             <select
               class="uk-select"
               v-model="filters.campus_area"
-              v-on:change="updateListingsToMatchFilters"
+              v-on:change="updateRouteToMatchFilters"
             >
               <option
                 v-for="option in campus_area_options"
@@ -82,7 +88,7 @@
             <select
               class="uk-select"
               v-model="filters.sortBy"
-              v-on:change="updateListingsToMatchFilters"
+              v-on:change="updateRouteToMatchFilters"
             >
               <option
                 v-for="option in sortOptions"
@@ -146,27 +152,27 @@
 
         <div v-show="showMobileFilters" class="two-inputs">
           <div>
-            <label for="min-price">Price</label>
+            <label for="max-price">Price</label>
             <input
               class="uk-input"
               id="max-price"
               type="number"
               min="0"
+              step="50"
               placeholder="Max"
               v-model="filters.maxPrice"
-              v-on:change="updateListingsToMatchFilters"
             />
           </div>
           <div>
-            <label for="min-distance">Distance</label>
+            <label for="max-distance">Distance</label>
             <input
               class="uk-input"
               id="max-distance"
               type="number"
               min="0"
+              step="0.1"
               placeholder="Max"
               v-model="filters.maxDistance"
-              v-on:change="updateListingsToMatchFilters"
             />
           </div>
         </div>
@@ -177,7 +183,6 @@
             <select
               class="uk-select"
               v-model="filters.campus_area"
-              v-on:change="updateListingsToMatchFilters"
             >
               <option
                 v-for="option in campus_area_options"

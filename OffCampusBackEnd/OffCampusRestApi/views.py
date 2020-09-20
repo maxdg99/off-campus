@@ -214,10 +214,18 @@ def __getFilteredListings(request):
     listingsFilter = listingsFilter & secondaryListingsFilter
 
     # Parses minimum and maximum distances from campus
-    if "minDistance" in queryParams and queryParams["minDistance"].isnumeric():
-        listingsFilter = listingsFilter & Q(miles_from_campus__gte=queryParams["minDistance"])
-    if "maxDistance" in queryParams and queryParams["maxDistance"].isnumeric():
-        listingsFilter = listingsFilter & Q(miles_from_campus__lte=queryParams["maxDistance"])
+    if "minDistance" in queryParams:
+        try:
+            minDistanceFloat = float(queryParams["minDistance"])
+            listingsFilter = listingsFilter & Q(miles_from_campus__gte=minDistanceFloat)
+        except ValueError:
+            pass
+    if "maxDistance" in queryParams:
+        try:
+            maxDistanceFloat = float(queryParams["maxDistance"])
+            listingsFilter = listingsFilter & Q(miles_from_campus__lte=maxDistanceFloat)
+        except ValueError:
+            pass
 
     if "campus_area" in queryParams and queryParams["campus_area"] in areaOptionsKeys:
         listingsFilter = listingsFilter & Q(campus_area=queryParams["campus_area"])
