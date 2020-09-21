@@ -1,48 +1,87 @@
 <template>
-    <div class="uk-container">
-        <h1 class="text-center">What is Off Campus?</h1>
-        <p class="text-center">
-            Off Campus aggregates rental property listings for the Columbus area. Our goal is to help students find the perfect off campus property in a fraction of the time.
-        </p>
-    
-        <h1 class="text-center">How does Off Campus Work?</h1>
-        <p class="text-center">
-            Where as other rental listing aggregation sites rely on rental companies inputting listings themselves (which Columbus rental companies do not tend to do), Off Campus uses various techniques to get data off of regntal company sites and on to ours.
-        </p>
+  <div class="uk-container">
+    <div class="uk-grid-medium uk-grid-match uk-child-width-1-1@s uk-child-width-1-3@m" uk-grid>
+      <div>
+        <div class="uk-card uk-card-default uk-card-body">
+          <h1 class="uk-card-title">What is Off Campus?</h1>
+          <p>Off Campus aggregates rental listings in the Columbus area. Our goal is to help students find the perfect off campus property in a fraction of the time.</p>
+        </div>
+      </div>
 
-        <h1 class="text-center">What does this mean for you?</h1>
-        <p class="text-center">
-            Above all, this means that you can say goodbye to spending hours on research listings on each individual rental company website.  That said, we want to be clear with the fact that the methods used to put listings on Off Campus are not foolproof.  This means that you may see data formmated or displayed in odd ways.  When in doubt just click on the address to view the rental companies listing!
-        </p>
+      <div>
+        <div class="uk-card uk-card-default uk-card-body">
+          <h1 class="uk-card-title">How does Off Campus Work?</h1>
+          <p>
+            While other property aggregation sites rely on rental companies to input listings themselves (and usually they don't), Off Campus uses
+            <a
+              href="https://en.wikipedia.org/wiki/Web_scraping"
+            >web scraping technology</a> to get data from property company sites and onto ours.
+          </p>
+        </div>
+      </div>
 
-        <h1 class="text-center">What rental companies do we have listings for?</h1>
-        <div class="text-center">North Steppe Properties</div>
-        <div class="text-center">Venice Properties</div>
-        <div class="text-center">Buckeye Real Estate</div>
-        <div class="text-center">Pella Properties</div>
-        <div class="text-center">Hometeam Properties</div>
-        <div class="text-center">Peak Properties</div>
-        <div class="text-center">OSU Properties</div>
-        <div class="text-center">Kohn Royer Griffith Inc.</div>
-        <div class="text-center">My First Place Properties</div>
-        <div class="text-center">Legacy Management Services</div>
-        <div class="text-center">OSU Live Properties</div>
-        <div class="text-center">VIP Realty</div>
+      <div>
+        <div class="uk-card uk-card-default uk-card-body">
+          <h1 class="uk-card-title">What does this mean for you?</h1>
+          <p>You can say goodbye to spending countless hours searching for a place to live. Now you don't have to manually scroll through numerous confusing and hard-to-use property company sites.</p>
+        </div>
+      </div>
 
-        <h1 class="text-center">Credits</h1>
-        <div class="text-center">Some icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+      <div>
+        <div class="uk-card uk-card-default uk-card-body">
+          <h1 class="uk-card-title">Which property companies do we list?</h1>
+          <ul>
+            <li>North Steppe Properties</li>
+            <li>Venice Properties</li>
+            <li>Buckeye Real Estate</li>
+            <li>Pella Properties</li>
+            <li>Hometeam Properties</li>
+            <li>Peak Properties</li>
+            <li>OSU Properties</li>
+            <li>Kohn Royer Griffith Inc.</li>
+            <li>My First Place Properties</li>
+            <li>Legacy Management Services</li>
+            <li>OSU Live Properties</li>
+            <li>VIP Realty</li>
+          </ul>
+        </div>
+      </div>
 
-        <h1 class="text-center">Disclaimer</h1>
-        <p class="text-center">
-           Off Campus is not liable for the correctness of any and all listing information on our site.  Off Campus is a web scraping application.  As a result, data collected via our scrapers may be formatted poorly or inaccurate.  If information displayed in a listing on OffCampus.us does not appear correct, please visit the rental companies site or contact the rental company directly for better detail on a given property.
-        </p>        
-        <Footer id="footer" />
+      <div>
+        <div class="uk-card uk-card-default uk-card-body">
+          <h1 class="uk-card-title">Attribution</h1>
+          <p>
+            We built this site using
+            <a href="https://vuejs.org/">Vue</a>,
+            <a href="https://getuikit.com/">UIKit</a>,
+            <a href="https://www.djangoproject.com/">Django</a>,
+            and lots of other awesome libraries!
+          </p>
+          <p>
+            Some icons are made by
+            <a
+              href="https://www.flaticon.com/authors/freepik"
+              title="Freepik"
+            >Freepik</a> from
+            <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <div class="uk-card uk-card-default uk-card-body">
+          <h1 class="uk-card-title">Disclaimer</h1>
+          <p>Off Campus is not liable for the correctness of any listing information on our site. Off Campus is a web scraping application. As a result, data collected via our scrapers may be poorly formatted or otherwise inaccurate. If listing information displayed on our site does not appear correct, please visit the website of the property company or contact the property company directly for better information on a given property.</p>
+        </div>
+      </div>
     </div>
+    <Footer id="footer" />
+  </div>
 </template>
 
 <style scoped>
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 </style>
 
@@ -52,7 +91,7 @@ import Footer from "@/components/Footer.vue";
 export default {
   name: "about",
   components: {
-      Footer
-  }
+    Footer,
+  },
 };
 </script>
