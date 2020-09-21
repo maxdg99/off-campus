@@ -167,3 +167,11 @@ You're done! Everything should be up and running.
 	npm run build
 	```
 1. Restart application:	`sudo systemctl start uwsgi`
+
+# Troubleshooting
+* View UWSGI logs: `sudo journalctl -u uwsgi -f`
+* Database is read-only:
+	```
+	sudo chown apartments:apartments db.sqlite3
+	sudo chmod 664
+	```
