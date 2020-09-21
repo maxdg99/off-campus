@@ -111,5 +111,12 @@ def scrape(classnames=None):
             classes.append(getattr(sys.modules[__name__], x))
         Listing.listings.filter(scraper__in=classnames).update(active=False)
     for o in classes:
-        o.process_listings(insert_listing_from_dict)
+        try:
+            o.process_listings(insert_listing_from_dict)
+        except Exception as e:
+            print("/n")
+            print("ERROR IN SCRAPER.")
+            print(e)
+            print("CLASS " + o.__name__ + " IS FAILING")
+        
 

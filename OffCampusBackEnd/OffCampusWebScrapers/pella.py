@@ -46,7 +46,7 @@ class PellaScraper(Scraper):
                 url = prop.find('a')['href']
 
                 image = prop.find('img')["src"]
-
+            
                 for child in prop.find("div", {'class': 'hover-details'}).findChildren("div", recursive=False):
                     if "$" in child.text:
                         price = child.text[1:child.text.find(".")]
@@ -71,10 +71,6 @@ class PellaScraper(Scraper):
                 address = listing_soup.find('h2').getText()
 
                 parsed_address, unknown = parse_address(address)
-
-                print(address)
-                print(parsed_address)
-                print("\n")
 
                 title = listing_soup.find('h1').getText()
                 unit_re = re.findall("#\d|Apt [A-Z]", title)
@@ -105,9 +101,7 @@ class PellaScraper(Scraper):
                         avail_date.remove('')
                     if 'Mid' in avail_date:
                         avail_date.remove('Mid')
-                    print(avail_date)
                     if len(avail_date) == 4:
-                        print(avail_date)
                         avail_date = PellaScraper.__clean_month(avail_date[1]) + '/' + PellaScraper.__clean_date(avail_date[2]) + '/' + avail_date[3]
                         avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
                         avail_mode = "Date"
@@ -126,7 +120,6 @@ class PellaScraper(Scraper):
                     avail_mode = "None"
                     is_avail = False
 
-                d = {"scraper": cls.__name__, "url": url, "image": image, "address": parse_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail, "unit": unit}
-                print(d)
+                d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail, "unit": unit}
                 #callback(d)
             

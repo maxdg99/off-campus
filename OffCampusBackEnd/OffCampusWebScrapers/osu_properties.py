@@ -75,10 +75,6 @@ class OSUPropertiesScraper(Scraper):
             
             address = f'{prop["address"]} {prop["city"]}, {prop["state"]} {prop["zip_code"]}'
             parsed_address, unknown = parse_address(address)
-
-            print(address)
-            print(parsed_address)
-            print("\n")
             
             price = prop['price']
             if "-" in price:
@@ -108,11 +104,9 @@ class OSUPropertiesScraper(Scraper):
                     avail_mode = "Now"
                     avail_date = None
                 elif "school year" in avail_date.lower():
-                    avail_date = avail_date[avail_date.find(" ")+1:]
-                    avail_date = avail_date[:avail_date.find(" ")]
-                    avail_date = avail_date[:avail_date.find("-")]
-                    avail_date = avail_date.strip()
-                    avail_date = "8/1/" + avail_date
+                    year_search = re.search("\d{4}-\d{4}", avail_date)
+                    year = year_search.group(0)
+                    avail_date = "8/1/" + year[0:4]
                     avail_date = datetime.datetime.strptime(avail_date, "%m/%d/%Y").date()
                     avail_mode = "Season"
                 else:
@@ -121,5 +115,4 @@ class OSUPropertiesScraper(Scraper):
                     avail_mode = "Date"
         
                 d = {"scraper": cls.__name__, "url": baseURL + urlAddOns[beds-1], "image": baseImage + image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
-                print(d)
                 callback(d)
