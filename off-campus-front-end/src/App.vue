@@ -43,6 +43,9 @@
           <li>
             <router-link to="/search" uk-toggle="target: #mobile-sidebar">Search</router-link>
           </li>
+          <li v-if="$root.isSignedIn">
+            <router-link to="/favorites" uk-toggle="target: #mobile-sidebar">Favorites</router-link>
+          </li>
           <li>
             <router-link to="/about" uk-toggle="target: #mobile-sidebar">About Us</router-link>
           </li>
