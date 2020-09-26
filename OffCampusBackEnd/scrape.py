@@ -28,6 +28,11 @@ def insert_listing_from_dict(l):
     string_address, tokenized_address = standardize_address(l["address"])
     try:
         obj = Listing.listings.get(address=string_address)
+        
+        if obj.scraper != l["scraper"]:
+            print("MISMATCH: "+string_address)
+            print(obj.scraper+" vs. new "+l["scraper"])
+        
         #print("exists: "+string_address)
         print(".", end="", flush=True)
 
