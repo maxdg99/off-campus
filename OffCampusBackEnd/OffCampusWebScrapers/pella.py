@@ -121,5 +121,5 @@ class PellaScraper(Scraper):
                     is_avail = False
 
                 d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail, "unit": unit}
-                #callback(d)
+                callback(d)
             
