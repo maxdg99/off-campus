@@ -36,14 +36,14 @@
       <div>
         <div
           v-if="listing.availability_mode=='Season'"
-        >Available this {{getMonth(listing.availability_date.month)}}</div>
+        ><span v-if="listing.unit">Unit {{listing.unit}}, </span>Available this {{getMonth(listing.availability_date.month)}}</div>
         <div
           v-else-if="listing.availability_mode=='Month'"
-        >Available in {{this.months[listing.availability_date.month - 1]}}</div>
-        <div v-else-if="listing.availability_mode=='Now'">Available Now</div>
+        ><span v-if="listing.unit">Unit {{listing.unit}}, </span>Available in {{this.months[listing.availability_date.month - 1]}}</div>
+        <div v-else-if="listing.availability_mode=='Now'"><span v-if="listing.unit">Unit {{listing.unit}}, </span>Available Now</div>
         <div
           v-else-if="listing.availability_mode=='Date'"
-        >Available on {{getDate(listing.availability_date)}}</div>
+        ><span v-if="listing.unit">Unit {{listing.unit}}, </span>Available on {{getDate(listing.availability_date)}}</div>
       </div>
       <span v-if="!listing.active">This listing is no longer available.</span>
     </div>
