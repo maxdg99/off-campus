@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import requests
+import requests, traceback
 import base64
 import json, sys
 from urllib.parse import urljoin
@@ -21,13 +21,18 @@ options = [cls for cls in Scraper.__subclasses__()]
 
 print("Available classnames: "+str(options))
 
+latLonCache = {}
+
 scrape_count =0
 def insert_listing_from_dict(l):
     global scrape_count
     scrape_count += 1
     string_address, tokenized_address = standardize_address(l["address"])
     try:
-        obj = Listing.listings.get(address=string_address)
+        unit_info = None
+        if 'unit' in tokenized_address:
+            unit_info = tokenized_address['unit']
+        obj = Listing.listings.get(address=string_address, unit=unit_info)
         
         if obj.scraper != l["scraper"]:
             print("MISMATCH: "+string_address)
@@ -53,7 +58,12 @@ def insert_listing_from_dict(l):
         print("+", end="", flush=True)
 
         # Get lat long
-        l["latitude"], l["longitude"] = getLatLong(string_address)
+        if string_address not in latLonCache:
+            lat, lon = getLatLong(string_address)
+            l["latitude"], l["longitude"] = lat, lon
+            latLonCache[string_address] = (lat, lon)
+        else:
+            l["latitude"], l["longitude"] = latLonCache[string_address]
 
         if l["latitude"] is not None:
             l["miles_from_campus"] = round(distance(l["latitude"], l["longitude"]), 2)
@@ -134,6 +144,7 @@ def scrape(classnames=None):
             print("/n")
             print("ERROR IN SCRAPER.")
             print(e)
+            traceback.print_exc()
             print("CLASS " + o.__name__ + " IS FAILING")
         
 
