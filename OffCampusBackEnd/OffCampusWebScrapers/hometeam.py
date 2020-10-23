@@ -31,6 +31,8 @@ class HometeamScraper(Scraper):
         appfolio_listings = []
         HometeamAppfolioScraper.process_listings(lambda listing: appfolio_listings.append(listing))
 
+        print("hometeam_listings: "+str(len(listings)))
+        print("appfolio_listing: "+str(len(appfolio_listings)))
         for hometeam_listing in listings:
             for appfolio_listing in appfolio_listings:
                 match, data = HometeamScraper.addresses_are_equal(hometeam_listing["address"], appfolio_listing["address"])

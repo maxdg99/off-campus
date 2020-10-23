@@ -241,7 +241,7 @@ def __getFilteredListings(request):
     # Parses ordering of listings
     if "order" in queryParams:
         if queryParams["order"] in orderQueries:
-            return listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]]).values('address', 'active', 'availability_date', 'availability_mode', 'beds', 'baths', 'campus_area', 'image', 'latitude', 'longitude', 'price', 'url', 'pk', 'miles_from_campus')
+            return listings.filter(listingsFilter).order_by(orderQueries[queryParams["order"]]).values('address', 'active', 'availability_date', 'availability_mode', 'beds', 'baths', 'campus_area', 'image', 'latitude', 'longitude', 'price', 'url', 'pk', 'miles_from_campus', 'unit')
         else:
             # Default order is miles from campus, increasing
-            return listings.filter(listingsFilter).order_by(orderQueries['3']).values('address', 'active', 'availability_date', 'availability_mode', 'beds', 'baths', 'campus_area', 'image', 'latitude', 'longitude', 'price', 'url', 'pk', 'miles_from_campus')
+            return listings.filter(listingsFilter).order_by(orderQueries['3']).values('address', 'active', 'availability_date', 'availability_mode', 'beds', 'baths', 'campus_area', 'image', 'latitude', 'longitude', 'price', 'url', 'pk', 'miles_from_campus', 'unit')

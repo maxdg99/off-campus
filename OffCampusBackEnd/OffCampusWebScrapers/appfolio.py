@@ -30,9 +30,6 @@ class AppfolioScraper():
 
             parsed_address, unknown = parse_address(address)
 
-            print(address)
-            print(parsed_address)
-            print("\n")
             unit = ""
 
             bed_and_bath = prop.find('span', {'class':'rent-banner__text js-listing-blurb-bed-bath'})
@@ -75,7 +72,6 @@ class AppfolioScraper():
                 description = ""
 
             d = {"scraper": className, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": availability_date, "availability_mode": availability_mode, "active": True, "unit": unit}
-            #print(d)
             callback(d)
 
 
