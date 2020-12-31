@@ -245,11 +245,12 @@ def standardize_address(address):
     return string_address, address
 
 def getLatLong(address):
-    query = {"key": "7a42def0c4b84b58a6bef95d82a82bcb", "q": address}
-    r = requests.get('https://api.opencagedata.com/geocode/v1/json', params=query)
+    print(address)
+    query = {"key": "AIzaSyCclGG8TOt38ssACRP3ww7HFBVqCcElRi4", "address": address}
+    r = requests.get('https://maps.googleapis.com/maps/api/geocode/json', params=query)
     o = r.json()
-    latLongParent = o["results"][0]["geometry"]
-    address = address[:address.find(", United States of America")]
+    print(o)
+    latLongParent = o["results"][0]["geometry"]["location"]
     if latLongParent and "lat" in latLongParent:
         latitude = latLongParent["lat"]
         longitude = latLongParent["lng"]
