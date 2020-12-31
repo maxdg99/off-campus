@@ -61,5 +61,4 @@ class EventideScraper(Scraper):
             description = description.replace('"', '')
 
             d = {'scraper': cls.__name__, 'url': url, 'image': image, 'address': address, 'beds': beds, 'baths': baths, 'description': description, 'price': price, 'availability_date': availability_date, 'availability_mode': 'Date', 'active': True}
-            print(d)
             callback(d)

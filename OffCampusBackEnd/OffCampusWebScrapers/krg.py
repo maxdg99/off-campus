@@ -69,5 +69,4 @@ class KRGScraper(Scraper):
                     avail_mode = 'Date'
 
                 d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
-                print(d)
                 callback(d)

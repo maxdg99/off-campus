@@ -37,7 +37,6 @@ class PeakScraper(Scraper):
                         range_street_number = re.search('^\d+-?\d* ', address)
                         single_address = address.replace(range_street_number[0], '')
                         single_address = f'{street_number} {single_address} Columbus, OH'
-                        print(single_address)
 
                         parsed_address, unknown = parse_address(single_address)
 
@@ -80,5 +79,4 @@ class PeakScraper(Scraper):
 
                         d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths,
                             "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True, "unit": unit}
-                        print(d)
                         callback(d)

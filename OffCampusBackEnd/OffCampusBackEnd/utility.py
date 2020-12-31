@@ -239,9 +239,9 @@ def standardize_address(address):
     if STATE in address:
         string_address = string_address + f' {address[STATE]}'
 
-    print("\n")
-    print("STRING ADDRESS: " +  string_address)
-    print("\n")
+    # print("\n")
+    # print("STRING ADDRESS: " +  string_address)
+    # print("\n")
     return string_address, address
 
 def getLatLong(address):
@@ -313,7 +313,6 @@ def format_address(address):
         for mod in modifiers:
             address_re = re.compile(re.escape(key+mod), re.IGNORECASE)
             address = address_re.sub(replacements[key], address)
-            print(address)
 
     zipcode = re.search("\d{5}", address)
     if zipcode:
