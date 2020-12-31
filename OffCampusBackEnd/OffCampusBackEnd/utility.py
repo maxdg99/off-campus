@@ -3,6 +3,9 @@ import urllib
 import json
 import re
 import math
+import os
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.getcwd(), '.env.local'))
 
 STREET_RANGE = 'street_range'
 STREET_NUMBER = 'street_number'
@@ -246,7 +249,7 @@ def standardize_address(address):
 
 def getLatLong(address):
     print(address)
-    query = {"key": "AIzaSyCclGG8TOt38ssACRP3ww7HFBVqCcElRi4", "address": address}
+    query = {"key": os.getenv("GOOGLE_SECRET_KEY"), "address": address}
     r = requests.get('https://maps.googleapis.com/maps/api/geocode/json', params=query)
     o = r.json()
     print(o)
