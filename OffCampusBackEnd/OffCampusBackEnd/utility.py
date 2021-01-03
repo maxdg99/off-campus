@@ -4,8 +4,6 @@ import json
 import re
 import math
 import os
-from dotenv import load_dotenv
-load_dotenv(os.path.join(os.getcwd(), '.env.local'))
 
 STREET_RANGE = 'street_range'
 STREET_NUMBER = 'street_number'
