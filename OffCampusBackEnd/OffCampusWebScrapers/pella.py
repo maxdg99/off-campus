@@ -4,6 +4,7 @@ import requests
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
 from OffCampusBackEnd.utility import parse_address
+from OffCampusRestApi.models import Listing
 
 class PellaScraper(Scraper):
 
@@ -104,20 +105,20 @@ class PellaScraper(Scraper):
                     if len(avail_date) == 4:
                         avail_date = PellaScraper.__clean_month(avail_date[1]) + '/' + PellaScraper.__clean_date(avail_date[2]) + '/' + avail_date[3]
                         avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
-                        avail_mode = "Date"
+                        avail_mode = Listing.AvailabilityMode.DATE
                         is_avail = True
                     elif len(avail_date) == 3: 
                         avail_date = PellaScraper.__clean_month(avail_date[1]) + '/1/' + avail_date[2]
                         avail_date = datetime.datetime.strptime(avail_date, "%B/%d/%Y").date()
-                        avail_mode = "Month"
+                        avail_mode = Listing.AvailabilityMode.MONTH
                         is_avail = True
                     else:
                         avail_date = None
                         is_avail = False
-                        avail_mode = "None"
+                        avail_mode = Listing.AvailabilityMode.NONE
                 else:
                     avail_date = None
-                    avail_mode = "None"
+                    avail_mode = Listing.AvailabilityMode.NONE
                     is_avail = False
 
                 d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": is_avail, "unit": unit}

@@ -4,6 +4,7 @@ import json
 import re
 import math
 import os
+from OffCampusRestApi.models import Listing
 
 STREET_RANGE = 'street_range'
 STREET_NUMBER = 'street_number'
@@ -283,14 +284,19 @@ def get_region(lat, lon):
     kingAndCanonLongitude = -83.02211
 
     if lat > thompsonLibraryLatitude:
-        result = 'north'
+        if lon < kingAndCanonLongitude:
+            result = Listing.CampusArea.NORTHWEST
+        elif lon > laneAndHighLongitude:
+            result = Listing.CampusArea.NORTHEAST
+        else:
+            result = Listing.CampusArea.NORTH
     else:
-        result = 'south'
-
-    if lon < kingAndCanonLongitude:
-        result += 'west'
-    elif lon > laneAndHighLongitude:
-        result += 'east'
+        if lon < kingAndCanonLongitude:
+            result = Listing.CampusArea.SOUTHWEST
+        elif lon > laneAndHighLongitude:
+            result = Listing.CampusArea.SOUTHEAST
+        else:
+            result = Listing.CampusArea.SOUTH
     
     return result
 

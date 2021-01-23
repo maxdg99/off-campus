@@ -4,6 +4,7 @@ from OffCampusWebScrapers.scraper import Scraper
 import datetime
 import re
 from OffCampusBackEnd.utility import parse_address
+from OffCampusRestApi.models import Listing
 
 class OSUPropertiesScraper(Scraper):
 
@@ -101,18 +102,18 @@ class OSUPropertiesScraper(Scraper):
                 avail_date = prop['availability']
                 avail_date = OSUPropertiesScraper.__remove_tags(avail_date)
                 if "now" in avail_date.lower():
-                    avail_mode = "Now"
+                    avail_mode = Listing.AvailabilityMode.NOW
                     avail_date = None
                 elif "school year" in avail_date.lower():
                     year_search = re.search("\d{4}-\d{4}", avail_date)
                     year = year_search.group(0)
                     avail_date = "8/1/" + year[0:4]
                     avail_date = datetime.datetime.strptime(avail_date, "%m/%d/%Y").date()
-                    avail_mode = "Season"
+                    avail_mode = Listing.AvailabilityMode.SEASON
                 else:
                     match = re.search('\w+ \d+, \d+', avail_date)
                     avail_date = datetime.datetime.strptime(match[0], "%B %d, %Y").date()
-                    avail_mode = "Date"
+                    avail_mode = Listing.AvailabilityMode.DATE
         
                 d = {"scraper": cls.__name__, "url": baseURL + urlAddOns[beds-1], "image": baseImage + image, "address": parsed_address, "beds": beds, "baths": baths, "description": description, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
                 callback(d)
