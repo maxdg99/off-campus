@@ -109,7 +109,7 @@ def unlikeProperty(request):
 
 def getAllListings(request):
     listings = __getFilteredListings(request)
-    response = JsonResponse(list(listings), safe=False)
+    response = JsonResponse(list(listings) if listings is not None else list(), safe=False)
     __allowCors(response)
     return response
 
@@ -117,7 +117,7 @@ def getLikedListings(request):
     if 'offcampus.us_auth' in request.session:
         row = request.session.get('offcampus.us_auth')
         listings = GoogleUser.objects.get(pk=row).favorites.values_list('pk', flat=True)
-        data =  list(listings)
+        data =  list(listings) if listings is not None else list()
         response = JsonResponse(data=data, content_type="application/json", status=200, safe=False)
         __allowCors(response)
         return response
