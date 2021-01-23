@@ -6,6 +6,7 @@ import requests
 import re
 from urllib.parse import urljoin
 from OffCampusBackEnd.utility import parse_address
+from OffCampusRestApi.models import Listing
 
 class AppfolioScraper():
 
@@ -52,13 +53,13 @@ class AppfolioScraper():
                 availability = availability.getText(strip=True)
                 if availability == "NOW":
                     availability_date = None
-                    availability_mode = "Now"
+                    availability_mode = Listing.AvailabilityMode.NOW
                 else:
                     availability_date = datetime.datetime.strptime(availability, "%m/%d/%y")
-                    availability_mode = "Date"
+                    availability_mode = Listing.AvailabilityMode.DATE
             else:
                 availability_date = None
-                availability_mode = "None"
+                availability_mode = Listing.AvailabilityMode.NONE
 
             try:
                 price = int(price[1:].replace(",", ""))

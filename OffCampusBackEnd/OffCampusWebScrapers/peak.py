@@ -4,6 +4,7 @@ import re
 from OffCampusWebScrapers.scraper import Scraper
 import datetime
 from OffCampusBackEnd.utility import parse_address
+from OffCampusRestApi.models import Listing
 
 class PeakScraper(Scraper):
     @classmethod
@@ -65,16 +66,16 @@ class PeakScraper(Scraper):
                         availability = availability.text
                         if availability == "Now":
                             avail_date = None
-                            avail_mode = 'Now'
+                            avail_mode = Listing.AvailabilityMode.NOW
                             isAvailable = True
                         elif availability:
                             avail_date = datetime.datetime.strptime(
                                 availability, "%m/%d/%y").date()
-                            avail_mode = 'Date'
+                            avail_mode = Listing.AvailabilityMode.DATE
                             isAvailable = True
                         else:
                             avail_date = None
-                            avail_mode = 'None'
+                            avail_mode = Listing.AvailabilityMode.NONE
                             isAvailable = False
 
                         d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths,

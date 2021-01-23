@@ -5,6 +5,7 @@ from OffCampusWebScrapers.scraper import Scraper
 import requests
 import re
 from urllib.parse import urljoin
+from OffCampusRestApi.models import Listing
 
 # WIP
 
@@ -60,5 +61,5 @@ class EventideScraper(Scraper):
             description = description_object.find('p').text
             description = description.replace('"', '')
 
-            d = {'scraper': cls.__name__, 'url': url, 'image': image, 'address': address, 'beds': beds, 'baths': baths, 'description': description, 'price': price, 'availability_date': availability_date, 'availability_mode': 'Date', 'active': True}
+            d = {'scraper': cls.__name__, 'url': url, 'image': image, 'address': address, 'beds': beds, 'baths': baths, 'description': description, 'price': price, 'availability_date': availability_date, 'availability_mode': Listing.AvailabilityMode.DATE, 'active': True}
             callback(d)

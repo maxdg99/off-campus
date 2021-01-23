@@ -5,8 +5,21 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
 class Listing(models.Model):
-    AVAILABILITY_MODE = [('S', 'Season'), ('M', 'Month'), ('N', 'Now'), ('-', 'None'), ('D', 'Date')]
-    CAMPUS_AREA = [('west', 'West Campus'), ('south', 'South Campus'), ('east', 'East Campus (Univ. District)'), ('north', 'North Campus')]
+
+    class AvailabilityMode(models.TextChoices):
+        SEASON = 'S', _('Season')
+        MONTH = 'M', _('Month')
+        NOW = 'N', _('Now')
+        NONE = '-', _('None')
+        DATE = 'D', _('Date')
+
+    class CampusArea(models.TextChoices):
+        NORTH = 'north', _('North Campus')
+        NORTHEAST = 'northeast', _('Northeast Campus')
+        NORTHWEST = 'northwest', _('Northwest Campus')
+        SOUTH = 'south', _('South Campus')
+        SOUTHEAST = 'southeast', _('Southeast Campus')
+        SOUTHWEST = 'southwest', _('Southwest Campus')
 
     url = models.CharField(max_length=1000)
     
@@ -14,7 +27,7 @@ class Listing(models.Model):
     
     address = models.CharField(max_length=100)
     street_number = models.CharField(max_length=10, default="")
-    street_range = models.CharField(max_length=15, default="")
+    street_range = models.CharField(max_length=25, default="")
     street_prefix = models.CharField(max_length=10, default="")
     street_name = models.CharField(max_length=50, default="")
     street_type = models.CharField(max_length=10, default="")
@@ -23,7 +36,7 @@ class Listing(models.Model):
     zipcode = models.CharField(max_length=5, default="")
     unit = models.CharField(max_length=10, default="")
 
-    campus_area = models.CharField(max_length=6, choices=CAMPUS_AREA)
+    campus_area = models.CharField(max_length=10, choices=CampusArea.choices)
 
     beds = models.PositiveIntegerField(null=True)
     baths = models.FloatField(null=True)
@@ -33,7 +46,7 @@ class Listing(models.Model):
     price = models.PositiveIntegerField(null=True)
 
     availability_date = models.DateField(null=True)
-    availability_mode = models.CharField(max_length=2, choices=AVAILABILITY_MODE)
+    availability_mode = models.CharField(max_length=2, choices=AvailabilityMode.choices, default=AvailabilityMode.NONE)
     active = models.BooleanField()
 
     date_created = models.DateField()

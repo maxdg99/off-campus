@@ -4,6 +4,7 @@ from OffCampusWebScrapers.scraper import Scraper
 import datetime
 import re
 from OffCampusBackEnd.utility import parse_address
+from OffCampusRestApi.models import Listing
 
 class KRGScraper(Scraper):
     @staticmethod
@@ -51,11 +52,11 @@ class KRGScraper(Scraper):
                 baths = float(listing.find_all('span', {'class': '\\\"info-value\\\"'})[1].text)
 
                 availability = listing.find_all('span', {'class': '\\\"info-title\\\"'})[2].text
-                avail_mode = 'None'
+                avail_mode = Listing.AvailabilityMode.NONE
                 avail_date = None
                 if 'NOW' in availability or 'Now' in availability:
                     avail_date = None
-                    avail_mode = 'Now'
+                    avail_mode = Listing.AvailabilityMode.NOW
                 elif 'Application Pending' not in availability and len(availability) > 0:
                     if '/' in availability:
                         try:
@@ -66,7 +67,7 @@ class KRGScraper(Scraper):
                         avail_date = datetime.datetime.strptime(availability, "%B %d, %Y").date()
                     else:
                         avail_date = datetime.datetime.strptime(availability, "%M%d%Y").date()
-                    avail_mode = 'Date'
+                    avail_mode = Listing.AvailabilityMode.DATE
 
                 d = {"scraper": cls.__name__, "url": url, "image": image, "address": parsed_address, "beds": beds, "baths": baths, "price": price, "availability_date": avail_date, "availability_mode": avail_mode, "active": True}
                 callback(d)

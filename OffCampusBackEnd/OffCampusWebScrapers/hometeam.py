@@ -4,6 +4,7 @@ import re
 from urllib.parse import urljoin
 from OffCampusWebScrapers.scraper import Scraper
 from OffCampusWebScrapers.appfolio import AppfolioScraper
+from OffCampusRestApi.models import Listing
 
 
 class HometeamAppfolioScraper:
@@ -72,7 +73,7 @@ class HometeamScraper(Scraper):
 
             data["price"] = None
             data["availability_date"] = None
-            data["availability_mode"] = 'None'
+            data["availability_mode"] = Listing.AvailabilityMode.NONE
             data["active"] = False
 
             return data
