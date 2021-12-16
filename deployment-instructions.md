@@ -126,9 +126,9 @@ server {
 }
 ```
 
-Write the following to /opt/apartments/app/OffCampusBackEnd/.env.local
+Write the following to /opt/apartments/app/OffCampusBackEnd/.env.local (inserting a secure secret key where prompted to do so)
 ```sh
-SECRET_KEY=^f)iru73nvws+!1#^3xf3wl2tu&y+$9yk=v^j@_tc+v7^d&a^f
+SECRET_KEY=INSERT SECURE SECRET KEY HERE
 DEBUG=false
 HOST_URL=api.offcampus.us
 ```
